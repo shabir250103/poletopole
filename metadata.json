@@ -1,0 +1,8 @@
+{
+  "name": "Pole to Pole Travels",
+  "description": "Customized adventure itineraries, ancestry heritage research, and personalized travel apparel designed by Colleen.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
