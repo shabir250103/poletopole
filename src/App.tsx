@@ -330,7 +330,7 @@ export default function App() {
         </section>
 
         {/* SECTION 2: WHY TRAVEL WITH US */}
-        <section id="why-travel-with-us-section" className="py-12 bg-[#fafbfd] border-t border-b border-slate-150">
+        <section id="why-travel-with-us-section" className="py-12 bg-[#fafbfd] border-b border-slate-150">
           <div className="max-w-xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-6">
               <h2 className="text-3xl font-bold font-serif text-[#0f2d4a] tracking-tight mb-2">
@@ -353,7 +353,7 @@ export default function App() {
                     Personalized Packages
                   </h3>
                   <p className="text-xs sm:text-[13px] text-slate-600 leading-normal">
-                    Custom itineraries tailored to your travel goals, budget, and interests.
+                    Custom itineraries tailored to your travel goals, budget and interests.
                   </p>
                 </div>
               </div>
@@ -368,7 +368,7 @@ export default function App() {
                     Global Reach
                   </h3>
                   <p className="text-xs sm:text-[13px] text-slate-600 leading-normal">
-                    Explore top destinations across Asia, Europe, America, and beyond.
+                    Explore top destinations across Asia, Europe, America and beyond.
                   </p>
                 </div>
               </div>
@@ -386,7 +386,7 @@ export default function App() {
                     24/7 Support
                   </h3>
                   <p className="text-xs sm:text-[13px] text-slate-600 leading-normal">
-                    We're here whenever you need us—before, during, and after your trip.
+                    We're here whenever you need us—before, during and after your trip.
                   </p>
                 </div>
               </div>
@@ -889,8 +889,8 @@ export default function App() {
                     </div>
                     <div>
                       <span className="block text-xs uppercase tracking-wider text-slate-500">Direct Planning Email</span>
-                      <a href="mailto:info@poletopoletravels.com" className="text-sm text-slate-800 font-display select-all hover:text-[#114c6c] transition-colors mt-1 block">
-                        info@poletopoletravels.com
+                      <a href="mailto:info@poletopole.in" className="text-sm text-slate-800 font-display select-all hover:text-[#114c6c] transition-colors mt-1 block">
+                        info@poletopole.in
                       </a>
                     </div>
                   </div>

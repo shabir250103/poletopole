@@ -142,8 +142,8 @@ export default function Footer({ setCurrentPage }: FooterProps) {
               </li>
               <li className="flex gap-3 items-center">
                 <Mail className="w-5 h-5 text-[#114c6c] shrink-0" />
-                <a href="mailto:info@poletopoletravels.com" className="hover:text-[#114c6c] transition-colors">
-                  info@poletopoletravels.com
+                <a href="mailto:info@poletopole.in" className="hover:text-[#114c6c] transition-colors">
+                  info@poletopole.in
                 </a>
               </li>
               <li className="flex gap-3 items-center">
