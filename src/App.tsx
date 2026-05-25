@@ -32,7 +32,8 @@ import {
   TrendingUp,
   MessageCircle,
   Coffee,
-  Instagram
+  Instagram,
+  Play
 } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -41,10 +42,11 @@ import { INTERNATIONAL_PACKAGES, DOMESTIC_PACKAGES, REVIEWS, INSTAGRAM_FEED } fr
 import { formatCurrency, parseMarkdownToHTML } from './utils';
 
 const HERO_VIDEOS = [
-  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779630483/4010941-uhd_3840_2160_25fps_arxt77.mp4',
-  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779630483/2028761-hd_1920_1080_24fps_cccdlo.mp4',
+  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779630484/12978273_3840_2160_30fps_naar12.mp4',
   'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779630487/14629596_3840_2160_60fps_tqbpxr.mp4',
-  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779630484/12978273_3840_2160_30fps_naar12.mp4'
+  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779699337/277097_jdpqvy.mp4',
+  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779699338/19229823-uhd_3840_2160_30fps_qhzsn1.mp4',
+  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779699338/218714_tpqyuk.mp4'
 ];
 
 const REVIEW_IMAGES = [
@@ -59,6 +61,55 @@ const REVIEW_IMAGES = [
   'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779633354/Screenshot_20260524-194944_yrb43u.png',
   'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779633355/Screenshot_20260524-194948_jdlqkz.png'
 ];
+
+const VIDEO_HIGHLIGHTS = [
+  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779700176/VID_20260525_020604_622_nifaea.mp4',
+  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779700176/VID_20260525_020709_220_zwev0a.mp4',
+  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779700176/VID_20260525_020554_907_sxx1nw.mp4',
+  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779700175/VID_20260525_020527_966_rs3uiu.mp4',
+  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779700175/VID_20260525_020458_231_donq5k.mp4'
+];
+
+function VideoHighlightCard({ src, index }: { src: string; index: number }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    if (isPlaying) {
+      videoRef.current.pause();
+    } else {
+      videoRef.current.play().catch(err => console.error("Playback failed", err));
+    }
+  };
+
+  return (
+    <div className="relative rounded-2xl overflow-hidden shadow-lg border border-slate-200/50 bg-black group flex flex-col justify-between aspect-[9/16] w-full max-w-[240px] mx-auto transition-transform hover:scale-[1.03] duration-300">
+      <div className="relative w-full h-full cursor-pointer" onClick={togglePlay}>
+        <video
+          ref={videoRef}
+          src={src}
+          playsInline
+          loop
+          className="w-full h-full object-cover"
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          controls={isPlaying}
+        />
+        {!isPlaying && (
+          <div className="absolute inset-0 bg-slate-900/40 group-hover:bg-slate-900/30 transition-colors flex flex-col items-center justify-center p-4">
+            <div className="w-12 h-12 rounded-full bg-white/95 text-slate-900 flex items-center justify-center shadow-2xl group-hover:scale-110 group-hover:bg-white transition-all duration-300">
+              <Play className="w-5 h-5 fill-slate-900 translate-x-[1px]" />
+            </div>
+            <span className="text-white text-[10px] font-semibold uppercase tracking-wider mt-3 drop-shadow">
+              Highlight #{index + 1}
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<string>('home');
@@ -250,6 +301,131 @@ export default function App() {
     );
   };
 
+  const renderBespokeInquirySection = (sectionTag = "Reserve Your Seat", heading = "Design Your Bespoke Custom Tour", subtitle = "Submit a premium design request. Colleen will contact you via WhatsApp or phone to finalize the finest itineraries.") => {
+    return (
+      <section id="inquiry-form-section" className="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full animate-fade-in text-left">
+        <div 
+          id="booking-inquiry-box"
+          className="w-full rounded-3xl p-8 sm:p-12 border border-slate-200 bg-white shadow-xl relative"
+        >
+          <div className="absolute top-0 right-10 -translate-y-1/2 p-3 rounded-full bg-[#114c6c]/10 border border-[#114c6c]/20 text-[#114c6c] backdrop-blur-lg">
+            <Compass className="w-6 h-6 animate-spin-slow" />
+          </div>
+
+          <div className="text-center max-w-xl mx-auto mb-10">
+            <span className="text-xs uppercase tracking-[0.25em] text-[#114c6c] font-semibold font-display block">
+              {sectionTag}
+            </span>
+            <h2 className="text-3xl font-serif font-bold text-slate-900 mt-1">
+              {heading}
+            </h2>
+            <p className="text-xs text-slate-500 mt-2">
+              {subtitle}
+            </p>
+          </div>
+
+          <form onSubmit={handleInquirySubmit} className="space-y-6">
+            {/* Row 1: Name & Destination */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-[10px] uppercase tracking-widest text-slate-500 font-display mb-2">Guest Name *</label>
+                <input 
+                  type="text"
+                  name="name"
+                  required
+                  value={bookingForm.name}
+                  onChange={handleInputChange}
+                  placeholder="e.g. Sarah Miller"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#114c6c] transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] uppercase tracking-widest text-[#114c6c] font-display mb-2">Desired Destination *</label>
+                <input 
+                  type="text"
+                  name="destination"
+                  required
+                  value={bookingForm.destination}
+                  onChange={handleInputChange}
+                  placeholder="e.g. Switzerland, Bali, Kashmir, or any country"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#114c6c] transition-colors"
+                />
+              </div>
+            </div>
+
+            {/* Row 2: Budget, Days, Persons */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-[10px] uppercase tracking-widest text-slate-500 font-display mb-2">Estimated Budget *</label>
+                <input 
+                  type="text"
+                  name="budget"
+                  required
+                  value={bookingForm.budget}
+                  onChange={handleInputChange}
+                  placeholder="e.g. $1,500 or Rs. 1,00,000"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#114c6c] transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] uppercase tracking-widest text-slate-500 font-display mb-2">Number of Days *</label>
+                <input 
+                  type="text"
+                  name="numberOfDays"
+                  required
+                  value={bookingForm.numberOfDays}
+                  onChange={handleInputChange}
+                  placeholder="e.g. 7 Days"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#114c6c] transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] uppercase tracking-widest text-slate-500 font-display mb-2">Number of Persons *</label>
+                <input 
+                  type="text"
+                  name="numberOfPersons"
+                  required
+                  value={bookingForm.numberOfPersons}
+                  onChange={handleInputChange}
+                  placeholder="e.g. 2 Persons"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#114c6c] transition-colors"
+                />
+              </div>
+            </div>
+
+            {inquirySuccess && (
+              <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm space-y-3 animate-fade-in">
+                <p>{inquirySuccess}</p>
+                {whatsappTemplateUrl && (
+                  <a 
+                    href={whatsappTemplateUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#25d366] text-white font-semibold text-xs uppercase tracking-widest hover:bg-[#20ba5a] transition-colors"
+                  >
+                    <MessageCircle className="w-4 h-4 text-white" />
+                    <span>Send on WhatsApp Now</span>
+                  </a>
+                )}
+              </div>
+            )}
+
+            <div className="pt-4 flex justify-center sm:justify-start">
+              <button
+                type="submit"
+                disabled={formLoading}
+                className="w-full sm:w-auto px-8 py-4 bg-[#144c6c] text-white uppercase tracking-widest text-xs font-bold rounded-xl hover:bg-[#144c6c]/95 transition-all disabled:opacity-40 cursor-pointer flex items-center justify-center gap-2"
+              >
+                <MessageCircle className="w-4.5 h-4.5 text-white" />
+                <span>{formLoading ? 'Formulating...' : 'Send via WhatsApp'}</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+    );
+  };
+
   // Package Card Renderer
   const renderPackageCard = (pkg: TravelPackage) => {
     return (
@@ -312,7 +488,7 @@ export default function App() {
                   playsInline 
                   preload="auto"
                   style={{ imageRendering: 'auto', transform: 'translate3d(0,0,0)' }}
-                  className="w-full h-full object-cover opacity-100 brightness-[1.15] contrast-[1.24] saturate-[1.08]"
+                  className="w-full h-full object-cover opacity-100 brightness-[1.05] contrast-[1.00] saturate-[1.00]"
                 >
                   <source src={HERO_VIDEOS[currentVideoIdx]} type="video/mp4" />
                   {/* Fallback image if video fails to load in sandboxed preview */}
@@ -391,127 +567,8 @@ export default function App() {
             {/* Why Choose us grid (now placed immediately below Hero) */}
             {renderWhyChooseUs()}
 
-            {/* Interactive Luxury Inquiry Form section (simplified structure) */}
-            <section id="inquiry-form-section" className="py-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-              <div 
-                id="booking-inquiry-box"
-                className="w-full rounded-3xl p-8 sm:p-12 border border-slate-200 bg-white shadow-xl relative"
-              >
-                <div className="absolute top-0 right-10 -translate-y-1/2 p-3 rounded-full bg-[#114c6c]/10 border border-[#114c6c]/20 text-[#114c6c] backdrop-blur-lg">
-                  <Compass className="w-6 h-6 animate-spin-slow" />
-                </div>
-
-                <div className="text-center max-w-xl mx-auto mb-10">
-                  <span className="text-xs uppercase tracking-[0.25em] text-[#114c6c] font-semibold font-display block">
-                    Reserve Your Seat
-                  </span>
-                  <h2 className="text-3xl font-serif font-bold text-slate-900 mt-1">
-                    Design Your Bespoke Custom Tour
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-2">
-                    Submit a premium design request. Colleen will contact you via WhatsApp or phone to finalize the finest itineraries.
-                  </p>
-                </div>
-
-                <form onSubmit={handleInquirySubmit} className="space-y-6">
-                  {/* Row 1: Name & Destination */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-[10px] uppercase tracking-widest text-slate-500 font-display mb-2">Guest Name *</label>
-                      <input 
-                        type="text"
-                        name="name"
-                        required
-                        value={bookingForm.name}
-                        onChange={handleInputChange}
-                        placeholder="e.g. Sarah Miller"
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#114c6c] focus:bg-white transition-colors"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] uppercase tracking-widest text-[#114c6c] font-display mb-2">Desired Destination *</label>
-                      <input 
-                        type="text"
-                        name="destination"
-                        required
-                        value={bookingForm.destination}
-                        onChange={handleInputChange}
-                        placeholder="e.g. Switzerland, Bali, Kashmir, or any country"
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#114c6c] focus:bg-white transition-colors"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Row 2: Budget, Days, Persons */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div>
-                      <label className="block text-[10px] uppercase tracking-widest text-slate-500 font-display mb-2">Estimated Budget *</label>
-                      <input 
-                        type="text"
-                        name="budget"
-                        required
-                        value={bookingForm.budget}
-                        onChange={handleInputChange}
-                        placeholder="e.g. $1,500 or Rs. 1,00,000"
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#114c6c] focus:bg-white transition-colors"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] uppercase tracking-widest text-slate-500 font-display mb-2">Number of Days *</label>
-                      <input 
-                        type="text"
-                        name="numberOfDays"
-                        required
-                        value={bookingForm.numberOfDays}
-                        onChange={handleInputChange}
-                        placeholder="e.g. 7 Days"
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#114c6c] focus:bg-white transition-colors"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] uppercase tracking-widest text-slate-500 font-display mb-2">Number of Persons *</label>
-                      <input 
-                        type="text"
-                        name="numberOfPersons"
-                        required
-                        value={bookingForm.numberOfPersons}
-                        onChange={handleInputChange}
-                        placeholder="e.g. 2 Persons"
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#114c6c] focus:bg-white transition-colors"
-                      />
-                    </div>
-                  </div>
-
-                  {inquirySuccess && (
-                    <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm space-y-3 animate-fade-in">
-                      <p>{inquirySuccess}</p>
-                      {whatsappTemplateUrl && (
-                        <a 
-                          href={whatsappTemplateUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#25d366] text-white font-semibold text-xs uppercase tracking-widest hover:bg-[#20ba5a] transition-colors"
-                        >
-                          <MessageCircle className="w-4 h-4 text-white" />
-                          <span>Send on WhatsApp Now</span>
-                        </a>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="pt-4 flex justify-center sm:justify-start">
-                    <button
-                      type="submit"
-                      disabled={formLoading}
-                      className="w-full sm:w-auto px-8 py-4 bg-[#144c6c] text-white uppercase tracking-widest text-xs font-bold rounded-xl hover:bg-[#144c6c]/95 transition-all disabled:opacity-40 cursor-pointer flex items-center justify-center gap-2"
-                    >
-                      <MessageCircle className="w-4.5 h-4.5 text-white" />
-                      <span>{formLoading ? 'Formulating...' : 'Send via WhatsApp'}</span>
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </section>
+            {/* Interactive Luxury Inquiry Form section (structured) */}
+            {renderBespokeInquirySection()}
           </div>
         )}
 
@@ -530,14 +587,23 @@ export default function App() {
             </div>
 
             {/* Packages Grid */}
-            <div id="intl-packages-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div id="intl-packages-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
               {(() => {
-                const SELECTED_INTERNATIONAL_NAMES = ['dubai', 'maldives', 'switzerland', 'thailand', 'bali', 'malaysia'];
+                const SELECTED_INTERNATIONAL_NAMES = ['dubai', 'maldives', 'switzerland', 'thailand', 'bali', 'malaysia', 'spain', 'singapore', 'srilanka', 'sri lanka', 'uzbekistan', 'morocco', 'turkey'];
                 const filtered = SELECTED_INTERNATIONAL_NAMES.map(name => 
                   INTERNATIONAL_PACKAGES.find(pkg => pkg.name.toLowerCase() === name)
                 ).filter((pkg): pkg is TravelPackage => !!pkg);
                 return filtered.map((pkg) => renderPackageCard(pkg));
               })()}
+            </div>
+
+            {/* Premium Inquiry Section */}
+            <div className="mt-16 border-t border-slate-100 pt-10">
+              {renderBespokeInquirySection(
+                "Exclusive Custom Route",
+                "Design Your Custom International Escape",
+                "Have other locations in mind? Share your dream international bucket-list directives. Colleen will design your customized itinerary master plan."
+              )}
             </div>
           </div>
         )}
@@ -559,12 +625,21 @@ export default function App() {
             {/* Packages Grid */}
             <div id="domestic-packages-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {(() => {
-                const SELECTED_DOMESTIC_NAMES = ['kashmir', 'goa', 'kerala', 'ooty', 'munnar', 'shimla'];
+                const SELECTED_DOMESTIC_NAMES = ['kashmir', 'goa', 'kerala', 'ooty', 'munnar', 'shimla', 'agra', 'benguluru', 'mumbai', 'jaipur', 'ladakh', 'kodaikanal'];
                 const filtered = SELECTED_DOMESTIC_NAMES.map(name => 
                   DOMESTIC_PACKAGES.find(pkg => pkg.name.toLowerCase() === name)
                 ).filter((pkg): pkg is TravelPackage => !!pkg);
                 return filtered.map((pkg) => renderPackageCard(pkg));
               })()}
+            </div>
+
+            {/* Premium Inquiry Section */}
+            <div className="mt-16 border-t border-slate-100 pt-10">
+              {renderBespokeInquirySection(
+                "Bespoke National Passage",
+                "Design Your Custom Domestic Escape",
+                "Want to blend other beautiful sights, forest safaris or historic walks? Send details to start sketching custom itineraries."
+              )}
             </div>
           </div>
         )}
@@ -633,8 +708,29 @@ export default function App() {
                 />
               </div>
 
+            </div>
 
+            {/* Video Highlights Section */}
+            <div className="mt-24 border-t border-slate-100 pt-16">
+              <div className="mb-12 text-center animate-fade-in">
+                <span className="text-xs uppercase tracking-[0.3em] text-[#114c6c] font-semibold font-display block mb-2">
+                  Direct From The Field
+                </span>
+                <h2 className="text-3xl font-serif font-bold text-slate-900 font-display">Video Highlights</h2>
+                <p className="text-xs text-slate-500 mt-2 font-display uppercase tracking-widest">
+                  Watch short highlight reels captured by our guests during their journeys (Click to Play)
+                </p>
+                <div className="h-[2px] w-20 bg-amber-500 mx-auto mt-4 rounded" />
+              </div>
 
+              {/* Grid of 5 videos */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-6xl mx-auto px-4">
+                {VIDEO_HIGHLIGHTS.map((videoUrl, idx) => (
+                  <div key={idx} className="animate-fade-in" style={{ animationDelay: `${idx * 100}ms` }}>
+                    <VideoHighlightCard src={videoUrl} index={idx} />
+                  </div>
+                ))}
+              </div>
             </div>
 
           </div>
@@ -848,8 +944,6 @@ export default function App() {
               </div>
 
             </div>
-
-
 
           </div>
         )}

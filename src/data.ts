@@ -4,7 +4,7 @@ import { TravelPackage, Review, InstagramPost } from './types';
 const IMAGE_MAP: Record<string, string> = {
   // AFRICA
   'Kenya': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80',
-  'Morocco': 'https://images.unsplash.com/photo-1489493887462-402b7264e619?auto=format&fit=crop&w=800&q=80',
+  'Morocco': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779700974/ait-benhaddou-ancient-city-in-morocco-north-africa_evtbwm.jpg',
   'Seychelles': 'https://images.unsplash.com/photo-1589979482837-e74f2e145060?auto=format&fit=crop&w=800&q=80',
   'South Africa': 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=800&q=80',
   'Zimbabwe': 'https://images.unsplash.com/photo-1603204006132-7bb3b7bca06e?auto=format&fit=crop&w=800&q=80',
@@ -34,12 +34,12 @@ const IMAGE_MAP: Record<string, string> = {
   'Russia': 'https://images.unsplash.com/photo-1512495039889-52a3b799cbd1?auto=format&fit=crop&w=800&q=80',
   'South Korea': 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80',
   'Malaysia': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779630836/petronas-towers-kuala-lumpur-malaysia-uhd-4k-wallpaper_b4icf3.jpg',
-  'Singapore': 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&w=800&q=80',
+  'Singapore': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779700975/f69d65aca996dd6e047dd487d3c5989d_bacm1g.jpg',
   'Philippines': 'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?auto=format&fit=crop&w=800&q=80',
   'Taiwan': 'https://images.unsplash.com/photo-1504618223053-559bdef9def5?auto=format&fit=crop&w=800&q=80',
   'Thailand': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779630668/Singapore_pdddzq.jpg',
   'Vietnam': 'https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=800&q=80',
-  'Uzbekistan': 'https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?auto=format&fit=crop&w=800&q=80',
+  'Uzbekistan': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779700976/pkg_5fec72d950415_epwynd.jpg',
 
   // EUROPE
   'Armenia': 'https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?auto=format&fit=crop&w=800&q=80',
@@ -64,10 +64,10 @@ const IMAGE_MAP: Record<string, string> = {
   'Portugal': 'https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?auto=format&fit=crop&w=800&q=80',
   'Romania': 'https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?auto=format&fit=crop&w=800&q=80',
   'Slovakia': 'https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?auto=format&fit=crop&w=800&q=80',
-  'Spain': 'https://images.unsplash.com/photo-1555992336-03a23c7b20eb?auto=format&fit=crop&w=800&q=80',
+  'Spain': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779700975/e1b64f74-city-32213-1987f4ad4ba_pu1sb9.jpg',
   'Sweden': 'https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?auto=format&fit=crop&w=800&q=80',
   'Switzerland': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779266410/switzerland_gakc8u.jpg',
-  'Turkey': 'https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?auto=format&fit=crop&w=800&q=80',
+  'Turkey': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779700974/993cdcb53e12f9de64241e6f3dae9ead_iwwnxn.jpg',
   'United Kingdom': 'https://images.unsplash.com/photo-1513635269975-59663e0ca1ad?auto=format&fit=crop&w=800&q=80',
 
   // ISLANDS
@@ -75,7 +75,8 @@ const IMAGE_MAP: Record<string, string> = {
   'Maldives': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779266408/maldives-_hveb5k.jpg',
   'Mauritius': 'https://images.unsplash.com/photo-1589979482837-e74f2e145060?auto=format&fit=crop&w=800&q=80',
   'Reunion': 'https://images.unsplash.com/photo-1589979482837-e74f2e145060?auto=format&fit=crop&w=800&q=80',
-  'Sri Lanka': 'https://images.unsplash.com/photo-1589979482837-e74f2e145060?auto=format&fit=crop&w=800&q=80',
+  'Sri Lanka': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779700975/earth-palm-tree-horizon-ocean-wallpaper-preview_ljky2s.jpg',
+  'Srilanka': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779700975/earth-palm-tree-horizon-ocean-wallpaper-preview_ljky2s.jpg',
 
   // MIDDLE EAST & OTHERS
   'Israel': 'https://images.unsplash.com/photo-1539650116574-8efeb43e2750?auto=format&fit=crop&w=800&q=80',
@@ -96,16 +97,16 @@ const IMAGE_MAP: Record<string, string> = {
   'Europe': 'https://images.unsplash.com/photo-1502784444187-359ac186c5bb?auto=format&fit=crop&w=800&q=80',
 
   // DOMESTIC TOP IMAGES
-  'Agra': 'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=800&q=80',
+  'Agra': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779700422/149934-797511790_tiny_ugkwp4.jpg',
   'Chandigarh': 'https://images.unsplash.com/photo-1622308644422-92a00c6be879?auto=format&fit=crop&w=800&q=80',
   'Delhi': 'https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=800&q=80',
   'Gulmarg': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779266409/Kashmir_uy6lnz.jpg',
   'Haridwar & Rishikesh': 'https://images.unsplash.com/photo-1600100397990-24b32525e4c4?auto=format&fit=crop&w=800&q=80',
   'Himachal Pradesh': 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80',
-  'Jaipur': 'https://images.unsplash.com/photo-1477587458883-47135dc640d5?auto=format&fit=crop&w=800&q=80',
+  'Jaipur': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779700421/1_kssrr4.jpg',
   'Jaisalmer': 'https://images.unsplash.com/photo-1489493887462-402b7264e619?auto=format&fit=crop&w=800&q=80',
   'Jammu and Kashmir': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779266409/Kashmir_uy6lnz.jpg',
-  'Ladakh': 'https://images.unsplash.com/photo-1532274402911-5a369e4c4bb5?auto=format&fit=crop&w=800&q=80',
+  'Ladakh': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779700430/ladakh-trek-e1635267234139_gganxi.jpg',
   'Lucknow': 'https://images.unsplash.com/photo-1600100397990-24b32525e4c4?auto=format&fit=crop&w=800&q=80',
   'Manali': 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80',
   'Mussoorie': 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80',
@@ -116,7 +117,9 @@ const IMAGE_MAP: Record<string, string> = {
   // SOUTH INDIA
   'Alleppey': 'https://images.unsplash.com/photo-1593693397690-362cb9666fc2?auto=format&fit=crop&w=800&q=80',
   'Araku Valley': 'https://images.unsplash.com/photo-1593693397690-362cb9666fc2?auto=format&fit=crop&w=800&q=80',
-  'Bangalore': 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80',
+  'Bangalore': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779700429/360_F_439790635_9u9sO3YXK87jmEYNuoBLZOz7JqpEDHTC_f6d2is.jpg',
+  'Bengaluru': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779700429/360_F_439790635_9u9sO3YXK87jmEYNuoBLZOz7JqpEDHTC_f6d2is.jpg',
+  'Benguluru': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779700429/360_F_439790635_9u9sO3YXK87jmEYNuoBLZOz7JqpEDHTC_f6d2is.jpg',
   'Chennai': 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=800&q=80',
   'Coorg': 'https://images.unsplash.com/photo-1593693397690-362cb9666fc2?auto=format&fit=crop&w=800&q=80',
   'Hyderabad': 'https://images.unsplash.com/photo-1600100397990-24b32525e4c4?auto=format&fit=crop&w=800&q=80',
@@ -146,7 +149,7 @@ const IMAGE_MAP: Record<string, string> = {
   'Jodhpur': 'https://images.unsplash.com/photo-1477587458883-47135dc640d5?auto=format&fit=crop&w=800&q=80',
   'Mahabaleshwar': 'https://images.unsplash.com/photo-1566552881560-0be862a7c445?auto=format&fit=crop&w=800&q=80',
   'Maharashtra': 'https://images.unsplash.com/photo-1566552881560-0be862a7c445?auto=format&fit=crop&w=800&q=80',
-  'Mumbai': 'https://images.unsplash.com/photo-1566552881560-0be862a7c445?auto=format&fit=crop&w=800&q=80',
+  'Mumbai': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779700428/360_F_341950409_Gq1sN2OqYgRZrUTvPohSmgQVubaqzlA5_b5g2lo.jpg',
   'Pune': 'https://images.unsplash.com/photo-1566552881560-0be862a7c445?auto=format&fit=crop&w=800&q=80',
   'Udaipur': 'https://images.unsplash.com/photo-1477587458883-47135dc640d5?auto=format&fit=crop&w=800&q=80',
 
@@ -177,7 +180,7 @@ const IMAGE_MAP: Record<string, string> = {
   'Andaman': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779266408/Andaman_sntam6.jpg',
   'Andhaman': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779266408/Andaman_sntam6.jpg',
   'Kashmir': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779266409/Kashmir_uy6lnz.jpg',
-  'Kodaikanal': 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80',
+  'Kodaikanal': 'https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779700421/123945980_y6ufg5.webp',
 };
 
 // USER-REQUESTED RAW PACKAGES LISTS
@@ -291,6 +294,8 @@ const RAW_DOMESTIC_CATALOG = [
   { name: 'Alleppey', tags: ['South India'] },
   { name: 'Araku Valley', tags: ['South India'] },
   { name: 'Bangalore', tags: ['South India', 'Educational'] },
+  { name: 'Benguluru', tags: ['South India', 'Educational'] },
+  { name: 'Bengaluru', tags: ['South India', 'Educational'] },
   { name: 'Chennai', tags: ['South India'] },
   { name: 'Coorg', tags: ['South India', 'Honeymoon'] },
   { name: 'Hyderabad', tags: ['South India'] },
