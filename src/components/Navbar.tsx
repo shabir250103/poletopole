@@ -79,8 +79,8 @@ export default function Navbar({ currentPage, setCurrentPage }: NavbarProps) {
 
   const navItems = [
     { id: 'home', label: 'Home' },
-    { id: 'international', label: 'International Packages', hasDropdown: true },
     { id: 'domestic', label: 'Domestic Packages', hasDropdown: true },
+    { id: 'international', label: 'International Packages', hasDropdown: true },
     { id: 'reviews', label: 'Reviews' },
     { id: 'contact', label: 'Contact Us' },
   ];
@@ -134,7 +134,7 @@ export default function Navbar({ currentPage, setCurrentPage }: NavbarProps) {
           </div>
  
           {/* Desktop Navigation links */}
-          <div id="desktop-nav-links" className="hidden lg:flex items-center gap-6">
+          <div id="desktop-nav-links" className="hidden lg:flex items-center gap-x-4 xl:gap-x-6 ml-auto pl-6">
             {navItems.map((item) => {
               if (item.hasDropdown) {
                 const categoryType = item.id as 'international' | 'domestic';
@@ -154,11 +154,11 @@ export default function Navbar({ currentPage, setCurrentPage }: NavbarProps) {
                       }}
                       className={`text-xs uppercase tracking-widest transition-all duration-300 relative py-2 font-display cursor-pointer hover:text-[#114c6c] flex items-center gap-1.5 ${
                         currentPage === item.id || hoveredCategory === categoryType
-                          ? 'text-[#114c6c] font-semibold'
+                          ? 'text-[#114c6c]'
                           : 'text-slate-600'
                       }`}
                     >
-                      <span>{item.label}</span>
+                      <span className="font-bold text-[13.5px] xl:text-[15px] leading-[16px] not-italic no-underline whitespace-nowrap">{item.label}</span>
                       <ChevronDown className="w-3 h-3 opacity-75 group-hover/navlink:rotate-180 transition-transform duration-300" />
                       {(currentPage === item.id || hoveredCategory === categoryType) && (
                         <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#114c6c]" />
@@ -226,9 +226,11 @@ export default function Navbar({ currentPage, setCurrentPage }: NavbarProps) {
                     setHoveredCategory(null);
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className={`text-xs uppercase tracking-widest transition-all duration-300 relative py-2 font-display cursor-pointer hover:text-[#114c6c] ${
+                  className={`uppercase tracking-widest transition-all duration-300 relative py-2 font-display cursor-pointer hover:text-[#114c6c] font-bold text-[13.5px] xl:text-[15px] whitespace-nowrap ${
+                    item.id === 'home' ? 'leading-[16px] text-justify' : 'leading-[16px]'
+                  } ${
                     currentPage === item.id
-                      ? 'text-[#114c6c] font-semibold'
+                      ? 'text-[#114c6c]'
                       : 'text-slate-600'
                   }`}
                 >

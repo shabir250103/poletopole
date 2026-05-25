@@ -293,8 +293,6 @@ const RAW_DOMESTIC_CATALOG = [
   // South India
   { name: 'Alleppey', tags: ['South India'] },
   { name: 'Araku Valley', tags: ['South India'] },
-  { name: 'Bangalore', tags: ['South India', 'Educational'] },
-  { name: 'Benguluru', tags: ['South India', 'Educational'] },
   { name: 'Bengaluru', tags: ['South India', 'Educational'] },
   { name: 'Chennai', tags: ['South India'] },
   { name: 'Coorg', tags: ['South India', 'Honeymoon'] },

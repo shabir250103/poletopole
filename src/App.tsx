@@ -33,7 +33,11 @@ import {
   MessageCircle,
   Coffee,
   Instagram,
-  Play
+  Play,
+  Globe,
+  Handshake,
+  Map,
+  Headphones
 } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -242,62 +246,156 @@ export default function App() {
     setActiveReviewIndex(prev => (prev - 1 + REVIEWS.length) % REVIEWS.length);
   };
 
-  // Unified Why Choose Us component values for premium branding
+  // Unified Why Choose Us component values for premium branding (Who We Are + Why Travel With Us)
   const renderWhyChooseUs = () => {
-    const items = [
-      { icon: <Award className="w-6 h-6 text-[#114c6c]" />, title: 'Transparent Cost Planning', text: 'Bespoke daily routing design fees between $50 to $150 per day with zero hidden surprises.' },
-      { icon: <ShieldCheck className="w-6 h-6 text-[#114c6c]" />, title: '15+ Years Travel Master', text: 'Headed up by Colleen, a giant travel enthusiast and detail planner with over 15 years designing global routes.' },
-      { icon: <MessageSquare className="w-6 h-6 text-[#114c6c]" />, title: 'Direct Call & Text Line', text: 'Stay in constant contact with Colleen directly on +91 95661 31283 for instant custom help.' },
-      { icon: <Compass className="w-6 h-6 text-[#114c6c]" />, title: 'Customized Heritage Plans', text: 'Whether it is a multi-country genealogy tracing, western national park campers, or polar vessel cruises.' },
-      { icon: <Shield className="w-6 h-6 text-[#114c6c]" />, title: 'Ancesty Genealogy Tracing', text: 'Trace ancestral birthplaces, home migrations, and historical paths so you walk exact paths of history.' },
-      { icon: <Hotel className="w-6 h-6 text-[#114c6c]" />, title: 'Handpicked Cozy Stays', text: 'We personally research and compile charming Bed & Breakfasts, historic castles, and ecological safaris.' },
-      { icon: <Plane className="w-6 h-6 text-[#114c6c]" />, title: 'Booking Support & Logistics', text: 'Simplifying cruise reservations, flight coordinates, and camper rentals for smooth passages.' },
-      { icon: <Users className="w-6 h-6 text-[#114c6c]" />, title: 'Custom Vacation Apparel', text: 'Design and print personalized matching group travel hoodies, t-shirts, and onesies for your squad.' },
-    ];
-
     return (
-      <section id="why-choose-us-section" className="py-24 border-t border-b border-slate-200 bg-white relative overflow-hidden">
-        {/* Cinematic Backdrop Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#114c6c]/5 rounded-full blur-[160px] pointer-events-none"></div>
+      <div id="home-why-and-who-sections" className="space-y-0">
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="text-xs uppercase tracking-[0.3em] text-[#114c6c] font-semibold font-display block mb-3">
-              The Pole to Pole Difference
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold tracking-tight text-slate-900 mb-4 font-display">
-              Why Active Adventure Seekers Plan with Pole to Pole Tours and Travels
-            </h2>
-            <div className="h-[2px] w-24 bg-[#114c6c]/40 mx-auto rounded"></div>
-            <p className="mt-4 text-sm text-slate-500">
-              Where customized ancestry research, personal logistics, and meticulous detail construct a lifetime memory.
+        {/* SECTION 1: WHO WE ARE */}
+        <section id="who-we-are-section" className="py-12 bg-white border-t border-slate-100">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            {/* Elegant small blue dash above */}
+            <div className="w-12 h-[3.5px] bg-[#2563ea] rounded mx-auto mb-3"></div>
+            
+            <div className="text-center max-w-3xl mx-auto mb-8">
+              <h2 className="text-3xl sm:text-4xl font-serif font-black text-[#0f2d4a] tracking-tight mb-3">
+                Who We Are
+              </h2>
+              <p className="text-slate-700 text-[15px] sm:text-[16px] leading-relaxed max-w-4xl mx-auto">
+                Welcome to <span className="font-bold text-[#114c6c]">Pole TO Pole Tours and Travels</span>, where every journey is crafted with care, and your satisfaction is our priority.
+              </p>
+            </div>
+
+            {/* Compact 4-column features row with fine lines */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 md:gap-y-0 text-center max-w-4xl mx-auto py-4 border-y border-slate-100/80 divide-x divide-slate-100">
+              
+              {/* Feature 1 */}
+              <div id="who-feat-1" className="flex flex-col items-center px-2">
+                <div className="w-14 h-14 rounded-full bg-[#f0f7ff] flex items-center justify-center text-[#2563ea] mb-3 shrink-0">
+                  <Calendar className="w-6 h-6" />
+                </div>
+                <h3 className="text-sm font-bold text-[#0f2d4a] tracking-wide mb-1">
+                  Founded in 2011
+                </h3>
+                <p className="text-xs text-slate-500">
+                  By Nizaruddin
+                </p>
+              </div>
+
+              {/* Feature 2 */}
+              <div id="who-feat-2" className="flex flex-col items-center px-2">
+                <div className="w-14 h-14 rounded-full bg-[#f0f7ff] flex items-center justify-center text-[#2563ea] mb-3 shrink-0">
+                  <Award className="w-6 h-6" />
+                </div>
+                <h3 className="text-sm font-bold text-[#0f2d4a] tracking-wide mb-1">
+                  15+ Years
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Of Experience
+                </p>
+              </div>
+
+              {/* Feature 3 */}
+              <div id="who-feat-3" className="flex flex-col items-center px-2">
+                <div className="w-14 h-14 rounded-full bg-[#f0f7ff] flex items-center justify-center text-[#2563ea] mb-3 shrink-0">
+                  <Globe className="w-6 h-6" />
+                </div>
+                <h3 className="text-sm font-bold text-[#0f2d4a] tracking-wide mb-1">
+                  Tailored for You
+                </h3>
+                <p className="text-[11px] text-slate-500 leading-snug max-w-[150px]">
+                  Travel experiences designed around your needs.
+                </p>
+              </div>
+
+              {/* Feature 4 */}
+              <div id="who-feat-4" className="flex flex-col items-center px-2">
+                <div className="w-14 h-14 rounded-full bg-[#f0f7ff] flex items-center justify-center text-[#2563ea] mb-3 shrink-0">
+                  <Handshake className="w-6 h-6" />
+                </div>
+                <h3 className="text-sm font-bold text-[#0f2d4a] tracking-wide mb-1">
+                  Your Satisfaction
+                </h3>
+                <p className="text-[11px] text-slate-500 leading-snug max-w-[150px]">
+                  Going above and beyond your expectations.
+                </p>
+              </div>
+
+            </div>
+
+            <p className="text-center text-xs sm:text-sm text-slate-600 mt-6 max-w-2xl mx-auto font-medium leading-relaxed">
+              With over a decade of expertise, we understand the diverse needs of our clients and deliver unforgettable travel experiences.
             </p>
           </div>
+        </section>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {items.map((it, idx) => (
-              <div 
-                key={idx}
-                id={`why-card-${idx}`}
-                className="group p-6 rounded-2xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-[#114c6c]/30 flex flex-col justify-between"
-              >
-                <div>
-                  <div className="p-3 w-fit rounded-lg bg-[#114c6c]/5 border border-[#114c6c]/15 mb-5 group-hover:scale-110 transition-transform duration-300">
-                    {it.icon}
-                  </div>
-                  <h3 className="text-lg font-serif font-semibold text-slate-900 mb-2 group-hover:text-[#114c6c] transition-colors">
-                    {it.title}
+        {/* SECTION 2: WHY TRAVEL WITH US */}
+        <section id="why-travel-with-us-section" className="py-12 bg-[#fafbfd] border-t border-b border-slate-150">
+          <div className="max-w-xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-6">
+              <h2 className="text-3xl font-bold font-serif text-[#0f2d4a] tracking-tight mb-2">
+                Why Travel With Us
+              </h2>
+              {/* Underline bar */}
+              <div className="w-14 h-[3px] bg-[#2563ea] rounded mx-auto"></div>
+            </div>
+
+            {/* List with light dividers */}
+            <div className="bg-white rounded-2xl border border-slate-200/50 shadow-sm overflow-hidden divide-y divide-slate-100">
+              
+              {/* Item 1 */}
+              <div className="p-5 flex items-start gap-4 hover:bg-slate-50/20 transition-colors">
+                <div className="w-12 h-12 rounded-full bg-[#f0f7ff] flex items-center justify-center text-[#2563ea] shrink-0">
+                  <Map className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-base font-bold text-[#0f2d4a] mb-1">
+                    Personalized Packages
                   </h3>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    {it.text}
+                  <p className="text-xs sm:text-[13px] text-slate-600 leading-normal">
+                    Custom itineraries tailored to your travel goals, budget, and interests.
                   </p>
                 </div>
-                <div className="w-8 h-[1px] bg-slate-200 group-hover:bg-[#114c6c]/30 group-hover:w-full transition-all duration-300 mt-6"></div>
               </div>
-            ))}
+
+              {/* Item 2 */}
+              <div className="p-5 flex items-start gap-4 hover:bg-slate-50/20 transition-colors">
+                <div className="w-12 h-12 rounded-full bg-[#f0f7ff] flex items-center justify-center text-[#2563ea] shrink-0">
+                  <Globe className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-base font-bold text-[#0f2d4a] mb-1">
+                    Global Reach
+                  </h3>
+                  <p className="text-xs sm:text-[13px] text-slate-600 leading-normal">
+                    Explore top destinations across Asia, Europe, America, and beyond.
+                  </p>
+                </div>
+              </div>
+
+              {/* Item 3 */}
+              <div className="p-5 flex items-start gap-4 hover:bg-slate-50/20 transition-colors">
+                <div className="w-12 h-12 rounded-full bg-[#f0f7ff] flex items-center justify-center text-[#2563ea] shrink-0 relative">
+                  <Headphones className="w-6 h-6" />
+                  <span className="absolute -bottom-1 -right-1 bg-[#2563ea] text-[8px] font-bold text-white px-1 py-0.5 rounded-full leading-none transform scale-90">
+                    24/7
+                  </span>
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-base font-bold text-[#0f2d4a] mb-1">
+                    24/7 Support
+                  </h3>
+                  <p className="text-xs sm:text-[13px] text-slate-600 leading-normal">
+                    We're here whenever you need us—before, during, and after your trip.
+                  </p>
+                </div>
+              </div>
+
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+      </div>
     );
   };
 
@@ -624,8 +722,8 @@ export default function App() {
 
             {/* Packages Grid */}
             <div id="domestic-packages-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {(() => {
-                const SELECTED_DOMESTIC_NAMES = ['kashmir', 'goa', 'kerala', 'ooty', 'munnar', 'shimla', 'agra', 'benguluru', 'mumbai', 'jaipur', 'ladakh', 'kodaikanal'];
+               {(() => {
+                const SELECTED_DOMESTIC_NAMES = ['kashmir', 'goa', 'kerala', 'ooty', 'munnar', 'shimla', 'agra', 'bengaluru', 'mumbai', 'jaipur', 'ladakh', 'kodaikanal'];
                 const filtered = SELECTED_DOMESTIC_NAMES.map(name => 
                   DOMESTIC_PACKAGES.find(pkg => pkg.name.toLowerCase() === name)
                 ).filter((pkg): pkg is TravelPackage => !!pkg);
