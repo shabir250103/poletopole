@@ -46,7 +46,7 @@ export default function Footer({ setCurrentPage }: FooterProps) {
               </div>
             </div>
             <p className="text-sm text-slate-600 leading-relaxed max-w-sm">
-              We make travel simple and profoundly personal. From custom adventure itineraries and ancestry genealogy research to beautiful matching vacation apparel, Colleen creates flawless, bespoke journeys that trace history and inspire lifetime memories.
+              We make travel simple and profoundly personal. From custom adventure itineraries and weekend escapes to customized group packages, Pole to Pole Tours and Travels creates flawless, bespoke journeys that inspire lifetime memories.
             </p>
             {/* Socials */}
             <div className="flex items-center gap-4">
@@ -114,7 +114,7 @@ export default function Footer({ setCurrentPage }: FooterProps) {
                   onClick={() => handleLinkClick('contact')}
                   className="hover:text-[#114c6c] transition-colors duration-250 cursor-pointer"
                 >
-                  Contact Colleen
+                  Contact Us
                 </button>
               </li>
             </ul>

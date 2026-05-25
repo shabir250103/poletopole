@@ -35,29 +35,28 @@ function getAiClient(): GoogleGenAI {
 
 // Custom curated packages context for the AI Advisor
 const CONTEXT_CATALOG = `
-You are the intelligent, warm, and structured Virtual Travel Assistant of "Pole to Pole Travels", headed by our expert travel planner Colleen.
-Your tone is friendly, passionate, helpful, and highly detailed. You love tracing genealogies, configuring custom itineraries, and making simple bookings.
+You are the intelligent, warm, and structured Virtual Travel Assistant of "Pole to Pole Travels", headed by our expert travel coordinators and founder Nizaruddin.
+Your tone is friendly, passionate, helpful, and highly detailed. You love designing professional travel programs, configuring custom tour itineraries, and making effortless bookings for individuals, families, and corporate groups.
 
 Here is Pole to Pole Travels' active premium catalog:
 
 1. INTERNATIONAL PACKAGES:
-- "German Heritage Pathway Tour" (10 Days Custom, Starting Price: $1,200 per person). Custom genealogy profiling, tracing your ancestral hometowns, taking train pass through Germany, and having local translator support.
-- "Antarctica Polar Explorer Cruise" (12 Days Expedition, Starting Price: $3,450 per person). Antarctic cruise to cruise icebergs, ride Zodiacs, meet polar guides, and view colonies of penguins.
-- "Bespoke Australia & New Zealand Trek" (30 Days Trans-Tasman, Starting Price: $4,100 per person). Full month-long trek. Includes Great Barrier Reef snorkeling, Sydney Harbour yacht sunset pass, Queenstown helicopter flyovers, and custom stays.
-- "Kenyan Savanna Wilderness Safari" (7 Days Private, Starting Price: $1,950 per person). Private open-roof safari drives, Eco-luxe glamping tents in Maasai Mara, sunrise hot air balloon, and direct local naturalists guiding.
+- "Imperial Europe Treasures Tour" (10 Days Custom, Starting Price: $1,200 per person). Custom itinerary profiling, exploring historic cities across Germany, Austria, and France, private rail passes, and local bilingual guides.
+- "Antarctica Polar Explorer Cruise" (12 Days Expedition, Starting Price: $3,450 per person). Premium cruise to view massive icebergs, ride Zodiac inflatables, meet polar guides, and view colonies of penguins safely.
+- "Bespoke Australia & New Zealand Trek" (30 Days Trans-Tasman, Starting Price: $4,100 per person). Full month-long trek. Includes Great Barrier Reef snorkeling, Sydney Harbour private yacht sunset cruise, Queenstown helicopter flyovers, and custom luxury lodge stays.
+- "Kenyan Savanna Wilderness Safari" (7 Days Private, Starting Price: $1,950 per person). Private open-roof safari drives, Eco-luxe glamping tents in Maasai Mara, sunrise hot air balloon flight, and direct local naturalists guiding.
 
 2. DOMESTIC PACKAGES:
-- "Grand Western National Parks Loop" (14 Days, Starting Price: $1,100 per caravan/guest). Campervan rental, route outline through a dozen iconic US National Parks, guided hiking, star observation, and lodge reservations.
-- "Missouri Homestead Roots Roadtrip" (5 Days Curated Heritage, Starting Price: $450 per person). Routing through grandfather's childhood county inside rural Missouri, local diner and historic carriage B&Bs bookings.
+- "Grand Western National Parks Loop" (14 Days, Starting Price: $1,100 per caravan/guest). Campervan rental, route outline through iconic US National Parks, guided hiking, star observation, and luxury cabin reservations.
+- "Scenic Blue Ridge and Smokies Roadtrip" (5 Days Curated Heritage, Starting Price: $450 per person). Routing through majestic mountains, scenic byways, historic villages, and boutique B&B bookings.
 
-Colleen's Pricing model: Standard day planning service costs between $50 to $150 per day.
-Colleen's Special services: We design and print Custom Printed group vacation apparel/shirts for kids and adults to stay visible in busy crowds!
+Pricing model: Standard customized itinerary planning service ranges from $50 to $150 per day depending on detail level.
 
 Your rules:
 1. Always guide the customer to book / text via our contact phone +91 95661 31283 or fill out our online Inquiry Form.
 2. If the user asks about pricing, mention it clearly (tours, custom daily fees between $50-$150).
-3. Be enthusiastic, friendly, and structured. Use bullet points. Encourage genealogy lookups or adventure loops.
-4. Offer to prepare a brief copy-pastable WhatsApp inquiry they can text directly to Colleen (+91 95661 31283).
+3. Be enthusiastic, friendly, and structured. Use bullet points. Encourage epic vacations, group itineraries, or adventure loops.
+4. Offer to prepare a brief copy-pastable WhatsApp inquiry they can text directly to our team (+91 95661 31283).
 `;
 
 // AI Assistant Endpoint
@@ -75,15 +74,15 @@ app.post('/api/chatbot', async (req, res) => {
     if (process.env.GEMINI_API_KEY === undefined) {
       // Simulate elegant Virtual Concierge response when key is missing to ensure zero application crashes
       const mockResponses: { [key: string]: string } = {
-        'hi': 'Hello! Welcome to **Pole to Pole Travels**. I am Colleen\'s Virtual Assistant. How can I help you customize your dream ancestor search, custom itinerary, or group shirts today?',
-        'hello': 'Hello! Welcome to **Pole to Pole Travels**. I am Colleen\'s Virtual Assistant. How can I help you customize your dream ancestor search, custom itinerary, or group shirts today?',
-        'germany': 'Our **German Heritage Pathway Tour** represents a superb 10-day custom voyage ($1,200/guest) tracing your family tree in Germany, visiting native birthplaces and houses. Would you like me to help draft an inquiry copy for Colleen?',
-        'national parks': 'Colleen\'s **Grand Western National Parks Loop** ($1,100) covers a dozen stunning US National Parks with fully equipped campervans and camping/lodge permits. Perfect for outdoor lovers!',
-        'antarctica': 'The **Antarctica Polar Explorer Cruise** starting from $3,450 is a once-in-a-lifetime expedition of ice-bays and penguin colonies. Colleen can help you prepare gear and land excursions!'
+        'hi': 'Hello! Welcome to **Pole to Pole Travels**. I am your Virtual Travel Assistant. How can I help you customize your dream holiday itinerary or book custom vacation packages today?',
+        'hello': 'Hello! Welcome to **Pole to Pole Travels**. I am your Virtual Travel Assistant. How can I help you customize your dream holiday itinerary or book custom vacation packages today?',
+        'germany': 'Our **Imperial Europe Treasures Tour** is a spectacular 10-day custom voyage ($1,200/guest) visiting historic landmarks across Munich, Berlin, and the Rhine. Would you like me to help draft an inquiry copy for our travel planning team?',
+        'national parks': 'Our team\'s **Grand Western National Parks Loop** ($1,100) covers a dozen stunning US National Parks with fully equipped campervans and camping/lodge permits. Perfect for outdoor lovers!',
+        'antarctica': 'The **Antarctica Polar Explorer Cruise** starting from $3,450 is a once-in-a-lifetime expedition of ice-bays and penguin colonies. We can help you prepare gear and land excursions!'
       };
 
       const lc = message.toLowerCase();
-      let reply = 'I would be delighted to assist you with your travel plans! It looks like our AI live connection is currently offline, but I can guide you to some of our signatures like the **German Heritage Pathway**, the **Western National Parks Campervan Loop**, or a classic **Antarctica Explorer Cruise**. Please feel free to text Colleen directly at **+91 95661 31283** to coordinate instantly!';
+      let reply = 'I would be delighted to assist you with your travel plans! It looks like our AI live connection is currently offline, but I can guide you to some of our signature programs like the **Imperial Europe Treasures Tour**, the **Western National Parks Campervan Loop**, or a classic **Antarctica Explorer Cruise**. Please feel free to text our team directly at **+91 95661 31283** to coordinate instantly!';
       
       for (const [key, response] of Object.entries(mockResponses)) {
         if (lc.includes(key)) {
@@ -116,13 +115,13 @@ app.post('/api/chatbot', async (req, res) => {
       contents: messagesContent,
     });
 
-    const reply = response.text || 'I would love to help you plan your next trip with Pole to Pole Travels. Please get in touch with Colleen at +91 95661 31283!';
+    const reply = response.text || 'I would love to help you plan your next trip with Pole to Pole Travels. Please get in touch with our team at +91 95661 31283!';
     res.json({ reply });
   } catch (error: any) {
     console.error('Gemini API Error:', error);
     res.status(500).json({ 
       error: 'Assistant is briefly organizing details.', 
-      reply: 'My apologies, I had a slight disruption in my signal. Please contact Colleen directly on +91 95661 31283 for swift help!' 
+      reply: 'My apologies, I had a slight disruption in my AI signal. Please contact our team directly on +91 95661 31283 for swift help!' 
     });
   }
 });
@@ -148,7 +147,7 @@ app.post('/api/inquiry', (req, res) => {
   
   res.json({ 
     success: true, 
-    message: 'Your inquiry has been formulated! Tap below to send it directly over WhatsApp to Colleen.',
+    message: 'Your inquiry has been formulated! Tap below to send it directly over WhatsApp to Pole to Pole Travels.',
     whatsappUrl 
   });
 });

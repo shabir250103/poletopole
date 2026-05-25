@@ -364,7 +364,7 @@ export default function Navbar({ currentPage, setCurrentPage }: NavbarProps) {
               className="flex items-center justify-center gap-2 text-xs uppercase tracking-widest text-[#114c6c] border border-[#114c6c]/30 bg-[#114c6c]/5 py-3 rounded-full font-display"
             >
               <Phone className="w-4 h-4 text-[#114c6c]" />
-              <span>Call Colleen</span>
+              <span>Call Us</span>
             </a>
           </div>
         </div>

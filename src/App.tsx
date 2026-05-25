@@ -219,7 +219,7 @@ export default function App() {
 
   // Helper values for standard luxury WhatsApp links
   const triggerGeneralWA = () => {
-    const text = "Hello Pole to Pole Tours and Travels! I am interested in planning a vacation or tracing my ancestry genealogy. Please contact me.";
+    const text = "Hello Pole to Pole Tours and Travels! I am interested in planning a custom vacation package. Please contact me.";
     window.open(`https://wa.me/919566131283?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -399,7 +399,7 @@ export default function App() {
     );
   };
 
-  const renderBespokeInquirySection = (sectionTag = "Reserve Your Seat", heading = "Design Your Bespoke Custom Tour", subtitle = "Submit a premium design request. Colleen will contact you via WhatsApp or phone to finalize the finest itineraries.") => {
+  const renderBespokeInquirySection = (sectionTag = "Reserve Your Seat", heading = "Design Your Bespoke Custom Tour", subtitle = "Submit a premium design request. Our tour planning team will contact you via WhatsApp or phone to finalize the finest itineraries.") => {
     return (
       <section id="inquiry-form-section" className="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full animate-fade-in text-left">
         <div 
@@ -700,7 +700,7 @@ export default function App() {
               {renderBespokeInquirySection(
                 "Exclusive Custom Route",
                 "Design Your Custom International Escape",
-                "Have other locations in mind? Share your dream international bucket-list directives. Colleen will design your customized itinerary master plan."
+                "Have other locations in mind? Share your dream international bucket-list directives. Our specialists will design your customized itinerary master plan."
               )}
             </div>
           </div>
@@ -842,10 +842,10 @@ export default function App() {
               <span className="text-xs uppercase tracking-[0.3em] text-[#114c6c] font-semibold font-display block mb-3">
                 Reach Out
               </span>
-              <h1 className="text-4xl sm:text-5xl font-serif font-bold text-slate-900 mb-4">Contact Colleen directly</h1>
+              <h1 className="text-4xl sm:text-5xl font-serif font-bold text-slate-900 mb-4">Contact Pole to Pole</h1>
               <div className="h-[2px] w-24 bg-[#114c6c]/40 mx-auto rounded mb-4"></div>
               <p className="text-sm text-slate-500 leading-relaxed">
-                Connect with Colleen to map out custom vacation routes, request ancestral lineage searches, or place matching family printed apparel orders.
+                Connect with our expert travel advisors to map out bespoke domestic and international vacation routes, ask questions about custom packages, or arrange group excursions.
               </p>
             </div>
 

@@ -389,7 +389,7 @@ export const REVIEWS: Review[] = [
     name: 'The Miller Family',
     rating: 5,
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&h=150&q=80',
-    text: 'Colleen helped us trace the exact village where our great-grandparents were born in Germany. Standing in front of the 120-year-old family house was an emotional experience we could never have planned on our own! She handled every train connection and hotel beautifully.',
+    text: 'Pole to Pole helped us plan a flawless journey to Germany. Standing in front of our historic family home was an emotional experience we could never have planned on our own! Their team handled every train connection, local tour, and hotel beautifully.',
     date: 'August 14, 2025',
     verified: true
   },
@@ -398,7 +398,7 @@ export const REVIEWS: Review[] = [
     name: 'Marcus & Sarah T.',
     rating: 5,
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80',
-    text: 'We booked the 14-day Western National Parks road trip Colleen designed. The camper rental was flawless and her trail recommendations saved us hours of stress! Also, the custom matching t-shirts she printed for our group kept us in sight in busy crowds.',
+    text: 'We booked the 14-day Western National Parks road trip designed by Pole to Pole. The vehicle rental was flawless and their trail recommendations saved us hours of stress! Also, the pre-planned guided treks kept our group safe and fully engaged.',
     date: 'February 22, 2026',
     verified: true
   },
@@ -407,7 +407,7 @@ export const REVIEWS: Review[] = [
     name: 'Eleanor Vance',
     rating: 5,
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&h=150&q=80',
-    text: 'A cruise to Antarctica was my absolute dream. Colleen’s personal tips about the landing sites and gear setup made all the difference. She is an absolute planning wizard - every single detail fell right into place!',
+    text: 'A cruise to Antarctica was my absolute dream. The Pole to Pole team’s personal tips about the landing sites and gear setup made all the difference. They are absolute planning wizards - every single detail fell right into place!',
     date: 'April 05, 2026',
     verified: true
   },
@@ -416,7 +416,7 @@ export const REVIEWS: Review[] = [
     name: 'The Harrison Clan',
     rating: 5,
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&h=150&q=80',
-    text: 'Finding my grandpa’s childhood house in rural Missouri was breathtakingly unforgettable. Colleen helped map out our ancestry routes and recommended stunning bed & breakfasts. Perfect service, highly tailored, and excellent pricing!',
+    text: 'Our customized tour of the central United States was breathtakingly unforgettable. Pole to Pole helped map out beautiful rustic routes and recommended stunning boutique hotels. Perfect service, highly tailored, and excellent pricing!',
     date: 'September 18, 2025',
     verified: true
   }
@@ -447,7 +447,7 @@ export const INSTAGRAM_FEED: InstagramPost[] = [
     type: 'photo',
     likes: '850',
     comments: '19',
-    caption: 'Walking in the footsteps of ancestors. This 120-year-old home survived both World Wars! Let us map out your heritage trip. 🚂🏰 #GermanyTravel #GenealogyTrip #FamilyHistory',
+    caption: 'Walking in the footsteps of history. This 120-year-old home survived both World Wars! Let us map out your custom heritage trip. 🚂🏰 #GermanyTravel #HeritageTrip #FamilyHistory',
     link: 'https://instagram.com/poletopole_toursandtravels'
   },
   {
@@ -465,7 +465,7 @@ export const INSTAGRAM_FEED: InstagramPost[] = [
     type: 'photo',
     likes: '2.1K',
     comments: '73',
-    caption: 'Stunning Queenstown, New Zealand landscapes. A perfect stop on our month-long trek. Let Colleen build your dream plan! 🏞️🇳🇿 #NewZealandTrek #MilfordSound #BespokeTravel',
+    caption: 'Stunning Queenstown, New Zealand landscapes. A perfect stop on our month-long trek. Let Pole to Pole build your dream plan! 🏞️🇳🇿 #NewZealandTrek #MilfordSound #BespokeTravel',
     link: 'https://instagram.com/poletopole_toursandtravels'
   },
   {
@@ -474,7 +474,7 @@ export const INSTAGRAM_FEED: InstagramPost[] = [
     type: 'photo',
     likes: '920',
     comments: '31',
-    caption: 'Getting group pictures together on the trail in our custom printed family vacation hoodies! Cotton-soft and highly visible. 👕🎒 #CustomVacationShirts #PoleToPoleDesigns #TravelGroup',
+    caption: 'Getting group pictures together on the trail in our custom printed corporate vacation hoodies! Cotton-soft and highly visible. 👕🎒 #CustomVacationShirts #PoleToPoleDesigns #TravelGroup',
     link: 'https://instagram.com/poletopole_toursandtravels'
   }
 ];
