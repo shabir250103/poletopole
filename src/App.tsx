@@ -46,11 +46,10 @@ import { INTERNATIONAL_PACKAGES, DOMESTIC_PACKAGES, REVIEWS, INSTAGRAM_FEED } fr
 import { formatCurrency, parseMarkdownToHTML } from './utils';
 
 const HERO_VIDEOS = [
-  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779630484/12978273_3840_2160_30fps_naar12.mp4',
-  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779630487/14629596_3840_2160_60fps_tqbpxr.mp4',
-  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779699337/277097_jdpqvy.mp4',
   'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779699338/19229823-uhd_3840_2160_30fps_qhzsn1.mp4',
-  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779699338/218714_tpqyuk.mp4'
+  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779630484/12978273_3840_2160_30fps_naar12.mp4',
+  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779778887/14920853_3840_2160_24fps_kpyyn3.mp4',
+  'https://res.cloudinary.com/dnmsztoba/video/upload/q_auto/f_auto/v1779201365/14852259_3840_2160_30fps_iiim6v.mp4'
 ];
 
 const REVIEW_IMAGES = [
@@ -224,7 +223,7 @@ export default function App() {
   };
 
   const triggerPackageWA = (pkgName: string) => {
-    const text = `Hello Pole to Pole Tours and Travels! I am interested in this package: *${pkgName}*`;
+    const text = `Hello Pole to Pole Tours and Travels! I am interested in the tour package for *${pkgName}*. Please provide more details, pricing and available itineraries.`;
     window.open(`https://wa.me/919566131283?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -262,7 +261,7 @@ export default function App() {
                 Who We Are
               </h2>
               <p className="text-slate-700 text-[15px] sm:text-[16px] leading-relaxed max-w-4xl mx-auto">
-                Welcome to <span className="font-bold text-[#114c6c]">Pole TO Pole Tours and Travels</span>, where every journey is crafted with care, and your satisfaction is our priority.
+                Welcome to pole to pole tours and travels. Where every journey is crafted with care and your satisfaction is our priority.
               </p>
             </div>
 
@@ -317,7 +316,7 @@ export default function App() {
                   Your Satisfaction
                 </h3>
                 <p className="text-[11px] text-slate-500 leading-snug max-w-[150px]">
-                  Going above and beyond your expectations.
+                  Satisfying your expectations.
                 </p>
               </div>
 

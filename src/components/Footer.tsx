@@ -46,7 +46,7 @@ export default function Footer({ setCurrentPage }: FooterProps) {
               </div>
             </div>
             <p className="text-sm text-slate-600 leading-relaxed max-w-sm">
-              We make travel simple and profoundly personal. From custom adventure itineraries and weekend escapes to customized group packages, Pole to Pole Tours and Travels creates flawless, bespoke journeys that inspire lifetime memories.
+              We make travel simple and profoundly personal. from custom adventure itineraries and weekend escapes to customized group and individual packages. pole to pole tours and travels creates flawless, bespoke journeys that inspire lifetime memories.
             </p>
             {/* Socials */}
             <div className="flex items-center gap-4">

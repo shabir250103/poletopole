@@ -9,46 +9,249 @@ interface NavbarProps {
 const INTERNATIONAL_CATEGORIES = [
   {
     title: 'Asia',
-    destinations: ['Bali', 'Cambodia', 'China', 'Hong Kong', 'Japan', 'Indonesia', 'Kazakhstan', 'Russia', 'South Korea', 'Malaysia', 'Singapore', 'Philippines', 'Taiwan', 'Thailand', 'Vietnam', 'Uzbekistan']
+    destinations: [
+      'Bali',
+      'Cambodia',
+      'China',
+      'Hong Kong',
+      'Japan',
+      'Indonesia',
+      'Kazakhstan',
+      'Russia',
+      'South Korea',
+      'Malaysia',
+      'Singapore',
+      'Philippines',
+      'Taiwan',
+      'Thailand',
+      'Vietnam',
+      'Uzbekistan'
+    ]
   },
   {
     title: 'Europe',
-    destinations: ['Armenia', 'Austria', 'Belgium', 'Bulgaria', 'Croatia', 'Czech Republic', 'Denmark Republic', 'Finland Republic', 'France', 'Germany', 'Greece', 'Greenland', 'Hungary', 'Iceland', 'Ireland', 'Italy', 'London', 'Netherlands', 'Norway', 'Portugal', 'Romania', 'Slovakia', 'Spain', 'Sweden', 'Switzerland', 'Turkey', 'United Kingdom']
+    destinations: [
+      'Armenia',
+      'Austria',
+      'Belgium',
+      'Bulgaria',
+      'Croatia',
+      'Czech Republic',
+      'Denmark Republic',
+      'Finland Republic',
+      'France',
+      'Germany',
+      'Greece',
+      'Greenland',
+      'Hungary',
+      'Iceland',
+      'Ireland',
+      'Italy',
+      'London',
+      'Netherlands',
+      'Norway',
+      'Portugal',
+      'Romania',
+      'Russia',
+      'Slovakia',
+      'Spain',
+      'Sweden',
+      'Switzerland',
+      'Turkey',
+      'United Kingdom'
+    ]
   },
   {
-    title: 'Middle East & Cruises',
-    destinations: ['Israel', 'Jordan', 'Oman', 'Qatar', 'UAE', 'Dubai', 'Egypt', 'Cordelia Cruises']
+    title: 'Africa & Pacific',
+    destinations: [
+      'HEADER:Africa',
+      'Kenya',
+      'Morocco',
+      'Seychelles',
+      'South Africa',
+      'Zimbabwe',
+      'Tanzania',
+      'HEADER:Pacific',
+      'Australia',
+      'Fiji',
+      'New Zealand'
+    ]
   },
   {
-    title: 'Islands & America',
-    destinations: ['Madagascar', 'Maldives', 'Mauritius', 'Reunion', 'Sri Lanka', 'Alaska', 'Canada', 'Central America', 'North America', 'South America', 'USA']
+    title: 'America & Islands',
+    destinations: [
+      'HEADER:America',
+      'Alaska',
+      'Canada',
+      'Central America',
+      'North America',
+      'South America',
+      'USA',
+      'HEADER:Island',
+      'Madagascar',
+      'Maldives',
+      'Mauritius',
+      'Reunion',
+      'Sri Lanka'
+    ]
   },
   {
-    title: 'Africa, Pacific & Honeymoon',
-    destinations: ['Kenya', 'Morocco', 'Seychelles', 'South Africa', 'Zimbabwe', 'Tanzania', 'Australia', 'Fiji', 'New Zealand', 'Phuket', 'Langkawi', 'Paris', 'Krabi', 'Koh Samui']
+    title: 'Middle East & Specials',
+    destinations: [
+      'HEADER:Middle East',
+      'Jordan',
+      'Oman',
+      'Qatar',
+      'UAE',
+      'Dubai',
+      'Egypt',
+      'HEADER:Cruises',
+      'Cordelia Cruises',
+      'HEADER:Honeymoon',
+      'Maldives',
+      'Bali',
+      'Mauritius',
+      'Phuket',
+      'Switzerland',
+      'Seychelles',
+      'Langkawi',
+      'Paris',
+      'Italy',
+      'Krabi',
+      'Greece',
+      'Thailand',
+      'Dubai',
+      'Sri Lanka',
+      'Singapore',
+      'Malaysia',
+      'Croatia',
+      'South Africa',
+      'Koh Samui',
+      'Australia',
+      'Spain',
+      'Europe'
+    ]
   }
 ];
 
 const DOMESTIC_CATEGORIES = [
   {
     title: 'North India',
-    destinations: ['Agra', 'Chandigarh', 'Delhi', 'Gulmarg', 'Haridwar & Rishikesh', 'Himachal Pradesh', 'Jaipur', 'Jaisalmer', 'Jammu and Kashmir', 'Ladakh', 'Lucknow', 'Manali', 'Mussoorie', 'Shimla', 'Srinagar', 'Uttarakhand']
+    destinations: [
+      'Agra',
+      'Chandigarh',
+      'Delhi',
+      'Gulmarg',
+      'Haridwar & Rishikesh',
+      'Himachal Pradesh',
+      'Jaipur',
+      'Jaisalmer',
+      'Jammu and Kashmir',
+      'Ladakh',
+      'Lucknow',
+      'Manali',
+      'Mussoorie',
+      'Shimla',
+      'Srinagar',
+      'Uttarakhand'
+    ]
   },
   {
     title: 'South India',
-    destinations: ['Alleppey', 'Araku Valley', 'Bangalore', 'Chennai', 'Coorg', 'Hyderabad', 'Kanyakumari', 'Karnataka', 'Kerala', 'Kochi', 'Munnar', 'Mysore', 'Ooty', 'Rameswaram', 'Tamil Nadu', 'Thekkady', 'Tirupati', 'Wayanad']
+    destinations: [
+      'Alleppey',
+      'Araku Valley',
+      'Bangalore',
+      'Chennai',
+      'Coorg',
+      'Hyderabad',
+      'Kanyakumari',
+      'Karnataka',
+      'Kerala',
+      'Kochi',
+      'Munnar',
+      'Mysore',
+      'Ooty',
+      'Rameswaram',
+      'Tamil Nadu',
+      'Thekkady',
+      'Tirupati',
+      'Wayanad'
+    ]
   },
   {
     title: 'East & West India',
-    destinations: ['Bihar', 'Darjeeling', 'Kolkata', 'Odisha', 'Puri', 'West Bengal', 'Ahmedabad', 'Goa', 'Gujarat', 'Jodhpur', 'Mahabaleshwar', 'Maharashtra', 'Mumbai', 'Pune', 'Rajasthan', 'Udaipur']
+    destinations: [
+      'HEADER:East India',
+      'Bihar',
+      'Darjeeling',
+      'Kolkata',
+      'Odisha',
+      'Puri',
+      'West Bengal',
+      'HEADER:West India',
+      'Ahmedabad',
+      'Goa',
+      'Gujarat',
+      'Jodhpur',
+      'Mahabaleshwar',
+      'Maharashtra',
+      'Mumbai',
+      'Pune',
+      'Rajasthan',
+      'Udaipur'
+    ]
   },
   {
     title: 'Northeast & Central',
-    destinations: ['Arunachal Pradesh', 'Gangtok', 'Guwahati', 'Manipur', 'Meghalaya', 'Pelling', 'Shillong', 'Sikkim', 'Tawang', 'Bhopal', 'Chhattisgarh', 'Gwalior', 'Indore', 'Madhya Pradesh', 'Pachmarhi', 'Ujjain', 'Ayodhya']
+    destinations: [
+      'HEADER:North East',
+      'Arunachal Pradesh',
+      'Gangtok',
+      'Guwahati',
+      'Manipur',
+      'Meghalaya',
+      'Pelling',
+      'Shillong',
+      'Sikkim',
+      'Tawang',
+      'HEADER:Central India',
+      'Bhopal',
+      'Chhattisgarh',
+      'Gwalior',
+      'Indore',
+      'Madhya Pradesh',
+      'Pachmarhi',
+      'Ujjain'
+    ]
   },
   {
-    title: 'Honeymoon & Specials',
-    destinations: ['Andaman', 'Coorg', 'Darjeeling', 'Goa', 'Himachal', 'Kashmir', 'Kerala', 'Kodaikanal', 'Manali', 'Munnar', 'Ooty', 'Shimla', 'Educational: Bangalore', 'Educational: Darjeeling', 'Educational: Goa', 'Educational: Kochi', 'Educational: Manali', 'Educational: Mysore']
+    title: 'Spiritual & Honeymoon',
+    destinations: [
+      'HEADER:Spiritual',
+      'Ayodhya',
+      'Tirupati',
+      'HEADER:Honeymoon',
+      'Andaman',
+      'Coorg',
+      'Darjeeling',
+      'Goa',
+      'Himachal',
+      'Kashmir',
+      'Kerala',
+      'Kodaikanal',
+      'Manali',
+      'Munnar',
+      'Ooty',
+      'Shimla',
+      'HEADER:Educational',
+      'Bangalore',
+      'Darjeeling',
+      'Goa',
+      'Kochi',
+      'Manali',
+      'Mysore'
+    ]
   }
 ];
 
@@ -72,8 +275,8 @@ export default function Navbar({ currentPage, setCurrentPage }: NavbarProps) {
   }, []);
 
   const triggerPackageWA = (pkgName: string) => {
-    const cleanName = pkgName.replace('Educational: ', '');
-    const text = `Hello Pole to Pole Travels! I am interested in this package: *${cleanName}*`;
+    const cleanName = pkgName.replace('Educational: ', '').replace('HEADER:', '');
+    const text = `Hello Pole to Pole Travels! I am interested in the custom tour package for *${cleanName}*. Please provide more details, pricing and available itineraries.`;
     window.open(`https://wa.me/919566131283?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -178,20 +381,32 @@ export default function Navbar({ currentPage, setCurrentPage }: NavbarProps) {
                                 {cat.title}
                               </h4>
                               <ul className="space-y-1.5">
-                                {cat.destinations.map((dest, destIdx) => (
-                                  <li key={destIdx}>
-                                    <button
-                                      onClick={() => {
-                                        triggerPackageWA(dest);
-                                        setHoveredCategory(null);
-                                      }}
-                                      className="text-[11px] text-slate-600 hover:text-[#114c6c] text-left transition-colors font-display w-full flex items-start gap-1 py-0.5 group/item"
-                                    >
-                                      <span className="text-amber-500 mr-1 font-sans">•</span>
-                                      <span className="truncate">{dest.replace('Educational: ', '')}</span>
-                                    </button>
-                                  </li>
-                                ))}
+                                {cat.destinations.map((dest, destIdx) => {
+                                  if (dest.startsWith('HEADER:')) {
+                                    const subTitle = dest.replace('HEADER:', '');
+                                    return (
+                                      <li key={destIdx} className="pt-2 pb-1 first:pt-0 border-b border-slate-100/60">
+                                        <span className="text-[10px] font-black text-[#114c6c] uppercase tracking-wider block">
+                                          {subTitle}
+                                        </span>
+                                      </li>
+                                    );
+                                  }
+                                  return (
+                                    <li key={destIdx}>
+                                      <button
+                                        onClick={() => {
+                                          triggerPackageWA(dest);
+                                          setHoveredCategory(null);
+                                        }}
+                                        className="text-[11.5px] text-slate-600 hover:text-[#114c6c] text-left transition-colors font-display w-full flex items-start gap-1 py-0.5 group/item"
+                                      >
+                                        <span className="text-amber-500 mr-1 font-sans">•</span>
+                                        <span className="truncate">{dest}</span>
+                                      </button>
+                                    </li>
+                                  );
+                                })}
                               </ul>
                             </div>
                           ))}
@@ -275,23 +490,32 @@ export default function Navbar({ currentPage, setCurrentPage }: NavbarProps) {
                     {mobileIntExpanded ? <ChevronUp className="w-4 h-4 text-[#114c6c]" /> : <ChevronDown className="w-4 h-4 text-[#114c6c]" />}
                   </button>
                   {mobileIntExpanded && (
-                    <div className="pl-6 pr-4 py-2 space-y-4 bg-slate-50 rounded-lg border-l border-[#114c6c] max-h-64 overflow-y-auto premium-scrollbar">
+                    <div className="pl-6 pr-4 py-2 space-y-4 bg-slate-50 rounded-lg border-l border-[#114c6c] max-h-80 overflow-y-auto premium-scrollbar">
                       {INTERNATIONAL_CATEGORIES.map((cat, idx) => (
                         <div key={idx} className="space-y-1.5">
-                          <p className="text-[10px] text-[#114c6c] font-semibold uppercase tracking-wider">{cat.title}</p>
+                          <p className="text-[10.5px] text-[#114c6c] font-bold uppercase tracking-wider border-b border-slate-200 pb-0.5">{cat.title}</p>
                           <div className="flex flex-wrap gap-1.5">
-                            {cat.destinations.map((dest, dIdx) => (
-                              <button
-                                key={dIdx}
-                                onClick={() => {
-                                  triggerPackageWA(dest);
-                                  setIsOpen(false);
-                                }}
-                                className="text-[10px] bg-white border border-slate-200 hover:border-[#114c6c] text-slate-700 px-2 py-1 rounded"
-                              >
-                                {dest.replace('Educational: ', '')}
-                              </button>
-                            ))}
+                            {cat.destinations.map((dest, dIdx) => {
+                              if (dest.startsWith('HEADER:')) {
+                                return (
+                                  <div key={dIdx} className="w-full text-[9.5px] font-black text-[#114c6c] uppercase tracking-widest mt-2 mb-0.5 first:mt-0">
+                                    {dest.replace('HEADER:', '')}
+                                  </div>
+                                );
+                              }
+                              return (
+                                <button
+                                  key={dIdx}
+                                  onClick={() => {
+                                    triggerPackageWA(dest);
+                                    setIsOpen(false);
+                                  }}
+                                  className="text-[10px] bg-white border border-slate-200 hover:border-[#114c6c] text-slate-700 px-2.5 py-1 rounded shadow-sm"
+                                >
+                                  {dest}
+                                </button>
+                              );
+                            })}
                           </div>
                         </div>
                       ))}
@@ -312,23 +536,32 @@ export default function Navbar({ currentPage, setCurrentPage }: NavbarProps) {
                     {mobileDomExpanded ? <ChevronUp className="w-4 h-4 text-[#114c6c]" /> : <ChevronDown className="w-4 h-4 text-[#114c6c]" />}
                   </button>
                   {mobileDomExpanded && (
-                    <div className="pl-6 pr-4 py-2 space-y-4 bg-slate-50 rounded-lg border-l border-[#114c6c] max-h-64 overflow-y-auto premium-scrollbar">
+                    <div className="pl-6 pr-4 py-2 space-y-4 bg-slate-50 rounded-lg border-l border-[#114c6c] max-h-80 overflow-y-auto premium-scrollbar">
                       {DOMESTIC_CATEGORIES.map((cat, idx) => (
                         <div key={idx} className="space-y-1.5">
-                          <p className="text-[10px] text-[#114c6c] font-semibold uppercase tracking-wider">{cat.title}</p>
+                          <p className="text-[10.5px] text-[#114c6c] font-bold uppercase tracking-wider border-b border-slate-200 pb-0.5">{cat.title}</p>
                           <div className="flex flex-wrap gap-1.5">
-                            {cat.destinations.map((dest, dIdx) => (
-                              <button
-                                key={dIdx}
-                                onClick={() => {
-                                  triggerPackageWA(dest);
-                                  setIsOpen(false);
-                                }}
-                                className="text-[10px] bg-white border border-slate-200/50 hover:border-[#114c6c] text-slate-700 px-2 py-1 rounded"
-                              >
-                                {dest.replace('Educational: ', '')}
-                              </button>
-                            ))}
+                            {cat.destinations.map((dest, dIdx) => {
+                              if (dest.startsWith('HEADER:')) {
+                                return (
+                                  <div key={dIdx} className="w-full text-[9.5px] font-black text-[#114c6c] uppercase tracking-widest mt-2 mb-0.5 first:mt-0">
+                                    {dest.replace('HEADER:', '')}
+                                  </div>
+                                );
+                              }
+                              return (
+                                <button
+                                  key={dIdx}
+                                  onClick={() => {
+                                    triggerPackageWA(dest);
+                                    setIsOpen(false);
+                                  }}
+                                  className="text-[10px] bg-white border border-slate-200/50 hover:border-[#114c6c] text-slate-700 px-2.5 py-1 rounded shadow-sm"
+                                >
+                                  {dest}
+                                </button>
+                              );
+                            })}
                           </div>
                         </div>
                       ))}
