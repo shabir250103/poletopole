@@ -118,14 +118,20 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState<string>('home');
   const [waHover, setWaHover] = useState(false);
   const [currentVideoIdx, setCurrentVideoIdx] = useState<number>(0);
+  const [videoProgress, setVideoProgress] = useState<number>(0);
   const [activeReviewImgListIdx, setActiveReviewImgListIdx] = useState<number>(0);
 
-  // Auto-advance video every 10 seconds when on the Home view
+  // Reset video progress animation state when video index transitions
+  useEffect(() => {
+    setVideoProgress(0);
+  }, [currentVideoIdx]);
+
+  // Safety auto-advance fallback (25 seconds) in case video playback gets stuck or is blocked from triggering onEnded
   useEffect(() => {
     if (currentPage !== 'home') return;
     const timer = setTimeout(() => {
       setCurrentVideoIdx((prev) => (prev + 1) % HERO_VIDEOS.length);
-    }, 10000);
+    }, 25000);
     return () => clearTimeout(timer);
   }, [currentVideoIdx, currentPage]);
 
@@ -581,9 +587,17 @@ export default function App() {
                   key={currentVideoIdx}
                   autoPlay 
                   muted 
-                  loop
                   playsInline 
                   preload="auto"
+                  onEnded={() => {
+                    setCurrentVideoIdx((prev) => (prev + 1) % HERO_VIDEOS.length);
+                  }}
+                  onTimeUpdate={(e) => {
+                    const video = e.currentTarget;
+                    if (video.duration) {
+                      setVideoProgress((video.currentTime / video.duration) * 100);
+                    }
+                  }}
                   style={{ imageRendering: 'auto', transform: 'translate3d(0,0,0)' }}
                   className="w-full h-full object-cover opacity-100 brightness-[1.05] contrast-[1.00] saturate-[1.00]"
                 >
@@ -614,9 +628,9 @@ export default function App() {
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-25 flex items-center gap-3 bg-black/25 backdrop-blur-sm px-4 py-2 rounded-full border border-white/10">
                 {HERO_VIDEOS.map((_, idx) => (
                   <button
-                    key={idx}
-                    onClick={() => setCurrentVideoIdx(idx)}
-                    className="group flex items-center gap-1.5 focus:outline-none cursor-pointer"
+                     key={idx}
+                     onClick={() => setCurrentVideoIdx(idx)}
+                     className="group flex items-center gap-1.5 focus:outline-none cursor-pointer"
                   >
                     <span className={`text-[10px] font-mono transition-colors ${
                       currentVideoIdx === idx ? 'text-amber-400 font-bold' : 'text-white/60 group-hover:text-white'
@@ -625,12 +639,11 @@ export default function App() {
                     </span>
                     <div className="w-8 h-1 bg-white/30 rounded-full overflow-hidden relative">
                       <div 
-                        className="h-full bg-amber-450 transition-all rounded-full"
+                        className="h-full rounded-full"
                         style={{
-                          transitionDuration: currentVideoIdx === idx ? '10000ms' : '0ms',
-                          transitionTimingFunction: 'linear',
-                          width: currentVideoIdx === idx ? '100%' : '0%',
-                          backgroundColor: currentVideoIdx === idx ? '#fbbf24' : 'transparent'
+                          transition: 'width 200ms linear, background-color 200ms',
+                          width: currentVideoIdx === idx ? `${videoProgress}%` : (idx < currentVideoIdx ? '100%' : '0%'),
+                          backgroundColor: currentVideoIdx === idx ? '#fbbf24' : (idx < currentVideoIdx ? 'rgba(255,255,255,0.7)' : 'transparent')
                         }}
                       />
                     </div>
