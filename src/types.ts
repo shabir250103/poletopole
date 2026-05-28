@@ -49,3 +49,4 @@ export interface InquiryInput {
   numberOfDays: string;
   numberOfPersons: string;
 }
+

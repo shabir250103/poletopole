@@ -13,6 +13,8 @@ import {
   Search, 
   SlidersHorizontal, 
   ArrowRight, 
+  ArrowLeft,
+  CheckCircle2,
   ChevronLeft, 
   ChevronRight, 
   Send, 
@@ -41,8 +43,10 @@ import {
 } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import AdminPanel from './components/AdminPanel';
+import { supabase } from './lib/supabase';
 import { TravelPackage, Review, InstagramPost, Message, InquiryInput } from './types';
-import { INTERNATIONAL_PACKAGES, DOMESTIC_PACKAGES, REVIEWS, INSTAGRAM_FEED } from './data';
+import { INTERNATIONAL_PACKAGES, DOMESTIC_PACKAGES, REVIEWS, INSTAGRAM_FEED, IMAGE_MAP } from './data';
 import { formatCurrency, parseMarkdownToHTML } from './utils';
 
 const HERO_VIDEOS = [
@@ -116,10 +120,158 @@ function VideoHighlightCard({ src, index }: { src: string; index: number }) {
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<string>('home');
+  const [selectedPackage, setSelectedPackage] = useState<TravelPackage | null>(null);
   const [waHover, setWaHover] = useState(false);
   const [currentVideoIdx, setCurrentVideoIdx] = useState<number>(0);
   const [videoProgress, setVideoProgress] = useState<number>(0);
   const [activeReviewImgListIdx, setActiveReviewImgListIdx] = useState<number>(0);
+  const [highlightedPackageId, setHighlightedPackageId] = useState<string | null>(null);
+
+  // Supabase dynamic datastreams
+  const [packages, setPackages] = useState<TravelPackage[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [dbStatus, setDbStatus] = useState<'testing' | 'loading' | 'connected' | 'offline'>('loading');
+
+  // Load packages and reviews from Supabase
+  useEffect(() => {
+    // Sync current pathname or hash route for admin view
+    const path = window.location.pathname;
+    if (path === '/admin' || window.location.hash === '#admin') {
+      setCurrentPage('admin');
+    }
+
+    async function loadPortfolioData() {
+      try {
+        setDbStatus('loading');
+        // Fetch packages
+        const { data: pkgData, error: pkgError } = await supabase
+          .from('packages')
+          .select('*')
+          .order('name', { ascending: true });
+
+        let finalPackages: TravelPackage[] = [];
+        if (!pkgError && pkgData && pkgData.length > 0) {
+          finalPackages = pkgData.map(p => ({
+            id: p.id,
+            category: p.category,
+            name: p.name,
+            duration: p.duration,
+            price: p.price,
+            rating: p.rating,
+            image: p.image,
+            highlights: Array.isArray(p.highlights) ? p.highlights : [],
+            hotels: p.hotels,
+            flightIncluded: p.flight_included ?? true,
+            mealsIncluded: p.meals_included ?? true,
+            guidesIncluded: p.guides_included ?? true,
+            visaAssistance: p.visa_assistance ?? true,
+            tags: Array.isArray(p.tags) ? p.tags : []
+          }));
+          setDbStatus('connected');
+        } else {
+          // Fallback or empty seed
+          finalPackages = [...INTERNATIONAL_PACKAGES, ...DOMESTIC_PACKAGES];
+        }
+        setPackages(finalPackages);
+
+        // Fetch reviews
+        const { data: revData, error: revError } = await supabase
+          .from('reviews')
+          .select('*')
+          .order('date', { ascending: false });
+
+        if (!revError && revData && revData.length > 0) {
+          const mappedReviews: Review[] = revData.map(r => ({
+            id: r.id,
+            name: r.name,
+            rating: r.rating,
+            avatar: r.avatar,
+            text: r.text,
+            date: r.date,
+            verified: r.verified ?? true
+          }));
+          setReviews(mappedReviews);
+        } else {
+          setReviews(REVIEWS);
+        }
+      } catch (err) {
+        console.warn('Supabase offline or fallback active:', err);
+        setPackages([...INTERNATIONAL_PACKAGES, ...DOMESTIC_PACKAGES]);
+        setReviews(REVIEWS);
+        setDbStatus('offline');
+      }
+    }
+
+    loadPortfolioData();
+  }, []);
+
+  // Click handler for package cards (Page 1 -> Page 2)
+  const handleSelectPackage = (pkgName: string) => {
+    const cleanName = pkgName.replace('Educational: ', '').replace('HEADER:', '');
+    
+    // Find matching package
+    const pkg = packages.find(
+      p => p.name.toLowerCase() === cleanName.toLowerCase()
+    );
+
+    if (pkg) {
+      setSelectedPackage(pkg);
+      setBookingForm(prev => ({
+        ...prev,
+        destination: pkg.name
+      }));
+    } else {
+      // Find package details dynamic mapping
+      const isDomestic = cleanName.toLowerCase().includes('kashmir') || 
+                         cleanName.toLowerCase().includes('delhi') || 
+                         cleanName.toLowerCase().includes('manali') ||
+                         cleanName.toLowerCase().includes('agra') ||
+                         cleanName.toLowerCase().includes('jaipur') ||
+                         cleanName.toLowerCase().includes('kerala') ||
+                         cleanName.toLowerCase().includes('goa') ||
+                         cleanName.toLowerCase().includes('ooty') ||
+                         cleanName.toLowerCase().includes('coorg') ||
+                         cleanName.toLowerCase().includes('andaman') ||
+                         cleanName.toLowerCase().includes('lakshadweep') ||
+                         cleanName.toLowerCase().includes('meghalaya') ||
+                         cleanName.toLowerCase().includes('kolkata') ||
+                         cleanName.toLowerCase().includes('mysore');
+
+      const mockPkg: TravelPackage = {
+        id: cleanName.replace(/\s+/g, '-').toLowerCase(),
+        category: isDomestic ? 'domestic' : 'international',
+        name: cleanName,
+        duration: '5 Nights / 6 Days',
+        price: 0,
+        rating: 4.9,
+        image: IMAGE_MAP[cleanName] || (isDomestic
+          ? 'https://images.unsplash.com/photo-1506461883276-594a12b11cc3?auto=format&fit=crop&w=800&q=80'
+          : 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80'),
+        highlights: ['Customizable Private Route', 'Elite Cozy Stays', 'Perfect Coordinates', '24/7 Concierge Support'],
+        hotels: 'Boutique Resorts / Premium Cozy Accommodations',
+        flightIncluded: true,
+        mealsIncluded: true,
+        guidesIncluded: true,
+        visaAssistance: true,
+        tags: [isDomestic ? 'Domestic' : 'International']
+      };
+      setSelectedPackage(mockPkg);
+      setBookingForm(prev => ({
+        ...prev,
+        destination: cleanName
+      }));
+    }
+    
+    setCurrentPage('package-detail');
+    setInquirySuccess(null);
+    setWhatsappTemplateUrl('');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Click handler for search/megamenu items (Navbar -> Page 2 directly)
+  const handleLocatePackage = (pkgName: string) => {
+    handleSelectPackage(pkgName);
+  };
 
   // Reset video progress animation state when video index transitions
   useEffect(() => {
@@ -135,13 +287,13 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [currentVideoIdx, currentPage]);
 
-  // Auto-advance reviews every 5 seconds when on the reviews view
+  // Auto-advance reviews image slideshow every 5 seconds when on reviews tab
   useEffect(() => {
     if (currentPage !== 'reviews') return;
-    const timer = setTimeout(() => {
+    const interval = setInterval(() => {
       setActiveReviewImgListIdx((prev) => (prev + 1) % REVIEW_IMAGES.length);
     }, 5000);
-    return () => clearTimeout(timer);
+    return () => clearInterval(interval);
   }, [activeReviewImgListIdx, currentPage]);
 
   // States for Searching, Filtering and Sorting packages
@@ -160,6 +312,15 @@ export default function App() {
     numberOfPersons: '',
   });
   const [formLoading, setFormLoading] = useState(false);
+
+  // Guest Testimonial reviews submission state
+  const [reviewForm, setReviewForm] = useState({
+    name: '',
+    rating: 5,
+    text: ''
+  });
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [reviewSuccessMessage, setReviewSuccessMessage] = useState<string | null>(null);
 
   // Reviews Carousel State
   const [activeReviewIndex, setActiveReviewIndex] = useState(0);
@@ -183,6 +344,22 @@ export default function App() {
 
     setFormLoading(true);
     try {
+      // Direct insertion to Supabase bookings table
+      try {
+        const { error: dbErr } = await supabase.from('bookings').insert({
+          name: bookingForm.name,
+          destination: bookingForm.destination,
+          budget: bookingForm.budget,
+          number_of_days: bookingForm.numberOfDays,
+          number_of_persons: bookingForm.numberOfPersons
+        });
+        if (dbErr) {
+          console.error('Error inserting booking to Supabase:', dbErr);
+        }
+      } catch (innerErr) {
+        console.error('Db connection error on booking submission:', innerErr);
+      }
+
       const response = await fetch('/api/inquiry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -222,6 +399,52 @@ export default function App() {
     }
   };
 
+  // Submit Guest Review directly to Supabase
+  const handleReviewSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!reviewForm.name.trim() || !reviewForm.text.trim()) {
+      alert('Kindly provide your Name and Review message.');
+      return;
+    }
+    setSubmittingReview(true);
+    setReviewSuccessMessage(null);
+    try {
+      const { error } = await supabase.from('reviews').insert({
+        name: reviewForm.name,
+        rating: reviewForm.rating,
+        text: reviewForm.text,
+        verified: true,
+        date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+        avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(reviewForm.name)}`
+      });
+
+      if (error) throw error;
+
+      setReviewSuccessMessage('Thank you! Your verified review has been published.');
+      setReviewForm({ name: '', rating: 5, text: '' });
+      
+      // Refetch reviews to update state instantly
+      const { data: revData } = await supabase.from('reviews').select('*').order('date', { ascending: false });
+      if (revData && revData.length > 0) {
+        const mappedReviews: Review[] = revData.map(r => ({
+          id: r.id,
+          name: r.name,
+          rating: r.rating,
+          avatar: r.avatar,
+          text: r.text,
+          date: r.date,
+          verified: r.verified ?? true
+        }));
+        setReviews(mappedReviews);
+      }
+    } catch (err) {
+      console.error('Error submitting review:', err);
+      alert('Error occurred while attempting to send testimonial. Please check your database rules.');
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
+
   // Helper values for standard luxury WhatsApp links
   const triggerGeneralWA = () => {
     const text = "Hello Pole to Pole Tours and Travels! I am interested in planning a custom vacation package. Please contact me.";
@@ -244,186 +467,35 @@ export default function App() {
   };
 
   const nextReview = () => {
-    setActiveReviewIndex(prev => (prev + 1) % REVIEWS.length);
+    setActiveReviewIndex(prev => (prev + 1) % (reviews.length || 1));
   };
 
   const prevReview = () => {
-    setActiveReviewIndex(prev => (prev - 1 + REVIEWS.length) % REVIEWS.length);
+    setActiveReviewIndex(prev => (prev - 1 + (reviews.length || 1)) % (reviews.length || 1));
   };
 
   // Unified Why Choose Us component values for premium branding (Who We Are + Why Travel With Us)
   const renderWhyChooseUs = () => {
-    return (
-      <div id="home-why-and-who-sections" className="space-y-0">
-        
-        {/* SECTION 1: WHO WE ARE */}
-        <section id="who-we-are-section" className="py-12 bg-white border-t border-slate-100">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6">
-            {/* Elegant small blue dash above */}
-            <div className="w-12 h-[3.5px] bg-[#2563ea] rounded mx-auto mb-3"></div>
-            
-            <div className="text-center max-w-3xl mx-auto mb-8">
-              <h2 className="text-3xl sm:text-4xl font-serif font-black text-[#0f2d4a] tracking-tight mb-3">
-                Who We Are
-              </h2>
-              <p className="text-slate-700 text-[15px] sm:text-[16px] leading-relaxed max-w-4xl mx-auto">
-                Welcome to pole to pole tours and travels. Where every journey is crafted with care and your satisfaction is our priority.
-              </p>
-            </div>
-
-            {/* Compact 4-column features row with fine lines */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 md:gap-y-0 text-center max-w-4xl mx-auto py-4 border-y border-slate-100/80 divide-x divide-slate-100">
-              
-              {/* Feature 1 */}
-              <div id="who-feat-1" className="flex flex-col items-center px-2">
-                <div className="w-14 h-14 rounded-full bg-[#f0f7ff] flex items-center justify-center text-[#2563ea] mb-3 shrink-0">
-                  <Calendar className="w-6 h-6" />
-                </div>
-                <h3 className="text-sm font-bold text-[#0f2d4a] tracking-wide mb-1">
-                  Founded in 2011
-                </h3>
-                <p className="text-xs text-slate-500">
-                  By Nizaruddin
-                </p>
-              </div>
-
-              {/* Feature 2 */}
-              <div id="who-feat-2" className="flex flex-col items-center px-2">
-                <div className="w-14 h-14 rounded-full bg-[#f0f7ff] flex items-center justify-center text-[#2563ea] mb-3 shrink-0">
-                  <Award className="w-6 h-6" />
-                </div>
-                <h3 className="text-sm font-bold text-[#0f2d4a] tracking-wide mb-1">
-                  15+ Years
-                </h3>
-                <p className="text-xs text-slate-500">
-                  Of Experience
-                </p>
-              </div>
-
-              {/* Feature 3 */}
-              <div id="who-feat-3" className="flex flex-col items-center px-2">
-                <div className="w-14 h-14 rounded-full bg-[#f0f7ff] flex items-center justify-center text-[#2563ea] mb-3 shrink-0">
-                  <Globe className="w-6 h-6" />
-                </div>
-                <h3 className="text-sm font-bold text-[#0f2d4a] tracking-wide mb-1">
-                  Tailored for You
-                </h3>
-                <p className="text-[11px] text-slate-500 leading-snug max-w-[150px]">
-                  Travel experiences designed around your needs.
-                </p>
-              </div>
-
-              {/* Feature 4 */}
-              <div id="who-feat-4" className="flex flex-col items-center px-2">
-                <div className="w-14 h-14 rounded-full bg-[#f0f7ff] flex items-center justify-center text-[#2563ea] mb-3 shrink-0">
-                  <Handshake className="w-6 h-6" />
-                </div>
-                <h3 className="text-sm font-bold text-[#0f2d4a] tracking-wide mb-1">
-                  Your Satisfaction
-                </h3>
-                <p className="text-[11px] text-slate-500 leading-snug max-w-[150px]">
-                  Satisfying your expectations.
-                </p>
-              </div>
-
-            </div>
-
-            <p className="text-center text-xs sm:text-sm text-slate-600 mt-6 max-w-2xl mx-auto font-medium leading-relaxed">
-              With over a decade of expertise, we understand the diverse needs of our clients and deliver unforgettable travel experiences.
-            </p>
-          </div>
-        </section>
-
-        {/* SECTION 2: WHY TRAVEL WITH US */}
-        <section id="why-travel-with-us-section" className="py-12 bg-[#fafbfd] border-b border-slate-150">
-          <div className="max-w-xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-6">
-              <h2 className="text-3xl font-bold font-serif text-[#0f2d4a] tracking-tight mb-2">
-                Why Travel With Us
-              </h2>
-              {/* Underline bar */}
-              <div className="w-14 h-[3px] bg-[#2563ea] rounded mx-auto"></div>
-            </div>
-
-            {/* List with light dividers */}
-            <div className="bg-white rounded-2xl border border-slate-200/50 shadow-sm overflow-hidden divide-y divide-slate-100">
-              
-              {/* Item 1 */}
-              <div className="p-5 flex items-start gap-4 hover:bg-slate-50/20 transition-colors">
-                <div className="w-12 h-12 rounded-full bg-[#f0f7ff] flex items-center justify-center text-[#2563ea] shrink-0">
-                  <Map className="w-6 h-6" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-base font-bold text-[#0f2d4a] mb-1">
-                    Personalized Packages
-                  </h3>
-                  <p className="text-xs sm:text-[13px] text-slate-600 leading-normal">
-                    Custom itineraries tailored to your travel goals, budget and interests.
-                  </p>
-                </div>
-              </div>
-
-              {/* Item 2 */}
-              <div className="p-5 flex items-start gap-4 hover:bg-slate-50/20 transition-colors">
-                <div className="w-12 h-12 rounded-full bg-[#f0f7ff] flex items-center justify-center text-[#2563ea] shrink-0">
-                  <Globe className="w-6 h-6" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-base font-bold text-[#0f2d4a] mb-1">
-                    Global Reach
-                  </h3>
-                  <p className="text-xs sm:text-[13px] text-slate-600 leading-normal">
-                    Explore top destinations across Asia, Europe, America and beyond.
-                  </p>
-                </div>
-              </div>
-
-              {/* Item 3 */}
-              <div className="p-5 flex items-start gap-4 hover:bg-slate-50/20 transition-colors">
-                <div className="w-12 h-12 rounded-full bg-[#f0f7ff] flex items-center justify-center text-[#2563ea] shrink-0 relative">
-                  <Headphones className="w-6 h-6" />
-                  <span className="absolute -bottom-1 -right-1 bg-[#2563ea] text-[8px] font-bold text-white px-1 py-0.5 rounded-full leading-none transform scale-90">
-                    24/7
-                  </span>
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-base font-bold text-[#0f2d4a] mb-1">
-                    24/7 Support
-                  </h3>
-                  <p className="text-xs sm:text-[13px] text-slate-600 leading-normal">
-                    We're here whenever you need us—before, during and after your trip.
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-      </div>
-    );
+    return null;
   };
 
-  const renderBespokeInquirySection = (sectionTag = "Reserve Your Seat", heading = "Design Your Bespoke Custom Tour", subtitle = "Submit a premium design request. Our tour planning team will contact you via WhatsApp or phone to finalize the finest itineraries.") => {
+  const renderBespokeInquirySection = () => {
     return (
       <section id="inquiry-form-section" className="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full animate-fade-in text-left">
         <div 
           id="booking-inquiry-box"
           className="w-full rounded-3xl p-8 sm:p-12 border border-slate-200 bg-white shadow-xl relative"
         >
-          <div className="absolute top-0 right-10 -translate-y-1/2 p-3 rounded-full bg-[#114c6c]/10 border border-[#114c6c]/20 text-[#114c6c] backdrop-blur-lg">
+          <div className="absolute top-0 right-10 -translate-y-1/2 p-3 rounded-full bg-[#144C6C]/10 border border-[#144C6C]/20 text-[#144C6C] backdrop-blur-lg">
             <Compass className="w-6 h-6 animate-spin-slow" />
           </div>
 
           <div className="text-center max-w-xl mx-auto mb-10">
-            <span className="text-xs uppercase tracking-[0.25em] text-[#114c6c] font-semibold font-display block">
-              {sectionTag}
-            </span>
-            <h2 className="text-3xl font-serif font-bold text-slate-900 mt-1">
-              {heading}
+            <h2 className="text-3xl font-serif font-bold text-slate-900 justify-center">
+              Travel Enquiry
             </h2>
-            <p className="text-xs text-slate-500 mt-2">
-              {subtitle}
+            <p className="text-xs text-slate-500 mt-2 font-display uppercase tracking-[0.25em] font-semibold">
+              Details
             </p>
           </div>
 
@@ -439,11 +511,11 @@ export default function App() {
                   value={bookingForm.name}
                   onChange={handleInputChange}
                   placeholder="e.g. Sarah Miller"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#114c6c] transition-colors"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#144C6C] transition-colors"
                 />
               </div>
               <div>
-                <label className="block text-[10px] uppercase tracking-widest text-[#114c6c] font-display mb-2">Desired Destination *</label>
+                <label className="block text-[10px] uppercase tracking-widest text-[#144C6C] font-display mb-2">Desired Destination *</label>
                 <input 
                   type="text"
                   name="destination"
@@ -451,7 +523,7 @@ export default function App() {
                   value={bookingForm.destination}
                   onChange={handleInputChange}
                   placeholder="e.g. Switzerland, Bali, Kashmir, or any country"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#114c6c] transition-colors"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#144C6C] transition-colors"
                 />
               </div>
             </div>
@@ -467,7 +539,7 @@ export default function App() {
                   value={bookingForm.budget}
                   onChange={handleInputChange}
                   placeholder="e.g. $1,500 or Rs. 1,00,000"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#114c6c] transition-colors"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#144C6C] transition-colors"
                 />
               </div>
               <div>
@@ -479,7 +551,7 @@ export default function App() {
                   value={bookingForm.numberOfDays}
                   onChange={handleInputChange}
                   placeholder="e.g. 7 Days"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#114c6c] transition-colors"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#144C6C] transition-colors"
                 />
               </div>
               <div>
@@ -491,7 +563,7 @@ export default function App() {
                   value={bookingForm.numberOfPersons}
                   onChange={handleInputChange}
                   placeholder="e.g. 2 Persons"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#114c6c] transition-colors"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#144C6C] transition-colors"
                 />
               </div>
             </div>
@@ -531,20 +603,26 @@ export default function App() {
 
   // Package Card Renderer
   const renderPackageCard = (pkg: TravelPackage) => {
+    const isHighlighted = highlightedPackageId === pkg.id;
     return (
       <div 
         key={pkg.id}
         id={`pkg-card-${pkg.id}`}
-        onClick={() => triggerPackageWA(pkg.name)}
-        className="group relative h-96 rounded-3xl overflow-hidden border border-slate-200/80 bg-white transition-all duration-300 hover:border-[#114c6c]/40 shadow-sm flex flex-col hover:-translate-y-1 cursor-pointer hover:shadow-xl"
+        onClick={() => handleSelectPackage(pkg.name)}
+        className={`group relative h-96 rounded-3xl overflow-hidden border transition-all duration-300 flex flex-col hover:-translate-y-1 cursor-pointer hover:shadow-xl ${
+          isHighlighted 
+            ? 'border-[#144C6C] ring-4 ring-[#144C6C]/40 ring-offset-4 scale-[1.03] shadow-[0_20px_50px_rgba(20,76,108,0.3)] z-20' 
+            : 'border-slate-200/80 bg-white hover:border-[#144C6C]/40 shadow-sm'
+        }`}
       >
         {/* Destination Image Section */}
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0 bg-slate-100">
           <img 
             src={pkg.image} 
             alt={pkg.name}
             loading="lazy"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            referrerPolicy="no-referrer"
           />
           {/* Subtle gradient dark overlay inside card */}
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent"></div>
@@ -552,7 +630,13 @@ export default function App() {
 
         {/* Content Details */}
         <div className="relative z-10 p-6 h-full flex flex-col justify-end">
-          <h3 className="text-2xl font-serif font-bold text-white group-hover:text-amber-400 transition-colors duration-200 leading-snug">
+          {isHighlighted && (
+            <div className="absolute top-4 left-4 bg-[#144C6C] text-white font-display uppercase tracking-widest text-[9px] font-black px-3 py-1.5 rounded-full shadow-inner animate-bounce">
+              ★ Selected Destination
+            </div>
+          )}
+
+          <h3 className="text-2xl font-serif font-bold text-white group-hover:text-blue-100 transition-colors duration-200 leading-snug">
             {pkg.name}
           </h3>
           
@@ -568,13 +652,13 @@ export default function App() {
   };
 
   return (
-    <div id="app-root-container" className="min-h-screen bg-[#fafafc] text-slate-800 selection:bg-[#114c6c] selection:text-white flex flex-col justify-between relative">
+    <div id="app-root-container" className="min-h-screen bg-[#fafafc] text-slate-800 selection:bg-[#144C6C] selection:text-white flex flex-col justify-between relative">
       
       {/* Glassmorphic Navbar */}
-      <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} onSelectPackage={handleSelectPackage} onLocatePackage={handleLocatePackage} />
 
       {/* Main Container Views */}
-      <main className="flex-1 w-full pt-20">
+      <main className="flex-1 w-full pt-[121px] sm:pt-[141px] lg:pt-[156px]">
 
         {/* 1. HOME VIEW */}
         {currentPage === 'home' && (
@@ -633,7 +717,7 @@ export default function App() {
                      className="group flex items-center gap-1.5 focus:outline-none cursor-pointer"
                   >
                     <span className={`text-[10px] font-mono transition-colors ${
-                      currentVideoIdx === idx ? 'text-amber-400 font-bold' : 'text-white/60 group-hover:text-white'
+                      currentVideoIdx === idx ? 'text-blue-100 font-bold' : 'text-white/60 group-hover:text-white'
                     }`}>
                       0{idx + 1}
                     </span>
@@ -643,7 +727,7 @@ export default function App() {
                         style={{
                           transition: 'width 200ms linear, background-color 200ms',
                           width: currentVideoIdx === idx ? `${videoProgress}%` : (idx < currentVideoIdx ? '100%' : '0%'),
-                          backgroundColor: currentVideoIdx === idx ? '#fbbf24' : (idx < currentVideoIdx ? 'rgba(255,255,255,0.7)' : 'transparent')
+                          backgroundColor: currentVideoIdx === idx ? '#144C6C' : (idx < currentVideoIdx ? 'rgba(255,255,255,0.7)' : 'transparent')
                         }}
                       />
                     </div>
@@ -656,16 +740,21 @@ export default function App() {
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-end justify-end gap-4 sm:gap-6 mt-10">
                   <button
                     onClick={() => {
-                      document.getElementById('booking-inquiry-box')?.scrollIntoView({ behavior: 'smooth' });
+                      const target = document.getElementById('booking-inquiry-box');
+                      if (target) {
+                        const yOffset = -110; 
+                        const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                      }
                     }}
-                    className="w-full sm:w-auto px-10 py-5 text-sm font-display uppercase tracking-[0.25em] bg-[#114c6c] text-white font-bold rounded-full hover:bg-[#114c6c]/90 transition-all duration-300 hover:scale-105 shadow-2xl cursor-pointer flex items-center justify-center gap-2 group animate-fade-in"
+                    className="w-full sm:w-auto px-10 py-5 text-sm font-display uppercase tracking-[0.25em] bg-[#144C6C] text-white font-bold rounded-full hover:bg-[#144C6C]/90 transition-all duration-300 hover:scale-105 shadow-2xl cursor-pointer flex items-center justify-center gap-2 group animate-fade-in"
                   >
                     <span>Book Your Trip</span>
                     <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1.5 transition-transform" />
                   </button>
                   <button
                     onClick={triggerGeneralWA}
-                    className="w-full sm:w-auto px-10 py-5 text-sm font-display uppercase tracking-[0.25em] border border-[#144c6c]/30 hover:border-[#144c6c] text-white bg-[#144c6c] hover:bg-[#144c6c]/90 font-bold rounded-full transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 cursor-pointer shadow-2xl animate-fade-in"
+                    className="w-full sm:w-auto px-10 py-5 text-sm font-display uppercase tracking-[0.25em] border border-[#144C6C]/30 hover:border-[#144C6C] text-white bg-[#144C6C] hover:bg-[#144C6C]/90 font-bold rounded-full transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 cursor-pointer shadow-2xl animate-fade-in"
                   >
                     <MessageCircle className="w-5 h-5 text-white" />
                     <span>Contact on WhatsApp</span>
@@ -674,82 +763,180 @@ export default function App() {
               </div>
             </section>
 
-            {/* Why Choose us grid (now placed immediately below Hero) */}
-            {renderWhyChooseUs()}
-
             {/* Interactive Luxury Inquiry Form section (structured) */}
             {renderBespokeInquirySection()}
           </div>
         )}
 
-        {/* 2. INTERNATIONAL PACKAGES VIEW */}
-        {currentPage === 'international' && (
-          <div id="view-international" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            {/* Header indicating Popular Packages */}
-            <div className="text-center mb-12 animate-fade-in">
-              <span className="text-xs uppercase tracking-[0.25em] text-[#114c6c] font-bold font-display block mb-2">
-                Exclusive World Escapes
-              </span>
-              <h1 className="text-3xl font-serif font-black text-slate-900 justify-center">
-                Our Popular Packages
-              </h1>
-              <div className="h-[2px] w-20 bg-amber-500 mx-auto mt-3 rounded" />
-            </div>
-
-            {/* Packages Grid */}
-            <div id="intl-packages-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
-              {(() => {
-                const SELECTED_INTERNATIONAL_NAMES = ['dubai', 'maldives', 'switzerland', 'thailand', 'bali', 'malaysia', 'spain', 'singapore', 'srilanka', 'sri lanka', 'uzbekistan', 'morocco', 'turkey'];
-                const filtered = SELECTED_INTERNATIONAL_NAMES.map(name => 
-                  INTERNATIONAL_PACKAGES.find(pkg => pkg.name.toLowerCase() === name)
-                ).filter((pkg): pkg is TravelPackage => !!pkg);
-                return filtered.map((pkg) => renderPackageCard(pkg));
-              })()}
-            </div>
-
-            {/* Premium Inquiry Section */}
-            <div className="mt-16 border-t border-slate-100 pt-10">
-              {renderBespokeInquirySection(
-                "Exclusive Custom Route",
-                "Design Your Custom International Escape",
-                "Have other locations in mind? Share your dream international bucket-list directives. Our specialists will design your customized itinerary master plan."
-              )}
+        {/* 2. ABOUT US VIEW */}
+        {currentPage === 'about-us' && (
+          <div id="view-about-us" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <h1 className="text-4xl font-serif font-black text-[#144C6C] mb-8 uppercase tracking-widest text-center">About Us</h1>
+            <div className="bg-white p-8 sm:p-12 rounded-3xl shadow-sm border border-slate-100 space-y-6 text-slate-700 leading-relaxed text-lg">
+                <p>Welcome to Pole to Pole Tours and Travels — your trusted travel partner for memorable journeys across the world.</p>
+                <p>We specialize in creating hassle-free travel experiences with personalized service, affordable packages and professional support. From family holidays and honeymoon trips to corporate travel and group tours, we ensure every journey is comfortable, enjoyable and well planned.</p>
+                <div className="my-8">
+                    <h3 className="text-xl font-bold text-[#144C6C] mb-4 uppercase">Our services include:</h3>
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-[#fbbf24]" /> International & Domestic Tour Packages</li>
+                        <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-[#fbbf24]" /> Flight Ticket Bookings</li>
+                        <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-[#fbbf24]" /> Hotel Reservations</li>
+                        <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-[#fbbf24]" /> Visa Assistance</li>
+                        <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-[#fbbf24]" /> Airport Transfers</li>
+                        <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-[#fbbf24]" /> Cruise & Holiday Packages</li>
+                        <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-[#fbbf24]" /> Customized Group Tours</li>
+                        <li className="flex items-center gap-3"><CheckCircle2 className="w-5 h-5 text-[#fbbf24]" /> Travel Insurance & More.</li>
+                    </ul>
+                </div>
+                <p>At Pole to Pole Tours and Travels customer satisfaction is our priority. We believe travel is not just about reaching a destination — it’s about creating unforgettable memories. With dedicated support, competitive pricing and attention to detail, we strive to make every trip smooth and stress-free.</p>
+                <p>Whether you are planning a relaxing vacation, business trip, spiritual tour or adventure holiday, we are here to guide you every step of the way.</p>
+                <p className="font-bold text-[#144C6C] text-center pt-4">Travel with confidence. Travel with us.</p>
             </div>
           </div>
         )}
 
-        {/* 3. DOMESTIC PACKAGES VIEW */}
-        {currentPage === 'domestic' && (
-          <div id="view-domestic" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            {/* Header indicating Popular Packages */}
-            <div className="text-center mb-12 animate-fade-in">
-              <span className="text-xs uppercase tracking-[0.25em] text-[#114c6c] font-bold font-display block mb-2">
-                Incredible National Journeys
-              </span>
-              <h1 className="text-3xl font-serif font-black text-slate-900 justify-center">
-                Our Popular Packages
+        {/* 3. DOMESTIC & INTERNATIONAL VIEW */}
+        {(currentPage === 'domestic' || currentPage === 'international') && (
+          <div id={`view-${currentPage}`} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="text-center max-w-3xl mx-auto mb-12 pt-8">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-black text-slate-900 tracking-wider uppercase">
+                {currentPage === 'domestic' ? 'Domestic Packages' : 'International Packages'}
               </h1>
-              <div className="h-[2px] w-20 bg-amber-500 mx-auto mt-3 rounded" />
             </div>
 
-            {/* Packages Grid */}
-            <div id="domestic-packages-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-               {(() => {
-                const SELECTED_DOMESTIC_NAMES = ['kashmir', 'goa', 'kerala', 'ooty', 'munnar', 'shimla', 'agra', 'bengaluru', 'mumbai', 'jaipur', 'ladakh', 'kodaikanal'];
-                const filtered = SELECTED_DOMESTIC_NAMES.map(name => 
-                  DOMESTIC_PACKAGES.find(pkg => pkg.name.toLowerCase() === name)
-                ).filter((pkg): pkg is TravelPackage => !!pkg);
-                return filtered.map((pkg) => renderPackageCard(pkg));
-              })()}
+            {/* Catalog search bar and status indicator */}
+            <div className="max-w-xl mx-auto mb-12 relative">
+              <input
+                type="text"
+                placeholder="Search destinations, packages or tags..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-6 py-4 bg-white border border-slate-200 focus:outline-none focus:border-[#144C6C]/50 rounded-full font-display text-sm shadow-sm"
+              />
+              <Search className="w-5 h-5 text-slate-400 absolute right-6 top-1/2 -translate-y-1/2" />
             </div>
 
-            {/* Premium Inquiry Section */}
-            <div className="mt-16 border-t border-slate-100 pt-10">
-              {renderBespokeInquirySection(
-                "Bespoke National Passage",
-                "Design Your Custom Domestic Escape",
-                "Want to blend other beautiful sights, forest safaris or historic walks? Send details to start sketching custom itineraries."
-              )}
+            {/* Bounded grid of matching packages */}
+            {(() => {
+              const currentCategoryVal = currentPage === 'domestic' ? 'domestic' : 'international';
+              const filtered = packages.filter(pkg => {
+                const matchesCat = pkg.category.toLowerCase() === currentCategoryVal;
+                const matchesQuery = pkg.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                     pkg.duration.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                     pkg.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
+                return matchesCat && matchesQuery;
+              });
+
+              if (filtered.length === 0) {
+                return (
+                  <div className="text-center py-20 px-4 rounded-3xl border border-dashed border-slate-200">
+                    <p className="text-slate-400 text-sm font-display">No packages found matching your query. Try searching for other destinations!</p>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {filtered.map((pkg) => (
+                    <div 
+                      key={pkg.id} 
+                      id={`pkg-card-${pkg.id}`}
+                      className="group bg-white rounded-2xl overflow-hidden border border-slate-200/60 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+                    >
+                      {/* Image Frame */}
+                      <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
+                        <img 
+                          src={pkg.image} 
+                          alt={pkg.name} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
+
+                      {/* Info body */}
+                      <div className="p-6 flex-1 flex flex-col justify-between">
+                        <div className="space-y-3">
+                          <h3 className="text-xl font-serif font-bold text-slate-900 group-hover:text-[#144C6C] transition-colors font-display text-left">
+                            {pkg.name}
+                          </h3>
+                        </div>
+
+                        {/* Card footer CTA */}
+                        <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-end">
+                          <button
+                            onClick={() => handleSelectPackage(pkg.name)}
+                            className="px-4 py-2.5 bg-[#144c6c] text-white text-[10px] font-sans font-black tracking-widest uppercase rounded-lg hover:bg-[#0c3147] transition-all cursor-pointer border border-[#144c6c]"
+                          >
+                            Explore Trip
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+          </div>
+        )}
+
+        {/* PACKAGE DETAILS VIEW */}
+        {currentPage === 'package-detail' && selectedPackage && (
+          <div id="view-package-detail" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            {/* Go Back custom route indicator */}
+            <div className="mb-6 animate-fade-in text-left">
+              <button 
+                onClick={() => {
+                  setCurrentPage('home');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-[#144C6C] hover:underline transition-colors font-display cursor-pointer bg-transparent border-none outline-none font-bold"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Go Back to Home</span>
+              </button>
+            </div>
+
+            {/* Immersive Package details featuring JUST the big high quality image, package title, and prominent "Explore" button */}
+            <div className="bg-white rounded-3xl border border-slate-200/60 shadow-xl overflow-hidden animate-fade-in">
+              {/* Massive, highly engaging image */}
+              <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100 border-b border-slate-100">
+                <img 
+                  src={selectedPackage.image} 
+                  alt={selectedPackage.name} 
+                  className="w-full h-full object-cover shadow-inner hover:scale-[1.01] transition-transform duration-500"
+                  referrerPolicy="no-referrer"
+                />
+                
+                {/* Immersive title overlay info */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex flex-col justify-end p-6 sm:p-10 text-left">
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-black text-white leading-tight">
+                    {selectedPackage.name}
+                  </h1>
+                </div>
+              </div>
+
+               {/* Action Area: Beautiful clean section with the explore button */}
+               <div className="p-8 sm:p-12 text-center space-y-6">
+                {/* Highly prominent custom explore CTA button */}
+                <button
+                  onClick={() => {
+                    const target = document.getElementById('booking-inquiry-box');
+                    if (target) {
+                      const yOffset = -110; 
+                      const y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                      window.scrollTo({ top: y, behavior: 'smooth' });
+                    }
+                  }}
+                  className="inline-flex items-center gap-2.5 px-10 py-5 text-sm sm:text-base font-display uppercase tracking-[0.25em] bg-[#144C6C] text-white font-black rounded-full hover:bg-[#0c3147] transition-all duration-300 hover:scale-105 shadow-xl cursor-pointer border border-[#144C6C]/20"
+                >
+                  <Compass className="w-5 h-5 animate-spin-slow" />
+                  <span>Explore & Customise This Trip</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Elegant Travel Enquiry Form Immediately Below */}
+            <div className="mt-16 pt-12 border-t border-slate-200/80">
+              {renderBespokeInquirySection()}
             </div>
           </div>
         )}
@@ -759,63 +946,72 @@ export default function App() {
           <div id="view-reviews" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             
             {/* Minimalist Header */}
-            <div className="mb-12 text-center animate-fade-in">
-              <span className="text-xs uppercase tracking-[0.3em] text-[#114c6c] font-semibold font-display block mb-2">
-                The Guest Testament
-              </span>
-              <h1 className="text-3xl font-serif font-bold text-slate-900">Verified Guest Reviews</h1>
-              <p className="text-xs text-slate-500 mt-2 font-display uppercase tracking-widest">Genuine Feedback From Our Real WhatsApp and Google Reviews</p>
+            <div className="mb-12 text-center animate-fade-in animate-duration-500">
+              <h1 className="text-3xl sm:text-4xl font-serif font-black text-slate-900 tracking-wider uppercase">CLIENT REVIEWS</h1>
             </div>
 
             {/* Premium Interactive Screenshot Carousel Slider */}
-            <div className="max-w-4xl mx-auto mb-20 animate-fade-in">
+            <div className="max-w-6xl mx-auto mb-20 animate-fade-in relative px-10">
               
-              {/* Active Image Box Frame */}
-              <div className="relative group rounded-3xl overflow-hidden border border-slate-200/80 bg-white shadow-xl p-4 sm:p-6 flex flex-col items-center justify-center min-h-[360px] md:min-h-[500px]">
-                
-                {/* Active Review Image */}
-                <div className="w-full flex justify-center items-center">
-                  <img 
-                    src={REVIEW_IMAGES[activeReviewImgListIdx]} 
-                    alt={`Customer Verified Review ${activeReviewImgListIdx + 1}`}
-                    className="max-h-[500px] md:max-h-[580px] w-auto max-w-full rounded-2xl object-contain border border-slate-100 shadow p-0.5 select-none transition-all duration-300"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
+              {/* Sliding Multi-Card Row */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+                {[0, 1, 2].map((offset) => {
+                  const targetIdx = (activeReviewImgListIdx + offset) % REVIEW_IMAGES.length;
+                  const isThirdOnTablet = offset === 2;
+                  const isSecondOnMobile = offset >= 1;
 
-                {/* Sleek Manual Left Arrow */}
-                <button 
-                  onClick={() => setActiveReviewImgListIdx((prev) => (prev - 1 + REVIEW_IMAGES.length) % REVIEW_IMAGES.length)}
-                  className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 p-3 sm:p-4 rounded-full bg-white/95 hover:bg-slate-50 active:scale-95 text-[#114c6c] shadow-lg border border-slate-200/50 transition-all cursor-pointer select-none group"
-                  aria-label="Previous review"
-                >
-                  <ChevronLeft className="w-6 h-6 stroke-[2] group-hover:-translate-x-0.5 transition-transform" />
-                </button>
-
-                {/* Sleek Manual Right Arrow */}
-                <button 
-                  onClick={() => setActiveReviewImgListIdx((prev) => (prev + 1) % REVIEW_IMAGES.length)}
-                  className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 p-3 sm:p-4 rounded-full bg-white/95 hover:bg-slate-50 active:scale-95 text-[#114c6c] shadow-lg border border-slate-200/50 transition-all cursor-pointer select-none group"
-                  aria-label="Next review"
-                >
-                  <ChevronRight className="w-6 h-6 stroke-[2] group-hover:translate-x-0.5 transition-transform" />
-                </button>
-
-                {/* Counter Tag */}
-                <div className="absolute top-4 right-4 bg-[#114c6c]/10 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-[#114c6c]/15 text-xs text-[#114c6c] font-display font-bold">
-                  {activeReviewImgListIdx + 1} / {REVIEW_IMAGES.length}
-                </div>
+                  return (
+                    <div 
+                      key={offset}
+                      className={`relative rounded-3xl overflow-hidden border border-slate-200 bg-white shadow-xl p-4 flex flex-col items-center justify-center min-h-[385px] md:min-h-[460px] hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 ${
+                        isThirdOnTablet ? 'hidden lg:flex' : ''
+                      } ${
+                        isSecondOnMobile ? 'hidden md:flex' : 'flex'
+                      }`}
+                    >
+                      <img 
+                        src={REVIEW_IMAGES[targetIdx]} 
+                        alt={`Customer Verified Review ${targetIdx + 1}`}
+                        className="max-h-[340px] md:max-h-[400px] w-auto max-w-full rounded-2xl object-contain shadow-sm select-none transition-all duration-300"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                  );
+                })}
               </div>
 
-              {/* Progress Bar (switches every 5s automatically) */}
-              <div className="w-full h-[4px] bg-slate-100 mt-6 rounded-full overflow-hidden">
-                <div 
-                  key={activeReviewImgListIdx}
-                  className="h-full bg-amber-500 rounded-full"
-                  style={{
-                    animation: 'reviewProgress 5000ms linear forwards'
-                  }}
-                />
+              {/* Sleek Manual Left Arrow */}
+              <button 
+                onClick={() => setActiveReviewImgListIdx((prev) => (prev - 1 + REVIEW_IMAGES.length) % REVIEW_IMAGES.length)}
+                className="absolute left-0 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white hover:bg-slate-50 active:scale-95 text-[#144C6C] shadow-lg border border-slate-200 transition-all cursor-pointer select-none group z-10"
+                aria-label="Previous review"
+              >
+                <ChevronLeft className="w-6 h-6 stroke-[2] group-hover:-translate-x-0.5 transition-transform" />
+              </button>
+
+              {/* Sleek Manual Right Arrow */}
+              <button 
+                onClick={() => setActiveReviewImgListIdx((prev) => (prev + 1) % REVIEW_IMAGES.length)}
+                className="absolute right-0 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white hover:bg-slate-50 active:scale-95 text-[#144C6C] shadow-lg border border-slate-200 transition-all cursor-pointer select-none group z-10"
+                aria-label="Next review"
+              >
+                <ChevronRight className="w-6 h-6 stroke-[2] group-hover:translate-x-0.5 transition-transform" />
+              </button>
+
+              {/* Dot Indicators */}
+              <div className="flex justify-center items-center gap-2 mt-8">
+                {REVIEW_IMAGES.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveReviewImgListIdx(idx)}
+                    className={`w-3 h-3 rounded-full transition-all duration-300 cursor-pointer ${
+                      activeReviewImgListIdx === idx 
+                        ? 'bg-[#144c6c] scale-125 shadow-md' 
+                        : 'bg-slate-300 hover:bg-slate-400'
+                    }`}
+                    aria-label={`Go to slide ${idx + 1}`}
+                  />
+                ))}
               </div>
 
             </div>
@@ -823,14 +1019,7 @@ export default function App() {
             {/* Video Highlights Section */}
             <div className="mt-24 border-t border-slate-100 pt-16">
               <div className="mb-12 text-center animate-fade-in">
-                <span className="text-xs uppercase tracking-[0.3em] text-[#114c6c] font-semibold font-display block mb-2">
-                  Direct From The Field
-                </span>
-                <h2 className="text-3xl font-serif font-bold text-slate-900 font-display">Video Highlights</h2>
-                <p className="text-xs text-slate-500 mt-2 font-display uppercase tracking-widest">
-                  Watch short highlight reels captured by our guests during their journeys (Click to Play)
-                </p>
-                <div className="h-[2px] w-20 bg-amber-500 mx-auto mt-4 rounded" />
+                <h2 className="text-3xl font-serif font-black text-slate-900 tracking-wider uppercase">VIDEO HIGHLIGHTS</h2>
               </div>
 
               {/* Grid of 5 videos */}
@@ -849,13 +1038,12 @@ export default function App() {
         {/* 6. CONTACT US VIEW */}
         {currentPage === 'contact' && (
           <div id="view-contact" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                 {/* Header details */}
-            <div className="text-center max-w-2xl mx-auto mb-16 pt-8">
-              <span className="text-xs uppercase tracking-[0.3em] text-[#114c6c] font-semibold font-display block mb-3">
+                            <div className="text-center max-w-2xl mx-auto mb-16 pt-8">
+              <span className="text-xs uppercase tracking-[0.3em] text-[#144C6C] font-semibold font-display block mb-3">
                 Reach Out
               </span>
               <h1 className="text-4xl sm:text-5xl font-serif font-bold text-slate-900 mb-4">Contact Pole to Pole</h1>
-              <div className="h-[2px] w-24 bg-[#114c6c]/40 mx-auto rounded mb-4"></div>
+              <div className="h-[2px] w-24 bg-[#144C6C]/40 mx-auto rounded mb-4"></div>
               <p className="text-sm text-slate-500 leading-relaxed">
                 Connect with our expert travel advisors to map out bespoke domestic and international vacation routes, ask questions about custom packages, or arrange group excursions.
               </p>
@@ -871,7 +1059,7 @@ export default function App() {
                   <h3 className="text-xl font-serif font-bold text-slate-900 mb-4">Pole to Pole Tours and Travels</h3>
                   
                   <div className="flex gap-4">
-                    <div className="p-3 bg-[#114c6c]/10 border border-[#114c6c]/15 rounded-xl text-[#114c6c] h-fit">
+                    <div className="p-3 bg-[#144C6C]/10 border border-[#144C6C]/15 rounded-xl text-[#144C6C] h-fit">
                       <MapPin className="w-5 h-5" />
                     </div>
                     <div>
@@ -884,38 +1072,38 @@ export default function App() {
                   </div>
 
                   <div className="flex gap-4">
-                    <div className="p-3 bg-[#114c6c]/10 border border-[#114c6c]/15 rounded-xl text-[#114c6c] h-fit">
+                    <div className="p-3 bg-[#144C6C]/10 border border-[#144C6C]/15 rounded-xl text-[#144C6C] h-fit">
                       <Phone className="w-5 h-5" />
                     </div>
                     <div>
                       <span className="block text-xs uppercase tracking-wider text-slate-500">Direct Talk & Text</span>
-                      <a href="tel:+919566131283" className="text-sm text-slate-800 font-display font-medium hover:text-[#114c6c] transition-colors mt-1 block">
-                        +91 95661 31283
+                      <a href="tel:+919566131283" className="text-sm text-slate-800 font-display font-medium hover:text-[#144C6C] transition-colors mt-1 block">
+                        +91 9566131283
                       </a>
                     </div>
                   </div>
 
                   <div className="flex gap-4">
-                    <div className="p-3 bg-[#114c6c]/10 border border-[#114c6c]/15 rounded-xl text-[#114c6c] h-fit">
+                    <div className="p-3 bg-[#144C6C]/10 border border-[#144C6C]/15 rounded-xl text-[#144C6C] h-fit">
                       <Mail className="w-5 h-5" />
                     </div>
                     <div>
                       <span className="block text-xs uppercase tracking-wider text-slate-500">Direct Planning Email</span>
-                      <a href="mailto:info@poletopole.in" className="text-sm text-slate-800 font-display select-all hover:text-[#114c6c] transition-colors mt-1 block">
+                      <a href="mailto:info@poletopole.in" className="text-sm text-slate-800 font-display select-all hover:text-[#144C6C] transition-colors mt-1 block">
                         info@poletopole.in
                       </a>
                     </div>
                   </div>
 
                   <div className="flex gap-4">
-                    <div className="p-3 bg-[#114c6c]/10 border border-[#114c6c]/15 rounded-xl text-[#114c6c] h-fit">
+                    <div className="p-3 bg-[#144C6C]/10 border border-[#144C6C]/15 rounded-xl text-[#144C6C] h-fit">
                       <Clock className="w-5 h-5" />
                     </div>
                     <div>
                       <span className="block text-xs uppercase tracking-wider text-slate-500">Active Desk Hours</span>
                       <p className="text-sm text-slate-800 mt-1">
-                        Mon - Sat: 9:00 AM - 6:00 PM EST <br />
-                        <span className="text-xs text-[#114c6c] font-light italic">Direct Client Line: Call, Text, or WhatsApp</span>
+                        Mon - Sat : 10:00 AM - 7:00 PM IST <br />
+                        <span className="text-xs text-[#144C6C] font-light italic">Direct Client Line: Call, Text, or WhatsApp</span>
                       </p>
                     </div>
                   </div>
@@ -947,9 +1135,8 @@ export default function App() {
                 <div id="booking-inquiry-box" className="rounded-3xl p-8 sm:p-10 border border-slate-200 bg-white shadow-xl">
                   
                   <div className="mb-8">
-                    <span className="text-xs uppercase tracking-[0.25em] text-[#114c6c] block mb-1">Planning Registration</span>
-                    <h3 className="text-2xl font-serif text-slate-900">Submit Holiday Directives</h3>
-                    <p className="text-xs text-slate-500 mt-1">Provide details of your planned vacation or lineage search.</p>
+                    <h3 className="text-2xl font-serif text-slate-900 font-bold">Travel Enquiry</h3>
+                    <p className="text-xs text-slate-500 font-display uppercase tracking-[0.25em] font-semibold mt-1">Details</p>
                   </div>
 
                   <form onSubmit={handleInquirySubmit} className="space-y-6">
@@ -964,11 +1151,11 @@ export default function App() {
                           value={bookingForm.name}
                           onChange={handleInputChange}
                           placeholder="e.g. Sarah Miller"
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#114c6c] focus:bg-white transition-colors"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#144C6C] focus:bg-white transition-colors"
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-[#114c6c] font-display mb-2">Desired Destination *</label>
+                        <label className="block text-[10px] uppercase tracking-widest text-[#144C6C] font-display mb-2">Desired Destination *</label>
                         <input 
                           type="text"
                           name="destination"
@@ -976,7 +1163,7 @@ export default function App() {
                           value={bookingForm.destination}
                           onChange={handleInputChange}
                           placeholder="e.g. Switzerland, Bali, Kashmir, or any country"
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#114c6c] focus:bg-white transition-colors"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#144C6C] focus:bg-white transition-colors"
                         />
                       </div>
                     </div>
@@ -992,7 +1179,7 @@ export default function App() {
                           value={bookingForm.budget}
                           onChange={handleInputChange}
                           placeholder="e.g. $1,500 or Rs. 1,00,000"
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#114c6c] focus:bg-white transition-colors"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#144C6C] focus:bg-white transition-colors"
                         />
                       </div>
                       <div>
@@ -1004,7 +1191,7 @@ export default function App() {
                           value={bookingForm.numberOfDays}
                           onChange={handleInputChange}
                           placeholder="e.g. 7 Days"
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#114c6c] focus:bg-white transition-colors"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#144C6C] focus:bg-white transition-colors"
                         />
                       </div>
                       <div>
@@ -1016,7 +1203,7 @@ export default function App() {
                           value={bookingForm.numberOfPersons}
                           onChange={handleInputChange}
                           placeholder="e.g. 2 Persons"
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#114c6c] focus:bg-white transition-colors"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#144C6C] focus:bg-white transition-colors"
                         />
                       </div>
                     </div>
@@ -1058,6 +1245,20 @@ export default function App() {
           </div>
         )}
 
+        {/* 7. ADMIN STAFF PORTAL VIEW */}
+        {currentPage === 'admin' && (
+          <div id="view-admin" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <AdminPanel 
+              onClose={() => {
+                setCurrentPage('home');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }} 
+              defaultPackages={[...INTERNATIONAL_PACKAGES, ...DOMESTIC_PACKAGES]}
+              defaultReviews={REVIEWS} 
+            />
+          </div>
+        )}
+
       </main>
 
       {/* Floating WhatsApp Action Button (All pages) */}
@@ -1078,7 +1279,7 @@ export default function App() {
 
         {waHover && (
           <div className="bg-white text-slate-800 border border-slate-200/80 backdrop-blur-md px-3.5 py-2.5 rounded-xl block text-xs font-display pointer-events-none transition-all duration-300 shadow-xl max-w-xs uppercase tracking-wider relative animate-fade-in">
-            <p className="text-[10px] text-[#114c6c] font-bold block">Concierge Connected</p>
+            <p className="text-[10px] text-[#144C6C] font-bold block">Concierge Connected</p>
             <p className="font-light text-slate-500 mt-0.5 whitespace-nowrap">WhatsApp Online Chat desk</p>
           </div>
         )}

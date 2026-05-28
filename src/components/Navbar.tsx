@@ -1,459 +1,280 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Phone, Compass, ChevronDown, ChevronUp } from 'lucide-react';
+import { Menu, X, Phone, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface NavbarProps {
   currentPage: string;
   setCurrentPage: (page: string) => void;
+  onSelectPackage?: (pkgName: string) => void;
+  onLocatePackage?: (pkgName: string) => void;
 }
 
-const INTERNATIONAL_CATEGORIES = [
-  {
-    title: 'Asia',
-    destinations: [
-      'Bali',
-      'Cambodia',
-      'China',
-      'Hong Kong',
-      'Japan',
-      'Indonesia',
-      'Kazakhstan',
-      'Russia',
-      'South Korea',
-      'Malaysia',
-      'Singapore',
-      'Philippines',
-      'Taiwan',
-      'Thailand',
-      'Vietnam',
-      'Uzbekistan'
-    ]
-  },
-  {
-    title: 'Europe',
-    destinations: [
-      'Armenia',
-      'Austria',
-      'Belgium',
-      'Bulgaria',
-      'Croatia',
-      'Czech Republic',
-      'Denmark Republic',
-      'Finland Republic',
-      'France',
-      'Germany',
-      'Greece',
-      'Greenland',
-      'Hungary',
-      'Iceland',
-      'Ireland',
-      'Italy',
-      'London',
-      'Netherlands',
-      'Norway',
-      'Portugal',
-      'Romania',
-      'Russia',
-      'Slovakia',
-      'Spain',
-      'Sweden',
-      'Switzerland',
-      'Turkey',
-      'United Kingdom'
-    ]
-  },
-  {
-    title: 'Africa & Pacific',
-    destinations: [
-      'HEADER:Africa',
-      'Kenya',
-      'Morocco',
-      'Seychelles',
-      'South Africa',
-      'Zimbabwe',
-      'Tanzania',
-      'HEADER:Pacific',
-      'Australia',
-      'Fiji',
-      'New Zealand'
-    ]
-  },
-  {
-    title: 'America & Islands',
-    destinations: [
-      'HEADER:America',
-      'Alaska',
-      'Canada',
-      'Central America',
-      'North America',
-      'South America',
-      'USA',
-      'HEADER:Island',
-      'Madagascar',
-      'Maldives',
-      'Mauritius',
-      'Reunion',
-      'Sri Lanka'
-    ]
-  },
-  {
-    title: 'Middle East & Specials',
-    destinations: [
-      'HEADER:Middle East',
-      'Jordan',
-      'Oman',
-      'Qatar',
-      'UAE',
-      'Dubai',
-      'Egypt',
-      'HEADER:Cruises',
-      'Cordelia Cruises',
-      'HEADER:Honeymoon',
-      'Maldives',
-      'Bali',
-      'Mauritius',
-      'Phuket',
-      'Switzerland',
-      'Seychelles',
-      'Langkawi',
-      'Paris',
-      'Italy',
-      'Krabi',
-      'Greece',
-      'Thailand',
-      'Dubai',
-      'Sri Lanka',
-      'Singapore',
-      'Malaysia',
-      'Croatia',
-      'South Africa',
-      'Koh Samui',
-      'Australia',
-      'Spain',
-      'Europe'
-    ]
-  }
+// 5 Columns split for Domestic "INDIA" Packages
+const NORTH_INDIA_PYS = [
+  'Kashmir',
+  'Delhi',
+  'Agra',
+  'Jaipur',
+  'Himachal Pradesh',
+  'Rajasthan'
 ];
 
-const DOMESTIC_CATEGORIES = [
-  {
-    title: 'North India',
-    destinations: [
-      'Agra',
-      'Chandigarh',
-      'Delhi',
-      'Gulmarg',
-      'Haridwar & Rishikesh',
-      'Himachal Pradesh',
-      'Jaipur',
-      'Jaisalmer',
-      'Jammu and Kashmir',
-      'Ladakh',
-      'Lucknow',
-      'Manali',
-      'Mussoorie',
-      'Shimla',
-      'Srinagar',
-      'Uttarakhand'
-    ]
-  },
-  {
-    title: 'South India',
-    destinations: [
-      'Alleppey',
-      'Araku Valley',
-      'Bangalore',
-      'Chennai',
-      'Coorg',
-      'Hyderabad',
-      'Kanyakumari',
-      'Karnataka',
-      'Kerala',
-      'Kochi',
-      'Munnar',
-      'Mysore',
-      'Ooty',
-      'Rameswaram',
-      'Tamil Nadu',
-      'Thekkady',
-      'Tirupati',
-      'Wayanad'
-    ]
-  },
-  {
-    title: 'East & West India',
-    destinations: [
-      'HEADER:East India',
-      'Bihar',
-      'Darjeeling',
-      'Kolkata',
-      'Odisha',
-      'Puri',
-      'West Bengal',
-      'HEADER:West India',
-      'Ahmedabad',
-      'Goa',
-      'Gujarat',
-      'Jodhpur',
-      'Mahabaleshwar',
-      'Maharashtra',
-      'Mumbai',
-      'Pune',
-      'Rajasthan',
-      'Udaipur'
-    ]
-  },
-  {
-    title: 'Northeast & Central',
-    destinations: [
-      'HEADER:North East',
-      'Arunachal Pradesh',
-      'Gangtok',
-      'Guwahati',
-      'Manipur',
-      'Meghalaya',
-      'Pelling',
-      'Shillong',
-      'Sikkim',
-      'Tawang',
-      'HEADER:Central India',
-      'Bhopal',
-      'Chhattisgarh',
-      'Gwalior',
-      'Indore',
-      'Madhya Pradesh',
-      'Pachmarhi',
-      'Ujjain'
-    ]
-  },
-  {
-    title: 'Spiritual & Honeymoon',
-    destinations: [
-      'HEADER:Spiritual',
-      'Ayodhya',
-      'Tirupati',
-      'HEADER:Honeymoon',
-      'Andaman',
-      'Coorg',
-      'Darjeeling',
-      'Goa',
-      'Himachal',
-      'Kashmir',
-      'Kerala',
-      'Kodaikanal',
-      'Manali',
-      'Munnar',
-      'Ooty',
-      'Shimla',
-      'HEADER:Educational',
-      'Bangalore',
-      'Darjeeling',
-      'Goa',
-      'Kochi',
-      'Manali',
-      'Mysore'
-    ]
-  }
+const SOUTH_INDIA_PYS = [
+  'Bangalore',
+  'Mysore',
+  'Ooty',
+  'Kodaikanal',
+  'Kerala',
+  'Hyderabad',
+  'Coorg',
+  'Andaman',
+  'Lakshadweep'
 ];
 
-export default function Navbar({ currentPage, setCurrentPage }: NavbarProps) {
+const WEST_INDIA_PYS = [
+  'Goa',
+  'Mumbai',
+  'Pune'
+];
+
+const EAST_INDIA_PYS = [
+  'Kolkata'
+];
+
+const NORTH_EAST_PYS = [
+  'Meghalaya',
+  'North East India'
+];
+
+const HONEYMOON_DOMESTIC_PYS = [
+  'Kashmir',
+  'Himachal Pradesh',
+  'Ooty',
+  'Kodaikanal',
+  'Kerala',
+  'Goa',
+  'Coorg',
+  'Andaman',
+  'Lakshadweep',
+  'Meghalaya'
+];
+
+const EDUCATIONAL_HERITAGE_PYS = [
+  'Delhi',
+  'Agra',
+  'Jaipur',
+  'Mysore',
+  'Hyderabad',
+  'Kolkata',
+  'Rajasthan'
+];
+
+// 5 Columns split for International "PACKAGES"
+const INT_ASIA_1_PYS = [
+  'Dubai',
+  'Singapore',
+  'Malaysia',
+  'Bali',
+  'Vietnam',
+  'Cambodia',
+  'Sri Lanka',
+  'Maldives'
+];
+
+const INT_ASIA_2_PYS = [
+  'Hong Kong',
+  'China',
+  'Japan',
+  'Thailand',
+  'Philippines',
+  'Kazakhstan',
+  'Uzbekistan',
+  'Oman'
+];
+
+const INT_EUROPE_PYS = [
+  'Turkey',
+  'Armenia',
+  'Georgia',
+  'Greece',
+  'France',
+  'Germany',
+  'London',
+  'Switzerland'
+];
+
+const INT_AFRICA_PYS = [
+  'Egypt',
+  'Mauritius',
+  'Kenya',
+  'South Africa',
+  'Tanzania'
+];
+
+const INT_HONEYMOON_PYS = [
+  'Maldives',
+  'Bali',
+  'Switzerland',
+  'Mauritius',
+  'Dubai',
+  'Greece',
+  'Turkey',
+  'Sri Lanka',
+  'Thailand'
+];
+
+export default function Navbar({ currentPage, setCurrentPage, onSelectPackage, onLocatePackage }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  
-  // Hover categories for desktop menu
   const [hoveredCategory, setHoveredCategory] = useState<'international' | 'domestic' | null>(null);
-
-  // Mobile accordion states
   const [mobileIntExpanded, setMobileIntExpanded] = useState(false);
   const [mobileDomExpanded, setMobileDomExpanded] = useState(false);
 
+  // Close hover category on page shift
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    setHoveredCategory(null);
+  }, [currentPage]);
+
+  const triggerGeneralWA = () => {
+    const text = "Hi Pole to Pole Travels, I would like to make an inquiry about a custom holiday package.";
+    window.open(`https://wa.me/919566131283?text=${encodeURIComponent(text)}`, '_blank');
+  };
 
   const triggerPackageWA = (pkgName: string) => {
-    const cleanName = pkgName.replace('Educational: ', '').replace('HEADER:', '');
-    const text = `Hello Pole to Pole Travels! I am interested in the custom tour package for *${cleanName}*. Please provide more details, pricing and available itineraries.`;
+    const text = `Hi Pole to Pole Travels, I am interested in inquiring about your customized package for: ${pkgName}. Please share details!`;
     window.open(`https://wa.me/919566131283?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   const navItems = [
-    { id: 'home', label: 'Home' },
-    { id: 'domestic', label: 'Domestic Packages', hasDropdown: true },
-    { id: 'international', label: 'International Packages', hasDropdown: true },
-    { id: 'reviews', label: 'Reviews' },
-    { id: 'contact', label: 'Contact Us' },
+    { id: 'home', label: 'HOME' },
+    { id: 'about-us', label: 'ABOUT US' },
+    { id: 'domestic', label: 'DOMESTIC PACKAGES', hasDropdown: true },
+    { id: 'international', label: 'INTERNATIONAL PACKAGES', hasDropdown: true },
+    { id: 'reviews', label: 'REVIEWS' },
+    { id: 'contact', label: 'CONTACT' },
   ];
+
+  const handleSelectDest = (dest: string) => {
+    if (onSelectPackage) {
+      onSelectPackage(dest);
+    } else if (onLocatePackage) {
+      onLocatePackage(dest);
+    } else {
+      triggerPackageWA(dest);
+    }
+    setHoveredCategory(null);
+  };
+
+  const renderDestSquareButton = (dest: string) => {
+    return (
+      <li key={dest} className="flex items-center">
+        <button
+          onClick={() => handleSelectDest(dest)}
+          className="text-[12px] font-sans font-semibold text-slate-800 hover:text-[#144C6C] text-left transition-colors w-full flex items-center py-0.5 group/item cursor-pointer"
+        >
+          <span className="text-slate-800 mr-2 text-[10px] select-none">&#9642;</span>
+          <span className="truncate">{dest}</span>
+        </button>
+      </li>
+    );
+  };
 
   return (
     <nav
       id="main-nav"
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        isScrolled || hoveredCategory
-          ? 'bg-white/95 backdrop-blur-md md:py-4 py-3 border-b border-slate-200 shadow-md'
-          : 'bg-white/85 backdrop-blur-sm md:py-6 py-4 border-b border-slate-100'
-      }`}
+      className="fixed top-0 left-0 w-full z-50 bg-white border-b border-slate-200 shadow-sm py-2"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
+      <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-16 @container relative">
+        <div className="flex items-center justify-between h-[105px] sm:h-[125px] lg:h-[140px]">
           
-          {/* Brand Logo and Name */}
+          {/* Brand Logo and Name - Stable, unchanging padding on hover */}
           <div
             id="brand-logo-container"
-            className="flex items-center gap-2 cursor-pointer group"
+            className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 cursor-pointer group"
             onClick={() => {
               setCurrentPage('home');
               setHoveredCategory(null);
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           >
-            <div className="w-[54px] h-[54px] sm:w-[72px] sm:h-[72px] rounded-full border-2 border-[#114c6c]/25 bg-white group-hover:scale-[1.08] transition-transform duration-300 overflow-hidden flex items-center justify-center p-0.5 shadow-md shrink-0">
+            <div className="w-[105px] h-[105px] sm:w-[125px] sm:h-[125px] lg:w-[140px] lg:h-[140px] overflow-hidden group-hover:scale-[1.04] transition-transform duration-300 flex items-center justify-center shrink-0 relative bg-transparent mix-blend-multiply">
               <img 
-                src="https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779209814/regenerated_image_1779202070069_xb72nl.jpg" 
+                src="https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779877875/Screenshot_20260526-204225_ptew1q.png" 
                 alt="Pole to Pole Tours and Travels Logo" 
-                className="w-full h-full object-cover rounded-full"
+                className="w-full h-full object-contain select-none pointer-events-none"
                 referrerPolicy="no-referrer"
               />
             </div>
-            <div className="flex flex-col text-[#114c6c] justify-center">
-              <span className="font-sans text-[17px] sm:text-[21px] lg:text-[24px] font-black tracking-[0.01em] leading-none select-none">
+            <div className="flex flex-col text-[#144C6C] justify-center ml-1 sm:ml-2 lg:ml-3 select-none">
+              <span className="font-sans text-[20px] sm:text-[24px] lg:text-[27px] xl:text-[30px] font-black tracking-[0.03em] leading-none uppercase">
                 POLE TO POLE
               </span>
-              <span className="font-sans text-[11px] sm:text-[13px] lg:text-[15px] font-black tracking-[0.02em] uppercase select-none mt-0.5 leading-none">
+              <span className="font-sans text-[11px] sm:text-[13.5px] lg:text-[15px] xl:text-[16.5px] font-black tracking-[0.05em] uppercase mt-0.5 sm:mt-1 leading-none">
                 TOURS AND TRAVELS
               </span>
-              <div className="h-[2px] bg-[#fbbf24] w-full mt-1 mb-1.5 rounded" />
-              <div className="flex items-center justify-between font-sans text-[7.5px] sm:text-[8.5px] lg:text-[10px] font-extrabold uppercase tracking-[0.12em] leading-none select-none">
+              <div className="h-[2px] sm:h-[2.5px] bg-[#fbbf24] w-full mt-1 sm:mt-1.5 mb-1 sm:mb-1.5 rounded-full" />
+              <div className="flex items-center justify-between font-sans text-[8.5px] sm:text-[10.5px] lg:text-[11.5px] xl:text-[12.5px] font-extrabold uppercase tracking-[0.02em] leading-none">
                 <span>DREAM</span>
-                <span className="text-[#fbbf24] font-black px-0.5">|</span>
+                <span className="text-[#144C6C]/60 font-light px-[1px]">|</span>
                 <span>TRAVEL</span>
-                <span className="text-[#fbbf24] font-black px-0.5">|</span>
+                <span className="text-[#144C6C]/60 font-light px-[1px]">|</span>
                 <span>ADMIRE</span>
               </div>
             </div>
           </div>
  
-          {/* Desktop Navigation links */}
-          <div id="desktop-nav-links" className="hidden lg:flex items-center gap-x-4 xl:gap-x-6 ml-auto pl-6">
+          {/* Desktop Navigation links - Fully hover based transitions */}
+          <div id="desktop-nav-links" className="hidden lg:flex items-center gap-x-1.5 xl:gap-x-3 ml-auto h-full">
             {navItems.map((item) => {
-              if (item.hasDropdown) {
-                const categoryType = item.id as 'international' | 'domestic';
-                return (
-                  <div
-                    key={item.id}
-                    className="relative py-2 group/navlink"
-                    onMouseEnter={() => setHoveredCategory(categoryType)}
-                    onMouseLeave={() => setHoveredCategory(null)}
-                  >
-                    <button
-                      id={`nav-${item.id}`}
-                      onClick={() => {
-                        setCurrentPage(item.id);
-                        setHoveredCategory(null);
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      className={`text-xs uppercase tracking-widest transition-all duration-300 relative py-2 font-display cursor-pointer hover:text-[#114c6c] flex items-center gap-1.5 ${
-                        currentPage === item.id || hoveredCategory === categoryType
-                          ? 'text-[#114c6c]'
-                          : 'text-slate-600'
-                      }`}
-                    >
-                      <span className="font-bold text-[13.5px] xl:text-[15px] leading-[16px] not-italic no-underline whitespace-nowrap">{item.label}</span>
-                      <ChevronDown className="w-3 h-3 opacity-75 group-hover/navlink:rotate-180 transition-transform duration-300" />
-                      {(currentPage === item.id || hoveredCategory === categoryType) && (
-                        <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#114c6c]" />
-                      )}
-                    </button>
- 
-                    {/* MEGA DROPDOWN PANEL */}
-                    {hoveredCategory === categoryType && (
-                      <div
-                        id={`${item.id}-mega-menu`}
-                        className="absolute left-1/2 -translate-x-[45%] top-full mt-2 w-[1000px] max-w-[90vw] bg-white border border-slate-200 rounded-2xl p-8 shadow-2xl z-50 max-h-[75vh] overflow-y-auto premium-scrollbar before:content-[''] before:absolute before:-top-3 before:left-0 before:right-0 before:h-3 before:bg-transparent"
-                      >
-                        <div className="grid grid-cols-5 gap-6 text-left">
-                          {(categoryType === 'international' ? INTERNATIONAL_CATEGORIES : DOMESTIC_CATEGORIES).map((cat, catIdx) => (
-                            <div key={catIdx} className="space-y-3">
-                              <h4 className="text-[#114c6c] font-serif font-semibold text-xs tracking-wider uppercase border-b border-slate-100 pb-2">
-                                {cat.title}
-                              </h4>
-                              <ul className="space-y-1.5">
-                                {cat.destinations.map((dest, destIdx) => {
-                                  if (dest.startsWith('HEADER:')) {
-                                    const subTitle = dest.replace('HEADER:', '');
-                                    return (
-                                      <li key={destIdx} className="pt-2 pb-1 first:pt-0 border-b border-slate-100/60">
-                                        <span className="text-[10px] font-black text-[#114c6c] uppercase tracking-wider block">
-                                          {subTitle}
-                                        </span>
-                                      </li>
-                                    );
-                                  }
-                                  return (
-                                    <li key={destIdx}>
-                                      <button
-                                        onClick={() => {
-                                          triggerPackageWA(dest);
-                                          setHoveredCategory(null);
-                                        }}
-                                        className="text-[11.5px] text-slate-600 hover:text-[#114c6c] text-left transition-colors font-display w-full flex items-start gap-1 py-0.5 group/item"
-                                      >
-                                        <span className="text-amber-500 mr-1 font-sans">•</span>
-                                        <span className="truncate">{dest}</span>
-                                      </button>
-                                    </li>
-                                  );
-                                })}
-                              </ul>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-                          <p className="text-[10px] uppercase tracking-widest text-slate-400">
-                            * Clicking on any destination instantly initiates a personalized WhatsApp inquiries *
-                          </p>
-                          <button
-                            onClick={() => {
-                              setCurrentPage(categoryType);
-                              setHoveredCategory(null);
-                              window.scrollTo({ top: 0, behavior: 'smooth' });
-                            }}
-                            className="text-xs uppercase tracking-wider text-[#114c6c] hover:bg-[#114c6c] hover:text-white border border-[#114c6c]/30 px-4 py-1.5 rounded-full transition-all bg-[#114c6c]/5 font-display"
-                          >
-                            View All Packages
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              }
- 
+              const isDropdown = item.hasDropdown;
+              const categoryType = item.id as 'international' | 'domestic';
+              
+              const isHovered = hoveredCategory === categoryType;
+              const isCurrent = currentPage === item.id || (item.id === 'home' && currentPage === 'home');
+              const isTabActive = isCurrent || isHovered;
+
+              const handleNavClick = () => {
+                if (item.id === 'about-us') {
+                  setCurrentPage('about-us');
+                  setHoveredCategory(null);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                  setCurrentPage(item.id);
+                  setHoveredCategory(null);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              };
+
               return (
-                <button
+                <div
                   key={item.id}
-                  id={`nav-${item.id}`}
-                  onClick={() => {
-                    setCurrentPage(item.id);
-                    setHoveredCategory(null);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  onMouseEnter={() => {
+                    if (isDropdown) {
+                      setHoveredCategory(categoryType);
+                    }
                   }}
-                  className={`uppercase tracking-widest transition-all duration-300 relative py-2 font-display cursor-pointer hover:text-[#114c6c] font-bold text-[13.5px] xl:text-[15px] whitespace-nowrap ${
-                    item.id === 'home' ? 'leading-[16px] text-justify' : 'leading-[16px]'
-                  } ${
-                    currentPage === item.id
-                      ? 'text-[#114c6c]'
-                      : 'text-slate-600'
-                  }`}
+                  onMouseLeave={() => {
+                    if (isDropdown) {
+                      setHoveredCategory(null);
+                    }
+                  }}
+                  className="h-full flex items-center pt-2 pb-2"
                 >
-                  {item.label}
-                  {currentPage === item.id && (
-                    <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#114c6c]" />
-                  )}
-                </button>
+                  <button
+                    id={`nav-${item.id}`}
+                    onClick={(e) => {
+                      handleNavClick();
+                    }}
+                    className={`h-[60px] flex items-center justify-center transition-all duration-200 font-display cursor-pointer uppercase tracking-widest text-[12px] xl:text-[13px] whitespace-nowrap px-3 py-2 rounded font-black ${
+                      isTabActive 
+                        ? 'bg-[#144C6C] text-white shadow-sm' 
+                        : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+                    }`}
+                  >
+                    <span>{item.label}</span>
+                    {isDropdown && (
+                      <ChevronDown className="w-3.5 h-3.5 ml-1" />
+                    )}
+                  </button>
+                </div>
               );
             })}
           </div>
@@ -470,6 +291,175 @@ export default function Navbar({ currentPage, setCurrentPage }: NavbarProps) {
             </button>
           </div>
         </div>
+ 
+        {/* ==============================================
+             SYMMETRICAL CENTRED MEGA DROP-DOWNS (DOMESTIC)
+             ============================================== */}
+        {hoveredCategory === 'domestic' && (
+          <div
+            id="domestic-mega-menu"
+            onMouseEnter={() => setHoveredCategory('domestic')}
+            onMouseLeave={() => setHoveredCategory(null)}
+            className="absolute left-1/2 -translate-x-1/2 top-full mt-0 w-full max-w-[1140px] bg-[#f8f9fa] border-4 border-[#144C6C] rounded-md p-6 shadow-2xl z-50 text-left animate-fade-in before:content-[''] before:absolute before:-top-4 before:left-0 before:right-0 before:h-4 before:bg-transparent"
+          >
+            <div className="grid grid-cols-5 gap-5 text-slate-800">
+              
+              {/* Column 1: North India Packages */}
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-[#144C6C] font-sans font-black text-[13px] uppercase tracking-wider pb-1.5 border-b-2 border-slate-300">
+                    North India Packages
+                  </h4>
+                  <ul className="space-y-1.5 mt-2">
+                    {NORTH_INDIA_PYS.map((dest) => renderDestSquareButton(dest))}
+                  </ul>
+                </div>
+              </div>
+ 
+              {/* Column 2: South India Packages */}
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-[#144C6C] font-sans font-black text-[13px] uppercase tracking-wider pb-1.5 border-b-2 border-slate-300">
+                    South India Packages
+                  </h4>
+                  <ul className="space-y-1.5 mt-2">
+                    {SOUTH_INDIA_PYS.map((dest) => renderDestSquareButton(dest))}
+                  </ul>
+                </div>
+              </div>
+ 
+              {/* Column 3: West India & East India */}
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-[#144C6C] font-sans font-black text-[13px] uppercase tracking-wider pb-1.5 border-b-2 border-slate-300">
+                    West India Packages
+                  </h4>
+                  <ul className="space-y-1.5 mt-2">
+                    {WEST_INDIA_PYS.map((dest) => renderDestSquareButton(dest))}
+                  </ul>
+                </div>
+                <div className="pt-2">
+                  <h4 className="text-[#144C6C] font-sans font-black text-[13px] uppercase tracking-wider pb-1.5 border-b-2 border-slate-300">
+                    East India Packages
+                  </h4>
+                  <ul className="space-y-1.5 mt-2">
+                    {EAST_INDIA_PYS.map((dest) => renderDestSquareButton(dest))}
+                  </ul>
+                </div>
+              </div>
+ 
+              {/* Column 4: North East India Packages */}
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-[#144C6C] font-sans font-black text-[13px] uppercase tracking-wider pb-1.5 border-b-2 border-slate-300">
+                    North East India Packages
+                  </h4>
+                  <ul className="space-y-1.5 mt-2">
+                    {NORTH_EAST_PYS.map((dest) => renderDestSquareButton(dest))}
+                  </ul>
+                </div>
+              </div>
+ 
+              {/* Column 5: Honeymoon & Educational */}
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-[#144C6C] font-sans font-black text-[13px] uppercase tracking-wider pb-1.5 border-b-2 border-slate-300">
+                    Honeymoon Packages
+                  </h4>
+                  <ul className="space-y-1.5 mt-2">
+                    {HONEYMOON_DOMESTIC_PYS.map((dest) => renderDestSquareButton(dest))}
+                  </ul>
+                </div>
+                <div className="pt-2">
+                  <h4 className="text-[#144C6C] font-sans font-black text-[13px] uppercase tracking-wider pb-1.5 border-b-2 border-slate-300">
+                    Educational & Heritage Packages
+                  </h4>
+                  <ul className="space-y-1.5 mt-2">
+                    {EDUCATIONAL_HERITAGE_PYS.map((dest) => renderDestSquareButton(dest))}
+                  </ul>
+                </div>
+              </div>
+ 
+            </div>
+          </div>
+        )}
+ 
+        {/* ==============================================
+             SYMMETRICAL CENTRED MEGA DROP-DOWNS (INTERNATIONAL)
+             ============================================== */}
+        {hoveredCategory === 'international' && (
+          <div
+            id="international-mega-menu"
+            onMouseEnter={() => setHoveredCategory('international')}
+            onMouseLeave={() => setHoveredCategory(null)}
+            className="absolute left-1/2 -translate-x-1/2 top-full mt-0 w-full max-w-[1140px] bg-[#f8f9fa] border-4 border-[#144C6C] rounded-md p-6 shadow-2xl z-50 text-left animate-fade-in before:content-[''] before:absolute before:-top-4 before:left-0 before:right-0 before:h-4 before:bg-transparent"
+          >
+            <div className="grid grid-cols-5 gap-5 text-slate-800">
+              
+              {/* Column 1: Asia Core */}
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-[#144C6C] font-sans font-black text-[13px] uppercase tracking-wider pb-1.5 border-b-2 border-slate-300">
+                    Asia
+                  </h4>
+                  <ul className="space-y-1.5 mt-2">
+                    {INT_ASIA_1_PYS.map((dest) => renderDestSquareButton(dest))}
+                  </ul>
+                </div>
+              </div>
+ 
+              {/* Column 2: Asia South & East */}
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-[#144C6C] font-sans font-black text-[13px] uppercase tracking-wider pb-1.5 border-b-2 border-slate-300">
+                    Asia
+                  </h4>
+                  <ul className="space-y-1.5 mt-2">
+                    {INT_ASIA_2_PYS.map((dest) => renderDestSquareButton(dest))}
+                  </ul>
+                </div>
+              </div>
+ 
+              {/* Column 3: Europe */}
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-[#144C6C] font-sans font-black text-[13px] uppercase tracking-wider pb-1.5 border-b-2 border-slate-300">
+                    Europe
+                  </h4>
+                  <ul className="space-y-1.5 mt-2">
+                    {INT_EUROPE_PYS.map((dest) => renderDestSquareButton(dest))}
+                  </ul>
+                </div>
+              </div>
+ 
+              {/* Column 4: Africa */}
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-[#144C6C] font-sans font-black text-[13px] uppercase tracking-wider pb-1.5 border-b-2 border-slate-300">
+                    Africa
+                  </h4>
+                  <ul className="space-y-1.5 mt-2">
+                    {INT_AFRICA_PYS.map((dest) => renderDestSquareButton(dest))}
+                  </ul>
+                </div>
+              </div>
+ 
+              {/* Column 5: Honeymoon & All Packages Core */}
+              <div className="space-y-4">
+                <div>
+                  <h4 className="text-[#144C6C] font-sans font-black text-[13px] uppercase tracking-wider pb-1.5 border-b-2 border-slate-300">
+                    Honeymoon Packages
+                  </h4>
+                  <ul className="space-y-1.5 mt-2">
+                    {INT_HONEYMOON_PYS.map((dest) => renderDestSquareButton(dest))}
+                  </ul>
+                </div>
+              </div>
+ 
+            </div>
+          </div>
+        )}
+ 
       </div>
  
       {/* Mobile Menu panel */}
@@ -480,6 +470,7 @@ export default function Navbar({ currentPage, setCurrentPage }: NavbarProps) {
         >
           {navItems.map((item) => {
             if (item.id === 'international') {
+              const uniqueIntTags = Array.from(new Set([...INT_ASIA_1_PYS, ...INT_ASIA_2_PYS, ...INT_EUROPE_PYS, ...INT_AFRICA_PYS, ...INT_HONEYMOON_PYS]));
               return (
                 <div key={item.id} className="space-y-1">
                   <button
@@ -487,38 +478,25 @@ export default function Navbar({ currentPage, setCurrentPage }: NavbarProps) {
                     className="w-full text-left font-display text-sm uppercase tracking-widest py-3 px-4 rounded-lg flex items-center justify-between text-slate-700 hover:bg-slate-50"
                   >
                     <span>{item.label}</span>
-                    {mobileIntExpanded ? <ChevronUp className="w-4 h-4 text-[#114c6c]" /> : <ChevronDown className="w-4 h-4 text-[#114c6c]" />}
+                    {mobileIntExpanded ? <ChevronUp className="w-4 h-4 text-[#144C6C]" /> : <ChevronDown className="w-4 h-4 text-[#144C6C]" />}
                   </button>
                   {mobileIntExpanded && (
-                    <div className="pl-6 pr-4 py-2 space-y-4 bg-slate-50 rounded-lg border-l border-[#114c6c] max-h-80 overflow-y-auto premium-scrollbar">
-                      {INTERNATIONAL_CATEGORIES.map((cat, idx) => (
-                        <div key={idx} className="space-y-1.5">
-                          <p className="text-[10.5px] text-[#114c6c] font-bold uppercase tracking-wider border-b border-slate-200 pb-0.5">{cat.title}</p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {cat.destinations.map((dest, dIdx) => {
-                              if (dest.startsWith('HEADER:')) {
-                                return (
-                                  <div key={dIdx} className="w-full text-[9.5px] font-black text-[#114c6c] uppercase tracking-widest mt-2 mb-0.5 first:mt-0">
-                                    {dest.replace('HEADER:', '')}
-                                  </div>
-                                );
-                              }
-                              return (
-                                <button
-                                  key={dIdx}
-                                  onClick={() => {
-                                    triggerPackageWA(dest);
-                                    setIsOpen(false);
-                                  }}
-                                  className="text-[10px] bg-white border border-slate-200 hover:border-[#114c6c] text-slate-700 px-2.5 py-1 rounded shadow-sm"
-                                >
-                                  {dest}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      ))}
+                    <div className="pl-6 pr-4 py-2 space-y-3 bg-slate-50 rounded-lg border-l border-[#144C6C] max-h-80 overflow-y-auto premium-scrollbar">
+                      <p className="text-[11px] text-[#144C6C] font-bold uppercase tracking-wider">International Packages</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {uniqueIntTags.map((dest, dIdx) => (
+                          <button
+                            key={dIdx}
+                            onClick={() => {
+                              handleSelectDest(dest);
+                              setIsOpen(false);
+                            }}
+                            className="text-[10px] bg-white border border-slate-200 hover:border-[#144C6C] text-slate-700 px-2.5 py-1 rounded shadow-sm cursor-pointer"
+                          >
+                            {dest}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -526,6 +504,7 @@ export default function Navbar({ currentPage, setCurrentPage }: NavbarProps) {
             }
  
             if (item.id === 'domestic') {
+              const uniqueDomTags = Array.from(new Set([...NORTH_INDIA_PYS, ...SOUTH_INDIA_PYS, ...WEST_INDIA_PYS, ...EAST_INDIA_PYS, ...NORTH_EAST_PYS, ...HONEYMOON_DOMESTIC_PYS, ...EDUCATIONAL_HERITAGE_PYS]));
               return (
                 <div key={item.id} className="space-y-1">
                   <button
@@ -533,56 +512,49 @@ export default function Navbar({ currentPage, setCurrentPage }: NavbarProps) {
                     className="w-full text-left font-display text-sm uppercase tracking-widest py-3 px-4 rounded-lg flex items-center justify-between text-slate-700 hover:bg-slate-50"
                   >
                     <span>{item.label}</span>
-                    {mobileDomExpanded ? <ChevronUp className="w-4 h-4 text-[#114c6c]" /> : <ChevronDown className="w-4 h-4 text-[#114c6c]" />}
+                    {mobileDomExpanded ? <ChevronUp className="w-4 h-4 text-[#144C6C]" /> : <ChevronDown className="w-4 h-4 text-[#144C6C]" />}
                   </button>
                   {mobileDomExpanded && (
-                    <div className="pl-6 pr-4 py-2 space-y-4 bg-slate-50 rounded-lg border-l border-[#114c6c] max-h-80 overflow-y-auto premium-scrollbar">
-                      {DOMESTIC_CATEGORIES.map((cat, idx) => (
-                        <div key={idx} className="space-y-1.5">
-                          <p className="text-[10.5px] text-[#114c6c] font-bold uppercase tracking-wider border-b border-slate-200 pb-0.5">{cat.title}</p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {cat.destinations.map((dest, dIdx) => {
-                              if (dest.startsWith('HEADER:')) {
-                                return (
-                                  <div key={dIdx} className="w-full text-[9.5px] font-black text-[#114c6c] uppercase tracking-widest mt-2 mb-0.5 first:mt-0">
-                                    {dest.replace('HEADER:', '')}
-                                  </div>
-                                );
-                              }
-                              return (
-                                <button
-                                  key={dIdx}
-                                  onClick={() => {
-                                    triggerPackageWA(dest);
-                                    setIsOpen(false);
-                                  }}
-                                  className="text-[10px] bg-white border border-slate-200/50 hover:border-[#114c6c] text-slate-700 px-2.5 py-1 rounded shadow-sm"
-                                >
-                                  {dest}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      ))}
+                    <div className="pl-6 pr-4 py-2 space-y-3 bg-slate-50 rounded-lg border-l border-[#144C6C] max-h-80 overflow-y-auto premium-scrollbar">
+                      <p className="text-[11px] text-[#144C6C] font-bold uppercase tracking-wider">Domestic Packages</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {uniqueDomTags.map((dest, dIdx) => (
+                          <button
+                            key={dIdx}
+                            onClick={() => {
+                              handleSelectDest(dest);
+                              setIsOpen(false);
+                            }}
+                            className="text-[10px] bg-white border border-slate-200/50 hover:border-[#144C6C] text-slate-700 px-2.5 py-1 rounded shadow-sm cursor-pointer"
+                          >
+                            {dest}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
               );
             }
-
+ 
             return (
               <button
                 key={item.id}
                 id={`mob-nav-${item.id}`}
                 onClick={() => {
-                  setCurrentPage(item.id);
-                  setIsOpen(false);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  if (item.id === 'about-us') {
+                    setCurrentPage('about-us');
+                    setIsOpen(false);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  } else {
+                    setCurrentPage(item.id);
+                    setIsOpen(false);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
                 }}
                 className={`w-full text-left font-display text-sm uppercase tracking-widest py-3 px-4 rounded-lg block cursor-pointer transition-colors ${
                   currentPage === item.id
-                    ? 'bg-[#114c6c]/10 text-[#114c6c] border-l-2 border-[#114c6c]'
+                    ? 'bg-[#144C6C]/10 text-[#144C6C] border-l-2 border-[#144C6C]'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
@@ -591,14 +563,13 @@ export default function Navbar({ currentPage, setCurrentPage }: NavbarProps) {
             );
           })}
           <div className="pt-4 border-t border-slate-200/85 flex flex-col gap-3 px-4">
-            <a
-              id="mob-call-cta"
-              href="tel:+919566131283"
-              className="flex items-center justify-center gap-2 text-xs uppercase tracking-widest text-[#114c6c] border border-[#114c6c]/30 bg-[#114c6c]/5 py-3 rounded-full font-display"
+            <button
+              onClick={triggerGeneralWA}
+              className="flex items-center justify-center gap-2 text-xs uppercase tracking-widest text-slate-100 bg-[#144C6C] py-3 rounded-full font-display w-full cursor-pointer shadow-sm"
             >
-              <Phone className="w-4 h-4 text-[#114c6c]" />
-              <span>Call Us</span>
-            </a>
+              <Phone className="w-4 h-4" />
+              <span>Call / WhatsApp Us</span>
+            </button>
           </div>
         </div>
       )}
