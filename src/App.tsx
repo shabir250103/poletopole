@@ -2176,20 +2176,14 @@ export default function App() {
                     placeholder="Email Address"
                   />
 
-                  <div className="flex border border-slate-300 rounded focus-within:border-[#144C6C]">
-                    <div className="flex items-center px-3 border-r border-slate-300 bg-slate-50 cursor-pointer">
-                      <span className="text-xl leading-none mr-1">🇮🇳</span>
-                      <ChevronDown className="w-3 h-3 text-slate-600" />
-                    </div>
-                    <input
-                      type="tel"
-                      required
-                      value={welcomeForm.phone}
-                      onChange={(e) => setWelcomeForm({ ...welcomeForm, phone: e.target.value })}
-                      className="w-full px-4 py-3 text-sm focus:outline-none text-slate-800 placeholder-slate-700 font-medium bg-transparent"
-                      placeholder="Contact Number"
-                    />
-                  </div>
+                  <input
+                    type="tel"
+                    required
+                    value={welcomeForm.phone}
+                    onChange={(e) => setWelcomeForm({ ...welcomeForm, phone: e.target.value })}
+                    className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium"
+                    placeholder="Contact Number"
+                  />
 
 
                   <div className="relative">
