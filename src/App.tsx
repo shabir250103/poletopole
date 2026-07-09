@@ -199,7 +199,8 @@ export default function App() {
     destination: '',
     dateOfTravel: '',
     numberOfPeople: '',
-    vacationType: ''
+    vacationType: '',
+    numberOfDays: ''
   });
   const [captchaParams, setCaptchaParams] = useState({ a: Math.floor(Math.random() * 10) + 1, b: Math.floor(Math.random() * 10) + 1 });
   const [captchaInput, setCaptchaInput] = useState('');
@@ -2067,7 +2068,7 @@ export default function App() {
 
       {/* Floating Action Buttons Container */}
       <div className="fixed bottom-6 right-6 z-40 flex flex-row-reverse items-center gap-4">
-        
+
         {/* Floating Enquire Now Button */}
         <button
           onClick={() => { setShowOfferContent(false); setWelcomeModalOpen(true); }}
@@ -2213,12 +2214,25 @@ export default function App() {
                   </div>
 
                   <input
-                    type="date"
+                    type="text"
                     required
                     value={welcomeForm.dateOfTravel}
+                    onFocus={(e) => (e.target.type = "date")}
+                    onBlur={(e) => (!e.target.value ? (e.target.type = "text") : null)}
                     onChange={(e) => setWelcomeForm({ ...welcomeForm, dateOfTravel: e.target.value })}
                     className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium uppercase"
+                    placeholder="Travel date"
                     min={new Date().toISOString().split("T")[0]}
+                  />
+
+                  <input
+                    type="number"
+                    required
+                    value={welcomeForm.numberOfDays}
+                    onChange={(e) => setWelcomeForm({ ...welcomeForm, numberOfDays: e.target.value })}
+                    className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium"
+                    placeholder="No. of Nights"
+                    min="1"
                   />
 
                   <input
@@ -2227,7 +2241,7 @@ export default function App() {
                     value={welcomeForm.numberOfPeople}
                     onChange={(e) => setWelcomeForm({ ...welcomeForm, numberOfPeople: e.target.value })}
                     className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium"
-                    placeholder="No. of Pax"
+                    placeholder="No of Pax"
                     min="1"
                   />
 
