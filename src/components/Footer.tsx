@@ -56,9 +56,9 @@ export default function Footer({ setCurrentPage }: FooterProps) {
           </div>
 
           {/* Column 2: Contact details */}
-          <div className="space-y-6 lg:pl-24">
-            <h3 className="text-base uppercase tracking-[0.15em] text-slate-900 font-black font-serif flex items-center">
-              Contact Details -:
+          <div className="space-y-6 w-full lg:w-fit lg:mx-auto">
+            <h3 className="text-base uppercase tracking-[0.15em] text-slate-900 font-black font-serif flex items-center justify-center">
+              Contact Details
             </h3>
             <ul className="space-y-5 text-base text-slate-700 font-medium">
               <li className="flex gap-4 items-start group">
@@ -66,7 +66,7 @@ export default function Footer({ setCurrentPage }: FooterProps) {
                   <MapPin className="w-4 h-4" />
                 </div>
                 <span className="pt-2 leading-relaxed text-slate-800">
-                  9, Old Jail Rd, Bundar Rama Garden, George Town,<br />Chennai, Greater Chennai, Tamil Nadu 600001
+                  9, Old Jail Rd, Bundar Rama Garden,<br /> George Town, Chennai-600001
                 </span>
               </li>
               <li className="flex gap-4 items-center group">
@@ -89,9 +89,9 @@ export default function Footer({ setCurrentPage }: FooterProps) {
           </div>
 
           {/* Column 3: Location Map */}
-          <div className="space-y-6 lg:pl-16">
-            <h3 className="text-base uppercase tracking-[0.15em] text-slate-900 font-bold font-serif flex items-center">
-              Location -:
+          <div className="space-y-6 w-full lg:w-fit lg:mx-auto">
+            <h3 className="text-base uppercase tracking-[0.15em] text-slate-900 font-black font-serif flex items-center justify-center">
+              Location
             </h3>
             <div className="w-full h-48 rounded-xl overflow-hidden border-2 border-slate-900/10 relative group hover:border-slate-900 transition-colors duration-500 shadow-xl">
               <iframe

@@ -967,8 +967,7 @@ export default function App() {
                   required
                   value={bookingForm.name}
                   onChange={handleInputChange}
-                  placeholder="e.g. Sarah Miller"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#144C6C] transition-colors"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 font-bold uppercase focus:outline-[#144C6C] transition-colors"
                 />
               </div>
               <div>
@@ -979,8 +978,7 @@ export default function App() {
                   required
                   value={bookingForm.destination}
                   onChange={handleInputChange}
-                  placeholder="e.g. Switzerland, Bali, Kashmir, or any country"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#144C6C] transition-colors"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 font-bold uppercase focus:outline-[#144C6C] transition-colors"
                 />
               </div>
             </div>
@@ -995,8 +993,7 @@ export default function App() {
                   required
                   value={bookingForm.budget}
                   onChange={handleInputChange}
-                  placeholder="e.g. $1,500 or Rs. 1,00,000"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#144C6C] transition-colors"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 font-bold uppercase focus:outline-[#144C6C] transition-colors"
                 />
               </div>
               <div>
@@ -1007,8 +1004,7 @@ export default function App() {
                   required
                   value={bookingForm.numberOfDays}
                   onChange={handleInputChange}
-                  placeholder="e.g. 7 Days"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#144C6C] transition-colors"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 font-bold uppercase focus:outline-[#144C6C] transition-colors"
                 />
               </div>
               <div>
@@ -1019,8 +1015,7 @@ export default function App() {
                   required
                   value={bookingForm.numberOfPersons}
                   onChange={handleInputChange}
-                  placeholder="e.g. 2 Persons"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-[#144C6C] transition-colors"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 font-bold uppercase focus:outline-[#144C6C] transition-colors"
                 />
               </div>
             </div>
@@ -1954,27 +1949,25 @@ export default function App() {
                     {/* Row 1: Name & Destination */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-slate-500 font-display mb-2">Name </label>
+                        <label className="block text-[10px] uppercase tracking-widest text-black font-display font-bold mb-2">Name </label>
                         <input
                           type="text"
                           name="name"
                           required
                           value={bookingForm.name}
                           onChange={handleInputChange}
-                          placeholder="e.g. Sarah Miller"
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#144C6C] focus:bg-white transition-colors"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 font-bold uppercase focus:outline-none focus:border-[#144C6C] focus:bg-white transition-colors"
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-[#144C6C] font-display mb-2">Destination </label>
+                        <label className="block text-[10px] uppercase tracking-widest text-black font-display font-bold mb-2">Destination </label>
                         <input
                           type="text"
                           name="destination"
                           required
                           value={bookingForm.destination}
                           onChange={handleInputChange}
-                          placeholder="e.g. Switzerland, Bali, Kashmir, or any country"
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#144C6C] focus:bg-white transition-colors"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 font-bold uppercase focus:outline-none focus:border-[#144C6C] focus:bg-white transition-colors"
                         />
                       </div>
                     </div>
@@ -1982,40 +1975,38 @@ export default function App() {
                     {/* Row 2: Budget, Days, Persons */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-slate-500 font-display mb-2">Travel Date </label>
+                        <label className="block text-[10px] uppercase tracking-widest text-black font-display font-bold mb-2">Travel Date </label>
                         <input
                           type="date"
                           name="budget"
                           required
                           value={bookingForm.budget}
                           onChange={handleInputChange}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#144C6C] focus:bg-white transition-colors"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 font-bold uppercase focus:outline-none focus:border-[#144C6C] focus:bg-white transition-colors"
                           min={new Date().toISOString().split("T")[0]}
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-slate-500 font-display mb-2">No of nights </label>
+                        <label className="block text-[10px] uppercase tracking-widest text-black font-display font-bold mb-2">No of nights </label>
                         <input
                           type="number"
                           name="numberOfDays"
                           required
                           value={bookingForm.numberOfDays}
                           onChange={handleInputChange}
-                          placeholder="e.g. 7"
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#144C6C] focus:bg-white transition-colors"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 font-bold uppercase focus:outline-none focus:border-[#144C6C] focus:bg-white transition-colors"
                           min="1"
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-slate-500 font-display mb-2">No of pax </label>
+                        <label className="block text-[10px] uppercase tracking-widest text-black font-display font-bold mb-2">No of pax </label>
                         <input
                           type="number"
                           name="numberOfPersons"
                           required
                           value={bookingForm.numberOfPersons}
                           onChange={handleInputChange}
-                          placeholder="e.g. 2"
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 focus:outline-none focus:border-[#144C6C] focus:bg-white transition-colors"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm text-slate-900 font-bold uppercase focus:outline-none focus:border-[#144C6C] focus:bg-white transition-colors"
                           min="1"
                         />
                       </div>
@@ -2174,14 +2165,6 @@ export default function App() {
                     placeholder=" Name *"
                   />
 
-                  <input
-                    type="text"
-                    required
-                    value={welcomeForm.city}
-                    onChange={(e) => setWelcomeForm({ ...welcomeForm, city: e.target.value })}
-                    className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium"
-                    placeholder="Origin City *"
-                  />
 
                   <input
                     type="email"
@@ -2192,52 +2175,6 @@ export default function App() {
                     placeholder="Email Address *"
                   />
 
-                  <div className="flex border border-slate-300 rounded focus-within:border-[#144C6C]">
-                    <div className="flex items-center px-3 border-r border-slate-300 bg-slate-50 cursor-pointer">
-                      <span className="text-xl leading-none mr-1">🇮🇳</span>
-                      <ChevronDown className="w-3 h-3 text-slate-600" />
-                    </div>
-                    <input
-                      type="tel"
-                      required
-                      value={welcomeForm.phone}
-                      onChange={(e) => setWelcomeForm({ ...welcomeForm, phone: e.target.value })}
-                      className="w-full px-4 py-3 text-sm focus:outline-none text-slate-800 placeholder-slate-700 font-medium bg-transparent"
-                      placeholder="Contact Number *"
-                    />
-                  </div>
-
-                  <div className="flex border border-slate-300 rounded focus-within:border-[#144C6C]">
-                    <div className="flex items-center px-3 border-r border-slate-300 bg-slate-50 cursor-pointer">
-                      <span className="text-xl leading-none mr-1">🇮🇳</span>
-                      <ChevronDown className="w-3 h-3 text-slate-600" />
-                    </div>
-                    <input
-                      type="tel"
-                      value={welcomeForm.whatsapp}
-                      onChange={(e) => setWelcomeForm({ ...welcomeForm, whatsapp: e.target.value })}
-                      className="w-full px-4 py-3 text-sm focus:outline-none text-slate-800 placeholder-slate-700 font-medium bg-transparent"
-                      placeholder="WhatsApp Number"
-                    />
-                  </div>
-
-                  <select
-                    required
-                    value={welcomeForm.vacationType}
-                    onChange={(e) => setWelcomeForm({ ...welcomeForm, vacationType: e.target.value, destination: '' })}
-                    className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium bg-white capitalize"
-                  >
-                    <option value="" disabled className="text-slate-400 capitalize">Holiday Type *</option>
-                    {Array.from(new Set(packages.map(p => p.category))).map(cat => (
-                      <option key={cat} value={cat} className="capitalize">{cat}</option>
-                    ))}
-                    {packages.length === 0 && (
-                      <>
-                        <option value="international">International</option>
-                        <option value="domestic">Domestic</option>
-                      </>
-                    )}
-                  </select>
 
                   <div className="relative">
                     <input
@@ -2246,14 +2183,12 @@ export default function App() {
                       list="destination-options"
                       value={welcomeForm.destination}
                       onChange={(e) => setWelcomeForm({ ...welcomeForm, destination: e.target.value })}
-                      className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium bg-white disabled:bg-slate-100 disabled:cursor-not-allowed"
+                      className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium bg-white"
                       placeholder="Type or select a destination *"
-                      disabled={!welcomeForm.vacationType}
                       autoComplete="off"
                     />
                     <datalist id="destination-options">
                       {packages
-                        .filter(p => !welcomeForm.vacationType || p.category.toLowerCase() === welcomeForm.vacationType.toLowerCase())
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map(p => (
                           <option key={p.id} value={p.name}>{p.name}</option>
@@ -2281,19 +2216,6 @@ export default function App() {
                     min="1"
                   />
 
-                  <div className="pt-2">
-                    <label className="block text-lg font-bold text-black mb-2">Captcha <span className="text-red-500">*</span></label>
-                    <div className="flex items-center gap-3">
-                      <span className="text-lg text-black">{captchaParams.a} + {captchaParams.b} =</span>
-                      <input
-                        type="text"
-                        required
-                        value={captchaInput}
-                        onChange={(e) => setCaptchaInput(e.target.value)}
-                        className="w-24 border border-slate-300 rounded px-3 py-2 text-base focus:outline-none focus:border-[#144C6C]"
-                      />
-                    </div>
-                  </div>
 
                   <div className="pt-4">
                     <button
