@@ -27,7 +27,7 @@ export default function Footer({ setCurrentPage }: FooterProps) {
           {/* Column 1: Brand & Bio */}
           <div className="space-y-6 flex flex-col items-start">
             <div className="flex items-center gap-4 group cursor-pointer" onClick={() => handleLinkClick('home')}>
-              <div className="w-[200px] h-auto bg-white rounded-2xl p-4 shadow-lg group-hover:scale-105 transition-transform duration-300">
+              <div className="w-[280px] h-auto bg-white rounded-2xl p-4 shadow-lg group-hover:scale-105 transition-transform duration-300">
                 <img
                   src={mainLogo}
                   alt="Pole to Pole Tours and Travels Logo"
