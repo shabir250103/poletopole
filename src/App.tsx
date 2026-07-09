@@ -949,10 +949,10 @@ export default function App() {
 
           <div className="text-center max-w-xl mx-auto mb-10">
             <h2 className="text-3xl font-serif font-bold text-slate-900 justify-center">
-              Travel Enquiry
+              Request a Quote Details
             </h2>
             <p className="text-xs text-slate-500 mt-2 font-display uppercase tracking-[0.25em] font-semibold">
-              Details
+
             </p>
           </div>
 
@@ -1946,8 +1946,8 @@ export default function App() {
                 <div id="booking-inquiry-box" className="rounded-3xl p-8 sm:p-10 border border-slate-200 bg-white shadow-xl">
 
                   <div className="mb-8">
-                    <h3 className="text-2xl font-serif text-slate-900 font-bold">Travel Enquiry</h3>
-                    <p className="text-xs text-slate-500 font-display uppercase tracking-[0.25em] font-semibold mt-1">Details</p>
+                    <h3 className="text-2xl font-serif text-slate-900 font-bold">Request a Quote Details</h3>
+                    <p className="text-xs text-slate-500 font-display uppercase tracking-[0.25em] font-semibold mt-1"></p>
                   </div>
 
                   <form onSubmit={handleInquirySubmit} className="space-y-6">
@@ -2074,39 +2074,43 @@ export default function App() {
 
       </main>
 
-      {/* Floating WhatsApp Action Button (All pages) */}
-      <div
-        id="whatsapp-floating-trigger"
-        className="fixed bottom-6 left-6 z-40 flex items-center gap-2.5"
-        onMouseEnter={() => setWaHover(true)}
-        onMouseLeave={() => setWaHover(false)}
-      >
+      {/* Floating Action Buttons Container */}
+      <div className="fixed bottom-6 right-6 z-40 flex flex-row-reverse items-center gap-4">
+        
+        {/* Floating Enquire Now Button */}
         <button
-          onClick={triggerGeneralWA}
-          className="p-4 bg-[#25d366] text-black rounded-full shadow-[0_4px_20px_rgba(37,211,102,0.45)] hover:scale-110 active:scale-95 duration-300 transition-all border border-white/20 hover:bg-[#20ba5a] cursor-pointer relative z-45"
-          aria-label="Contact Concierge on WhatsApp"
+          onClick={() => { setShowOfferContent(false); setWelcomeModalOpen(true); }}
+          className="bg-[#144C6C] text-white px-6 py-4 rounded-full font-bold uppercase tracking-widest text-xs shadow-[0_4px_20px_rgba(20,76,108,0.45)] hover:scale-105 active:scale-95 duration-300 transition-transform cursor-pointer border border-white/20 flex items-center gap-2"
+          aria-label="Open Enquiry Form"
         >
-          <MessageCircle className="w-6 h-6 fill-black text-black" />
-          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-amber-500 rounded-full animate-ping"></span>
+          <Mail className="w-4 h-4" />
+          <span>Enquire Now</span>
         </button>
 
-        {waHover && (
-          <div className="bg-white text-slate-800 border border-slate-200/80 backdrop-blur-md px-3.5 py-2.5 rounded-xl block text-xs font-display pointer-events-none transition-all duration-300 shadow-xl max-w-xs uppercase tracking-wider relative animate-fade-in">
-            <p className="text-[10px] text-[#144C6C] font-bold block">Concierge Connected</p>
-            <p className="font-light text-slate-500 mt-0.5 whitespace-nowrap">WhatsApp Online Chat desk</p>
-          </div>
-        )}
-      </div>
+        {/* Floating WhatsApp Action Button */}
+        <div
+          id="whatsapp-floating-trigger"
+          className="flex flex-row-reverse items-center gap-2.5"
+          onMouseEnter={() => setWaHover(true)}
+          onMouseLeave={() => setWaHover(false)}
+        >
+          <button
+            onClick={triggerGeneralWA}
+            className="p-4 bg-[#25d366] text-black rounded-full shadow-[0_4px_20px_rgba(37,211,102,0.45)] hover:scale-110 active:scale-95 duration-300 transition-all border border-white/20 hover:bg-[#20ba5a] cursor-pointer relative z-45"
+            aria-label="Contact Concierge on WhatsApp"
+          >
+            <MessageCircle className="w-6 h-6 fill-black text-black" />
+            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-amber-500 rounded-full animate-ping"></span>
+          </button>
 
-      {/* Floating Enquire Now Button */}
-      <button
-        onClick={() => { setShowOfferContent(false); setWelcomeModalOpen(true); }}
-        className="fixed bottom-6 right-6 z-40 bg-[#144C6C] text-white px-6 py-4 rounded-full font-bold uppercase tracking-widest text-xs shadow-[0_4px_20px_rgba(20,76,108,0.45)] hover:scale-105 active:scale-95 duration-300 transition-transform cursor-pointer border border-white/20 flex items-center gap-2"
-        aria-label="Open Enquiry Form"
-      >
-        <Mail className="w-4 h-4" />
-        <span>Enquire Now</span>
-      </button>
+          {waHover && (
+            <div className="bg-white text-slate-800 border border-slate-200/80 backdrop-blur-md px-3.5 py-2.5 rounded-xl block text-xs font-display pointer-events-none transition-all duration-300 shadow-xl max-w-xs uppercase tracking-wider relative animate-fade-in">
+              <p className="text-[10px] text-[#144C6C] font-bold block">Concierge Connected</p>
+              <p className="font-light text-slate-500 mt-0.5 whitespace-nowrap">WhatsApp Online Chat desk</p>
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Welcome Inquiry Modal (Redesigned to match request) */}
       {welcomeModalOpen && (
