@@ -1,16 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Clean the URL if it contains the "/rest/v1/" suffix
-const rawUrl = (import.meta as any).env?.VITE_SUPABASE_URL || "https://wybilkdgddqkxmivmtgy.supabase.co/rest/v1/";
+const rawUrl = import.meta.env.VITE_SUPABASE_URL || "https://wybilkdgddqkxmivmtgy.supabase.co/rest/v1/";
 const supabaseUrl = rawUrl.replace(/\/rest\/v1\/?$/, "");
 
-const supabaseAnonKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || "sb_publishable_0WmqptGJogpV7K5kZ09DUg_IeTq3Y1-";
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_0WmqptGJogpV7K5kZ09DUg_IeTq3Y1-";
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export interface SupabasePackage {
   id: string;
-  category: 'international' | 'domestic';
+  category: 'international' | 'domestic' | 'inbound';
   name: string;
   duration: string;
   price: number;

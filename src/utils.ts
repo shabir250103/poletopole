@@ -51,12 +51,12 @@ export function parseMarkdownToHTML(text: string): string {
 }
 
 /**
- * Format currency in USD beautifully.
+ * Format currency in INR beautifully.
  */
 export function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('en-IN', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'INR',
     maximumFractionDigits: 0
   }).format(value);
 }

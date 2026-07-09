@@ -1,4 +1,5 @@
-import { Compass, Mail, MapPin, Phone, Clock, Instagram, Facebook, Youtube } from 'lucide-react';
+import mainLogo from '../assets/mainlogo.jpeg';
+import { Compass, Mail, MapPin, Phone, Clock, Instagram, Facebook, Youtube, ChevronRight } from 'lucide-react';
 
 interface FooterProps {
   setCurrentPage: (page: string) => void;
@@ -13,173 +14,109 @@ export default function Footer({ setCurrentPage }: FooterProps) {
   };
 
   return (
-    <footer id="main-footer" className="bg-slate-50 border-t border-slate-200 pt-20 pb-10">
-      <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 pb-16 border-b border-slate-200">
-          
-            {/* Column 1: Brand & Bio */}
-            <div id="footer-col-brand" className="space-y-6">
-            <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 group cursor-pointer" onClick={() => handleLinkClick('home')}>
-              <div className="w-[105px] h-[105px] sm:w-[125px] sm:h-[125px] lg:w-[140px] lg:h-[140px] overflow-hidden group-hover:scale-[1.08] transition-transform duration-300 flex items-center justify-center shrink-0 relative bg-transparent mix-blend-multiply">
-                <img 
-                  src="https://res.cloudinary.com/dnmsztoba/image/upload/q_auto/f_auto/v1779877875/Screenshot_20260526-204225_ptew1q.png" 
-                  alt="Pole to Pole Tours and Travels Logo" 
-                  className="w-full h-full object-contain select-none pointer-events-none"
+    <footer id="main-footer" className="bg-[#0b2233] text-white pt-20 pb-10 border-t-4 border-[#fbbf24] relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#144C6C] rounded-full blur-[100px] opacity-30"></div>
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-[#fbbf24] rounded-full blur-[120px] opacity-10"></div>
+      </div>
+
+      <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 pb-16 border-b border-white/10 items-start">
+
+          {/* Column 1: Brand & Bio */}
+          <div className="space-y-6 flex flex-col items-start">
+            <div className="flex items-center gap-4 group cursor-pointer" onClick={() => handleLinkClick('home')}>
+              <div className="w-[200px] h-auto bg-white rounded-2xl p-4 shadow-lg group-hover:scale-105 transition-transform duration-300">
+                <img
+                  src={mainLogo}
+                  alt="Pole to Pole Tours and Travels Logo"
+                  className="w-full h-auto object-contain"
                   referrerPolicy="no-referrer"
                 />
               </div>
-              <div className="flex flex-col text-[#144C6C] justify-center ml-1 sm:ml-2 lg:ml-3 select-none">
-                <span className="font-sans text-[20px] sm:text-[24px] lg:text-[27px] xl:text-[30px] font-black tracking-[0.03em] leading-none uppercase">
-                  POLE TO POLE
-                </span>
-                <span className="font-sans text-[11px] sm:text-[13.5px] lg:text-[15px] xl:text-[16.5px] font-black tracking-[0.05em] uppercase mt-0.5 sm:mt-1 leading-none">
-                  TOURS AND TRAVELS
-                </span>
-                <div className="h-[2px] sm:h-[2.5px] bg-[#fbbf24] w-full mt-1 sm:mt-1.5 mb-1 sm:mb-1.5 rounded-full" />
-                <div className="flex items-center justify-between font-sans text-[8.5px] sm:text-[10.5px] lg:text-[11.5px] xl:text-[12.5px] font-extrabold uppercase tracking-[0.02em] leading-none">
-                  <span>DREAM</span>
-                  <span className="text-[#144C6C]/60 font-light px-[1px]">|</span>
-                  <span>TRAVEL</span>
-                  <span className="text-[#144C6C]/60 font-light px-[1px]">|</span>
-                  <span>ADMIRE</span>
-                </div>
-              </div>
             </div>
-            <p className="text-sm text-slate-600 leading-relaxed max-w-sm">
-              We make travel simple and profoundly personal from custom adventure itineraries and weekend escapes to customized group and individual packages. pole to pole tours and travels creates flawless, bespoke journeys that inspire lifetime memories.
-            </p>
+            <div className="text-sm text-slate-300 leading-relaxed pr-0 lg:pr-8 pt-2 space-y-3">
+              <p>
+                Pole To Pole Tours And Travels is a trusted travel company based in Chennai, India, committed to delivering exceptional travel experiences. We take pride in providing reliable, high-quality, and personalized travel services, ensuring every journey is smooth, comfortable, and memorable.
+              </p>
+              <p>
+                Whether you're planning a leisure holiday, a business trip, or a special getaway, our dedicated team is here to create seamless travel experiences tailored to your needs. At Pole To Pole Tours And Travels, your journey begins with trust and ends with unforgettable memories.
+              </p>
+            </div>
             {/* Socials */}
-            <div className="flex items-center gap-4">
-              <a
-                href="https://instagram.com/poletopole_toursandtravels"
-                target="_blank"
-                rel="noreferrer"
-                id="footer-social-ig"
-                className="p-2.5 rounded-full border border-slate-200 bg-white text-slate-500 hover:text-[#144C6C] hover:border-[#144C6C]/40 transition-all duration-300 hover:scale-110 shadow-sm"
-                aria-label="Instagram"
-              >
+            <div className="flex items-center gap-4 pt-2">
+              <a href="https://instagram.com/poletopole_toursandtravels" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:bg-[#fbbf24] hover:text-[#0b2233] hover:border-[#fbbf24] hover:scale-110 hover:-translate-y-1 transition-all duration-300 shadow-sm">
                 <Instagram className="w-4 h-4" />
               </a>
-              <a
-                href="#"
-                id="footer-social-fb"
-                className="p-2.5 rounded-full border border-slate-200 bg-white text-slate-500 hover:text-[#144C6C] hover:border-[#144C6C]/40 transition-all duration-300 hover:scale-110 shadow-sm"
-                aria-label="Facebook"
-              >
+              <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:bg-[#fbbf24] hover:text-[#0b2233] hover:border-[#fbbf24] hover:scale-110 hover:-translate-y-1 transition-all duration-300 shadow-sm">
                 <Facebook className="w-4 h-4" />
               </a>
             </div>
           </div>
 
-          {/* Column 2: Quick Links */}
-          <div id="footer-col-links" className="space-y-6">
-            <h3 className="text-xs uppercase tracking-[0.2em] text-[#144C6C] font-semibold font-display">
-              Travel Pages
+          {/* Column 2: Contact details */}
+          <div className="space-y-6">
+            <h3 className="text-sm uppercase tracking-[0.15em] text-white font-bold font-serif flex items-center">
+              Contact Details -:
             </h3>
-            <ul className="space-y-3.5 text-sm text-slate-600">
-              <li>
-                <button
-                  onClick={() => handleLinkClick('home')}
-                  className="hover:text-[#144C6C] transition-colors duration-250 cursor-pointer"
-                >
-                  Explore Home
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleLinkClick('international')}
-                  className="hover:text-[#144C6C] transition-colors duration-250 cursor-pointer"
-                >
-                  International Outings
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleLinkClick('domestic')}
-                  className="hover:text-[#144C6C] transition-colors duration-250 cursor-pointer"
-                >
-                  Domestic & National Parks
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleLinkClick('reviews')}
-                  className="hover:text-[#144C6C] transition-colors duration-250 cursor-pointer"
-                >
-                  Guest Stories
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleLinkClick('contact')}
-                  className="hover:text-[#144C6C] transition-colors duration-250 cursor-pointer"
-                >
-                  Contact Us
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 3: Contact details */}
-          <div id="footer-col-contact" className="space-y-6">
-            <h3 className="text-xs uppercase tracking-[0.2em] text-[#144C6C] font-semibold font-display">
-              INFO
-            </h3>
-            <ul className="space-y-4 text-sm text-slate-600">
-              <li className="flex gap-3">
-                <MapPin className="w-5 h-5 text-[#144C6C] shrink-0 mt-0.5" />
-                <span>
-                  Old Jail Road, near Arts College,
-                  <br />
-                  Chennai - 600001
+            <ul className="space-y-5 text-sm text-slate-300">
+              <li className="flex gap-4 items-start group">
+                <div className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center shrink-0 group-hover:bg-[#fbbf24] group-hover:border-[#fbbf24] group-hover:text-[#0b2233] transition-all duration-300">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <span className="pt-2 leading-relaxed">
+                  9, Old Jail Rd, Bundar Rama Garden, George Town,<br />Chennai, Greater Chennai, Tamil Nadu 600001
                 </span>
               </li>
-              <li className="flex gap-3 items-center">
-                <Phone className="w-5 h-5 text-[#144C6C] shrink-0" />
-                <a href="tel:+919566131283" className="hover:text-[#144C6C] transition-colors">
+              <li className="flex gap-4 items-center group">
+                <div className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center shrink-0 group-hover:bg-[#fbbf24] group-hover:border-[#fbbf24] group-hover:text-[#0b2233] transition-all duration-300">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <a href="tel:+919566131283" className="hover:text-[#fbbf24] transition-colors pt-1 font-medium">
                   +91 9566131283
                 </a>
               </li>
-              <li className="flex gap-3 items-center">
-                <Mail className="w-5 h-5 text-[#144C6C] shrink-0" />
-                <a href="mailto:info@poletopole.in" className="hover:text-[#144C6C] transition-colors">
+              <li className="flex gap-4 items-center group">
+                <div className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center shrink-0 group-hover:bg-[#fbbf24] group-hover:border-[#fbbf24] group-hover:text-[#0b2233] transition-all duration-300">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <a href="mailto:info@poletopole.in" className="hover:text-[#fbbf24] transition-colors pt-1 font-medium">
                   info@poletopole.in
                 </a>
-              </li>
-              <li className="flex gap-3 items-center">
-                <Clock className="w-5 h-5 text-[#144C6C] shrink-0" />
-                <span>Mon - Sat : 10:00 AM - 7:00 PM IST</span>
               </li>
             </ul>
           </div>
 
-          {/* Column 4: Google Maps Embed */}
-          <div id="footer-col-map" className="space-y-6">
-            <h3 className="text-xs uppercase tracking-[0.2em] text-[#144C6C] font-semibold font-display">
-              LOCATION
+          {/* Column 3: Location Map */}
+          <div className="space-y-6">
+            <h3 className="text-sm uppercase tracking-[0.15em] text-white font-bold font-serif flex items-center">
+              Location -:
             </h3>
-            <div className="w-full h-40 rounded-xl overflow-hidden border border-slate-200 relative group hover:border-[#144C6C]/40 transition-colors duration-300 shadow-sm">
+            <div className="w-full h-48 rounded-xl overflow-hidden border-2 border-white/10 relative group hover:border-[#fbbf24] transition-colors duration-500 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
               <iframe
                 title="Google Maps Office Location"
-                src="https://maps.google.com/maps?q=Old%20Jail%20Road%20near%20Arts%20College%20Chennai%20600001&t=&z=14&ie=UTF8&iwloc=&output=embed"
-                className="w-full h-full grayscale opacity-85 hover:grayscale-0 transition-all duration-300 border-0 rounded-xl"
+                src="https://maps.google.com/maps?q=9%2C%20Old%20Jail%20Rd%2C%20Bundar%20Rama%20Garden%2C%20George%20Town%2C%20Chennai%2C%20Greater%20Chennai%2C%20Tamil%20Nadu%20600001&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                className="w-full h-full grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 border-0"
                 allowFullScreen={false}
                 loading="lazy"
                 referrerPolicy="no-referrer"
               ></iframe>
-              <div className="absolute inset-0 bg-[#144C6C]/5 pointer-events-none group-hover:bg-transparent transition-colors duration-300"></div>
+              <div className="absolute inset-0 bg-[#144C6C]/20 pointer-events-none group-hover:opacity-0 transition-opacity duration-500"></div>
             </div>
           </div>
 
         </div>
 
-        {/* Down Copyright Section */}
-        <div id="footer-bottom-bar" className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400 font-display">
-          <p>© {currentYear} Pole to Pole Tours and Travels. All Rights Reserved. Dream | Travel | Admire.</p>
+        {/* Bottom Bar */}
+        <div className="mt-8 flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-slate-400">
+          <p>© {currentYear} Pole to Pole Tours and Travels. All Rights Reserved.</p>
+          <div className="flex items-center">
+            <span className="text-[#fbbf24] font-bold tracking-[0.2em] text-[10px] sm:text-xs uppercase">Dream <span className="text-white/30 mx-2">|</span> Travel <span className="text-white/30 mx-2">|</span> Admire</span>
+          </div>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-[#144C6C] transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-[#144C6C] transition-colors">Terms of Planning</a>
-            <a href="#" className="hover:text-[#144C6C] transition-colors">Bespoke Options</a>
+            <a href="#" className="hover:text-[#fbbf24] transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-[#fbbf24] transition-colors">Terms of Service</a>
           </div>
         </div>
       </div>

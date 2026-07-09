@@ -13,6 +13,7 @@ export interface TravelPackage {
   guidesIncluded: boolean;
   visaAssistance: boolean;
   tags: string[];
+  itinerary?: any[];
 }
 
 export interface Review {

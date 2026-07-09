@@ -27,7 +27,9 @@ import {
   Star,
   Sparkles,
   RefreshCw,
-  Copy
+  Copy,
+  Image,
+  Tag
 } from 'lucide-react';
 
 interface AdminPanelProps {
@@ -43,10 +45,9 @@ export default function AdminPanel({ onClose, defaultPackages, defaultReviews }:
   const [authPassword, setAuthPassword] = useState<string>('');
   const [authLoading, setAuthLoading] = useState<boolean>(false);
   const [authError, setAuthError] = useState<string | null>(null);
-  const [usingLocalFallback, setUsingLocalFallback] = useState<boolean>(false);
 
   // Tabs & Views State
-  const [activeTab, setActiveTab] = useState<'packages' | 'bookings' | 'reviews' | 'setup'>('packages');
+  const [activeTab, setActiveTab] = useState<'packages' | 'bookings' | 'reviews' | 'carousel' | 'offers' | 'setup'>('packages');
   const [loading, setLoading] = useState<boolean>(false);
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
@@ -54,6 +55,8 @@ export default function AdminPanel({ onClose, defaultPackages, defaultReviews }:
   const [packages, setPackages] = useState<SupabasePackage[]>([]);
   const [bookings, setBookings] = useState<SupabaseBooking[]>([]);
   const [reviews, setReviews] = useState<SupabaseReview[]>([]);
+  const [carouselItems, setCarouselItems] = useState<any[]>([]);
+  const [offers, setOffers] = useState<any[]>([]);
 
   // Package Form Modal State
   const [packageModalOpen, setPackageModalOpen] = useState<boolean>(false);
@@ -87,19 +90,20 @@ export default function AdminPanel({ onClose, defaultPackages, defaultReviews }:
     verified: true
   });
 
+  // Carousel Form Modal State
+  const [carouselModalOpen, setCarouselModalOpen] = useState<boolean>(false);
+  const [carouselForm, setCarouselForm] = useState<any>({ id: null, title: '', description: '', image_url: '' });
+
+  // Offer Form Modal State
+  const [offerModalOpen, setOfferModalOpen] = useState<boolean>(false);
+  const [offerForm, setOfferForm] = useState<any>({ id: null, title: '', image_url: '' });
+
   // Check login status on load
   useEffect(() => {
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
         setIsAuthenticated(true);
-      } else {
-        // Double check local storage for custom mock auth to facilitate instant testing
-        const fallbackSession = localStorage.getItem('pole_admin_fallback');
-        if (fallbackSession === 'true') {
-          setIsAuthenticated(true);
-          setUsingLocalFallback(true);
-        }
       }
     };
     checkSession();
@@ -111,6 +115,8 @@ export default function AdminPanel({ onClose, defaultPackages, defaultReviews }:
       loadPackages();
       loadBookings();
       loadReviews();
+      loadCarousel();
+      loadOffers();
     }
   }, [isAuthenticated]);
 
@@ -133,18 +139,9 @@ export default function AdminPanel({ onClose, defaultPackages, defaultReviews }:
       });
 
       if (error) {
-        // If official fails, see if it is the easy-setup default fallback credentials
-        if (authEmail === 'admin@poletopole.com' && authPassword === 'admin123') {
-          localStorage.setItem('pole_admin_fallback', 'true');
-          setIsAuthenticated(true);
-          setUsingLocalFallback(true);
-          showNotification('Logged in securely using local system fallback admin credentials.');
-        } else {
-          throw error;
-        }
+        throw error;
       } else if (data.session) {
         setIsAuthenticated(true);
-        setUsingLocalFallback(false);
         showNotification('Successfully authenticated via Supabase Auths.');
       }
     } catch (err: any) {
@@ -157,13 +154,58 @@ export default function AdminPanel({ onClose, defaultPackages, defaultReviews }:
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    localStorage.removeItem('pole_admin_fallback');
     setIsAuthenticated(false);
-    setUsingLocalFallback(false);
     showNotification('Logged out successfully.');
   };
 
-  // Supabase Loading Handlers
+  // --- Supabase Storage Helpers ---
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, prefix: string): Promise<string | null> => {
+    const file = e.target.files?.[0];
+    if (!file) return null;
+
+    setLoading(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const fileName = `${prefix}_${Date.now()}.${ext}`;
+      
+      const { data, error } = await supabase.storage
+        .from('poletopole')
+        .upload(fileName, file);
+
+      if (error) throw error;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('poletopole')
+        .getPublicUrl(fileName);
+
+      return publicUrl;
+    } catch (err: any) {
+      console.error('Storage Upload Error Detail:', err);
+      let errMsg = err.message || 'Unknown error';
+      if (errMsg.includes('row-level security')) {
+        errMsg = 'RLS Policy Error: You must run the Storage Security Policies SQL in your Supabase dashboard.';
+      }
+      showNotification(`Upload failed: ${errMsg}`, 'error');
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteFromStorage = async (url: string) => {
+    try {
+      if (url && url.includes('poletopole/')) {
+        const fileName = url.split('poletopole/').pop();
+        if (fileName) {
+          await supabase.storage.from('poletopole').remove([fileName]);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to delete old image from storage', err);
+    }
+  };
+
+  // --- CRUD Operations ---
   const loadPackages = async () => {
     setLoading(true);
     try {
@@ -236,6 +278,34 @@ export default function AdminPanel({ onClose, defaultPackages, defaultReviews }:
         verified: r.verified ?? true
       }));
       setReviews(mapped);
+    }
+  };
+
+  const loadCarousel = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('carousel_images')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setCarouselItems(data || []);
+    } catch (err) {
+      console.error("Failed to fetch carousel items:", err);
+    }
+  };
+
+  const loadOffers = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('offers')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setOffers(data || []);
+    } catch (err) {
+      console.error("Failed to fetch offers:", err);
     }
   };
 
@@ -328,11 +398,17 @@ export default function AdminPanel({ onClose, defaultPackages, defaultReviews }:
           : String(packageForm.tags).split(',').map(s => s.trim()).filter(Boolean)
       };
 
+      const existingPkg = packages.find(p => p.id === payload.id);
+
       const { error } = await supabase
         .from('packages')
         .upsert(payload, { onConflict: 'id' });
 
       if (error) throw error;
+
+      if (existingPkg && existingPkg.image && existingPkg.image !== payload.image) {
+        await deleteFromStorage(existingPkg.image);
+      }
 
       showNotification(`Package "${payload.name}" saved successfully!`);
       setPackageModalOpen(false);
@@ -357,12 +433,18 @@ export default function AdminPanel({ onClose, defaultPackages, defaultReviews }:
 
     setLoading(true);
     try {
+      const existingPkg = packages.find(p => p.id === id);
+
       const { error } = await supabase
         .from('packages')
         .delete()
         .eq('id', id);
 
       if (error) throw error;
+
+      if (existingPkg && existingPkg.image) {
+        await deleteFromStorage(existingPkg.image);
+      }
       showNotification('Package deleted successfully!');
       loadPackages();
     } catch (err: any) {
@@ -395,11 +477,17 @@ export default function AdminPanel({ onClose, defaultPackages, defaultReviews }:
         verified: !!reviewForm.verified
       };
 
+      const existingRev = reviews.find(r => r.id === payload.id);
+
       const { error } = await supabase
         .from('reviews')
         .upsert(payload, { onConflict: 'id' });
 
       if (error) throw error;
+
+      if (existingRev && existingRev.avatar && existingRev.avatar !== payload.avatar) {
+        await deleteFromStorage(existingRev.avatar);
+      }
 
       showNotification(`Review by "${payload.name}" registered successfully!`);
       setReviewModalOpen(false);
@@ -417,21 +505,147 @@ export default function AdminPanel({ onClose, defaultPackages, defaultReviews }:
   };
 
   const handleDeleteReview = async (id: string) => {
-    if (!confirm('Delete this user testament feedback?')) return;
-
+    if (!confirm('Permanently wipe this review profile record?')) return;
+    
+    setLoading(true);
     try {
+      const existingRev = reviews.find(r => r.id === id);
+
       const { error } = await supabase
         .from('reviews')
         .delete()
         .eq('id', id);
-
+        
       if (error) throw error;
+
+      if (existingRev && existingRev.avatar && !existingRev.avatar.includes('unsplash')) {
+        await deleteFromStorage(existingRev.avatar);
+      }
       showNotification('Review deleted.');
       loadReviews();
     } catch (err: any) {
       console.error('Error deleting review:', err);
       setReviews(prev => prev.filter(r => r.id !== id));
       showNotification('Review deleted from temporary fallback layout.', 'success');
+    }
+  };
+
+  // --- Carousel Handlers ---
+  const handleSaveCarousel = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!carouselForm.title || !carouselForm.image_url) {
+      showNotification('Title and Image are required for Carousel.', 'error');
+      return;
+    }
+    setLoading(true);
+    try {
+      const existing = carouselItems.find(c => c.id === carouselForm.id);
+      
+      const payload = {
+        title: carouselForm.title,
+        description: carouselForm.description,
+        image_url: carouselForm.image_url
+      };
+      
+      let error;
+      if (carouselForm.id) {
+        const res = await supabase.from('carousel_images').update(payload).eq('id', carouselForm.id);
+        error = res.error;
+      } else {
+        const res = await supabase.from('carousel_images').insert(payload);
+        error = res.error;
+      }
+      
+      if (error) throw error;
+      
+      if (existing && existing.image_url && existing.image_url !== payload.image_url) {
+        await deleteFromStorage(existing.image_url);
+      }
+      
+      showNotification('Carousel image saved successfully!');
+      setCarouselModalOpen(false);
+      loadCarousel();
+    } catch (err: any) {
+      console.error('Error saving carousel:', err);
+      showNotification(`Error saving carousel: ${err.message}`, 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteCarousel = async (id: number, imageUrl: string) => {
+    if (!confirm('Are you sure you want to delete this carousel image?')) return;
+    setLoading(true);
+    try {
+      if (imageUrl) {
+        await deleteFromStorage(imageUrl);
+      }
+      const { error } = await supabase.from('carousel_images').delete().eq('id', id);
+      if (error) throw error;
+      showNotification('Carousel image deleted.');
+      loadCarousel();
+    } catch (err: any) {
+      console.error('Error deleting carousel:', err);
+      showNotification(`Error deleting carousel: ${err.message}`, 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- Offer Handlers ---
+  const handleSaveOffer = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!offerForm.title || !offerForm.image_url) {
+      showNotification('Title and Image are required for the Offer poster.', 'error');
+      return;
+    }
+    setLoading(true);
+    try {
+      const existing = offers.find(o => o.id === offerForm.id);
+      const payload = { title: offerForm.title, image_url: offerForm.image_url };
+      
+      let error;
+      if (offerForm.id) {
+        const res = await supabase.from('offers').update(payload).eq('id', offerForm.id);
+        error = res.error;
+      } else {
+        const res = await supabase.from('offers').insert(payload);
+        error = res.error;
+      }
+      
+      if (error) throw error;
+      
+      if (existing && existing.image_url && existing.image_url !== payload.image_url) {
+        await deleteFromStorage(existing.image_url);
+      }
+      
+      showNotification('Offer saved successfully!');
+      setOfferModalOpen(false);
+      loadOffers();
+    } catch (err: any) {
+      console.error('Error saving offer:', err);
+      showNotification(`Error saving offer: ${err.message}`, 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteOffer = async (id: number, imageUrl: string) => {
+    if (!confirm('Are you sure you want to delete this offer?')) return;
+    setLoading(true);
+    try {
+      if (imageUrl) {
+        await deleteFromStorage(imageUrl);
+      }
+      const { error } = await supabase.from('offers').delete().eq('id', id);
+      if (error) throw error;
+      showNotification('Offer deleted.');
+      loadOffers();
+    } catch (err: any) {
+      console.error('Error deleting offer:', err);
+      showNotification(`Error deleting offer: ${err.message}`, 'error');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -500,10 +714,29 @@ create table if not exists reviews (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- 4. Set RLS Security Policies so users can add inquiries and reviews, and view packages
+-- 4. Create carousel_images table
+create table if not exists carousel_images (
+  id bigint generated by default as identity primary key,
+  title text not null,
+  description text,
+  image_url text not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 5. Create offers table
+create table if not exists offers (
+  id bigint generated by default as identity primary key,
+  title text not null,
+  image_url text not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 6. Set RLS Security Policies
 alter table packages enable row level security;
 alter table bookings enable row level security;
 alter table reviews enable row level security;
+alter table carousel_images enable row level security;
+alter table offers enable row level security;
 
 -- Policies for Packages (Free public reading, Auth write)
 drop policy if exists "Allow public select packages" on packages;
@@ -524,6 +757,36 @@ drop policy if exists "Allow public insert reviews" on reviews;
 create policy "Allow public insert reviews" on reviews for insert with check (true);
 drop policy if exists "Allow all reviews admin" on reviews;
 create policy "Allow all reviews admin" on reviews for all using (true);
+
+-- Policies for Carousel Images (Public select, Auth all)
+drop policy if exists "Allow public select carousel" on carousel_images;
+create policy "Allow public select carousel" on carousel_images for select using (true);
+drop policy if exists "Allow write carousel for all" on carousel_images;
+create policy "Allow write carousel for all" on carousel_images for all using (true) with check (true);
+
+-- Policies for Offers (Public select, Auth all)
+drop policy if exists "Allow public select offers" on offers;
+create policy "Allow public select offers" on offers for select using (true);
+drop policy if exists "Allow write offers for all" on offers;
+create policy "Allow write offers for all" on offers for all using (true) with check (true);
+
+-- 7. Set up Storage Bucket for Images
+insert into storage.buckets (id, name, public) 
+values ('poletopole', 'poletopole', true)
+on conflict (id) do update set public = true;
+
+-- Storage Policies for 'poletopole' bucket
+drop policy if exists "Public Access" on storage.objects;
+create policy "Public Access" on storage.objects for select using ( bucket_id = 'poletopole' );
+
+drop policy if exists "Auth Insert" on storage.objects;
+create policy "Auth Insert" on storage.objects for insert with check ( bucket_id = 'poletopole' and auth.role() = 'authenticated' );
+
+drop policy if exists "Auth Update" on storage.objects;
+create policy "Auth Update" on storage.objects for update using ( bucket_id = 'poletopole' and auth.role() = 'authenticated' );
+
+drop policy if exists "Auth Delete" on storage.objects;
+create policy "Auth Delete" on storage.objects for delete using ( bucket_id = 'poletopole' and auth.role() = 'authenticated' );
 `;
     navigator.clipboard.writeText(code);
     showNotification('SQL schema script copied to clipboard! Paste it into the SQL Editor in your Supabase Dashboard.');
@@ -670,11 +933,6 @@ create policy "Allow all reviews admin" on reviews for all using (true);
           </div>
 
           <div className="flex items-center gap-4">
-            {usingLocalFallback && (
-              <span className="hidden md:inline-flex text-[10px] font-bold bg-amber-500/15 border border-amber-500/30 text-amber-500 px-3 py-1 rounded-full items-center gap-1.5 animate-pulse">
-                <Database className="w-3.5 h-3.5" /> local fallback credentials
-              </span>
-            )}
             <button
               onClick={handleLogout}
               className="px-4 py-2 text-xs font-bold uppercase tracking-wider hover:bg-slate-800 border border-slate-700 rounded-lg hover:text-red-400 transition-colors flex items-center gap-2 cursor-pointer min-h-[38px] leading-tight"
@@ -732,6 +990,30 @@ create policy "Allow all reviews admin" on reviews for all using (true);
           >
             <MessageSquare className="w-4 h-4" />
             <span>Guest Reviews ({reviews.length})</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('carousel')}
+            className={`py-3 px-4 flex items-center gap-2 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors cursor-pointer shrink-0 ${
+              activeTab === 'carousel' 
+                ? 'border-[#144C6C] text-[#144C6C]' 
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            <Image className="w-4 h-4" />
+            <span>Carousel ({carouselItems.length})</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('offers')}
+            className={`py-3 px-4 flex items-center gap-2 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors cursor-pointer shrink-0 ${
+              activeTab === 'offers' 
+                ? 'border-[#144C6C] text-[#144C6C]' 
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            <Tag className="w-4 h-4" />
+            <span>Offers ({offers.length})</span>
           </button>
 
           <button
@@ -1110,6 +1392,127 @@ create policy "Allow all reviews admin" on reviews for all using (true);
           </div>
         )}
 
+        {/* CAROUSEL TAB */}
+        {activeTab === 'carousel' && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-end mb-4">
+              <div>
+                <h2 className="text-2xl font-serif font-black text-slate-900 tracking-wider uppercase mb-1">Carousel Master</h2>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Manage Home Hero Sliders</p>
+              </div>
+              <button
+                onClick={() => {
+                  setCarouselForm({ id: null, title: '', description: '', image_url: '' });
+                  setCarouselModalOpen(true);
+                }}
+                className="bg-[#144C6C] hover:bg-[#144C6C]/95 text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 cursor-pointer shadow-sm transition-all"
+              >
+                <Plus className="w-4 h-4" />
+                <span>New Slide</span>
+              </button>
+            </div>
+            
+            {loading ? (
+              <div className="py-20 text-center"><Loader2 className="w-8 h-8 animate-spin mx-auto text-[#144C6C]" /></div>
+            ) : carouselItems.length === 0 ? (
+              <div className="py-16 text-center border-2 border-dashed border-slate-200 rounded-3xl bg-slate-50">
+                <p className="text-slate-500 font-bold mb-4">No carousel slides uploaded yet.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {carouselItems.map(c => (
+                  <div key={c.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col group">
+                    <div className="h-48 relative overflow-hidden bg-slate-100">
+                      <img src={c.image_url} alt={c.title} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="p-4 flex flex-col flex-1">
+                      <h3 className="font-bold text-slate-800 line-clamp-1">{c.title}</h3>
+                      {c.description && <p className="text-xs text-slate-500 mt-1 line-clamp-2">{c.description}</p>}
+                      <div className="mt-auto pt-4 flex gap-2">
+                         <button
+                           onClick={() => {
+                             setCarouselForm(c);
+                             setCarouselModalOpen(true);
+                           }}
+                           className="flex-1 px-3 py-1.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors text-center cursor-pointer"
+                         >
+                           Edit
+                         </button>
+                         <button
+                           onClick={() => handleDeleteCarousel(c.id, c.image_url)}
+                           className="px-3 py-1.5 text-xs font-bold text-red-650 bg-red-50 hover:bg-red-100 rounded-lg transition-colors cursor-pointer"
+                         >
+                           Delete
+                         </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* OFFERS TAB */}
+        {activeTab === 'offers' && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-end mb-4">
+              <div>
+                <h2 className="text-2xl font-serif font-black text-slate-900 tracking-wider uppercase mb-1">Promotional Offers</h2>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Manage Home Page Posters</p>
+              </div>
+              <button
+                onClick={() => {
+                  setOfferForm({ id: null, title: '', image_url: '' });
+                  setOfferModalOpen(true);
+                }}
+                className="bg-[#144C6C] hover:bg-[#144C6C]/95 text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 cursor-pointer shadow-sm transition-all"
+              >
+                <Plus className="w-4 h-4" />
+                <span>New Offer</span>
+              </button>
+            </div>
+            
+            {loading ? (
+              <div className="py-20 text-center"><Loader2 className="w-8 h-8 animate-spin mx-auto text-[#144C6C]" /></div>
+            ) : offers.length === 0 ? (
+              <div className="py-16 text-center border-2 border-dashed border-slate-200 rounded-3xl bg-slate-50">
+                <p className="text-slate-500 font-bold mb-4">No offers created yet.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {offers.map(o => (
+                  <div key={o.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col group">
+                    <div className="h-48 relative overflow-hidden bg-slate-100">
+                      <img src={o.image_url} alt={o.title} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="p-4 flex flex-col flex-1">
+                      <h3 className="font-bold text-slate-800 line-clamp-1">{o.title}</h3>
+                      <div className="mt-auto pt-4 flex gap-2">
+                         <button
+                           onClick={() => {
+                             setOfferForm(o);
+                             setOfferModalOpen(true);
+                           }}
+                           className="flex-1 px-3 py-1.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors text-center cursor-pointer"
+                         >
+                           Edit
+                         </button>
+                         <button
+                           onClick={() => handleDeleteOffer(o.id, o.image_url)}
+                           className="px-3 py-1.5 text-xs font-bold text-red-650 bg-red-50 hover:bg-red-100 rounded-lg transition-colors cursor-pointer"
+                         >
+                           Delete
+                         </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* 4. SETUP TAB */}
         {activeTab === 'setup' && (
           <div className="space-y-6 max-w-4xl mx-auto">
@@ -1247,14 +1650,22 @@ create policy "Allow all actions on reviews" on reviews for all using (true);
                   <label className="uppercase tracking-widest text-slate-500 font-bold block mb-1.5">
                     Branch Category
                   </label>
-                  <select
-                    value={packageForm.category}
-                    onChange={(e) => setPackageForm(prev => ({ ...prev, category: e.target.value as 'international' | 'domestic' }))}
-                    className="w-full px-4 py-2.5 border border-slate-250 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#144C6C] bg-white text-slate-800"
-                  >
-                    <option value="international">International Portfolio</option>
-                    <option value="domestic">Domestic (India) Portfolio</option>
-                  </select>
+                  <div className="flex gap-2 p-1 bg-slate-100 rounded-xl">
+                    {(['domestic', 'international', 'inbound'] as const).map((cat) => (
+                      <button
+                        key={cat}
+                        type="button"
+                        onClick={() => setPackageForm(prev => ({ ...prev, category: cat }))}
+                        className={`flex-1 px-2 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${
+                          packageForm.category === cat 
+                            ? 'bg-white text-[#144C6C] shadow-sm ring-1 ring-slate-200' 
+                            : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200'
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="sm:col-span-2">
@@ -1329,16 +1740,35 @@ create policy "Allow all actions on reviews" on reviews for all using (true);
 
                 <div className="sm:col-span-2">
                   <label className="uppercase tracking-widest text-slate-500 font-bold block mb-1.5">
-                    Exquisite Cover Image URL
+                    Exquisite Cover Image (URL or Upload)
                   </label>
-                  <input
-                    type="url"
-                    required
-                    value={packageForm.image}
-                    onChange={(e) => setPackageForm(prev => ({ ...prev, image: e.target.value }))}
-                    placeholder="https://images.unsplash.com/..."
-                    className="w-full px-4 py-2.5 border border-slate-250 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#144C6C] bg-white text-slate-800"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      required
+                      value={packageForm.image}
+                      onChange={(e) => setPackageForm(prev => ({ ...prev, image: e.target.value }))}
+                      placeholder="https://images.unsplash.com/..."
+                      className="flex-1 px-4 py-2.5 border border-slate-250 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#144C6C] bg-white text-slate-800"
+                    />
+                    <label className="flex-shrink-0 cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl border border-slate-250 flex items-center justify-center font-bold text-xs transition-colors">
+                      Upload File
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        className="hidden" 
+                        onChange={async (e) => {
+                          const url = await handleFileUpload(e, 'package');
+                          if (url) {
+                            setPackageForm(prev => ({ ...prev, image: url }));
+                          }
+                        }}
+                      />
+                    </label>
+                  </div>
+                  {packageForm.image && packageForm.image.startsWith('data:image') && (
+                    <p className="text-[10px] text-green-600 mt-1">Image file loaded successfully.</p>
+                  )}
                 </div>
 
                 <div className="sm:col-span-2">
@@ -1439,6 +1869,123 @@ create policy "Allow all actions on reviews" on reviews for all using (true);
         </div>
       )}
 
+      {/* CAROUSEL ADD/EDIT MODAL */}
+      {carouselModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 w-full max-w-md shadow-2xl animate-fade-in text-left">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
+              <h3 className="text-lg font-serif font-black text-slate-900">
+                {carouselForm.id ? 'Edit Slide' : 'New Slide'}
+              </h3>
+              <button onClick={() => setCarouselModalOpen(false)} className="text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleSaveCarousel} className="space-y-4">
+              <div>
+                <label className="uppercase tracking-widest text-slate-500 font-bold block mb-1">Title</label>
+                <input
+                  type="text"
+                  required
+                  value={carouselForm.title}
+                  onChange={e => setCarouselForm(prev => ({ ...prev, title: e.target.value }))}
+                  className="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white text-slate-800"
+                />
+              </div>
+              <div>
+                <label className="uppercase tracking-widest text-slate-500 font-bold block mb-1">Description (Optional)</label>
+                <input
+                  type="text"
+                  value={carouselForm.description}
+                  onChange={e => setCarouselForm(prev => ({ ...prev, description: e.target.value }))}
+                  className="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white text-slate-800"
+                />
+              </div>
+              <div>
+                <label className="uppercase tracking-widest text-slate-500 font-bold block mb-1">Image</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    required
+                    value={carouselForm.image_url}
+                    onChange={e => setCarouselForm(prev => ({ ...prev, image_url: e.target.value }))}
+                    className="flex-1 px-4 py-2 border border-slate-200 rounded-xl bg-white text-slate-800"
+                  />
+                  <label className="flex-shrink-0 cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl border border-slate-200 flex items-center justify-center font-bold text-xs transition-colors">
+                    Upload
+                    <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
+                      const url = await handleFileUpload(e, 'carousel');
+                      if (url) setCarouselForm((prev: any) => ({ ...prev, image_url: url }));
+                    }} />
+                  </label>
+                </div>
+              </div>
+              <div className="border-t border-slate-100 pt-5 flex justify-end gap-3.5">
+                <button type="submit" disabled={loading} className="px-5 py-2.5 text-white bg-[#144C6C] hover:bg-[#144C6C]/95 font-bold rounded-xl shadow-md flex items-center gap-2">
+                  {loading && <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />}
+                  <span>Save Slide</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* OFFERS ADD/EDIT MODAL */}
+      {offerModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 w-full max-w-md shadow-2xl animate-fade-in text-left">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
+              <h3 className="text-lg font-serif font-black text-slate-900">
+                {offerForm.id ? 'Edit Offer' : 'New Offer'}
+              </h3>
+              <button onClick={() => setOfferModalOpen(false)} className="text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleSaveOffer} className="space-y-4">
+              <div>
+                <label className="uppercase tracking-widest text-slate-500 font-bold block mb-1">Title</label>
+                <input
+                  type="text"
+                  required
+                  value={offerForm.title}
+                  onChange={e => setOfferForm(prev => ({ ...prev, title: e.target.value }))}
+                  className="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white text-slate-800"
+                />
+              </div>
+              <div>
+                <label className="uppercase tracking-widest text-slate-500 font-bold block mb-1">Image</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    required
+                    value={offerForm.image_url}
+                    onChange={e => setOfferForm(prev => ({ ...prev, image_url: e.target.value }))}
+                    className="flex-1 px-4 py-2 border border-slate-200 rounded-xl bg-white text-slate-800"
+                  />
+                  <label className="flex-shrink-0 cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl border border-slate-200 flex items-center justify-center font-bold text-xs transition-colors">
+                    Upload
+                    <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
+                      const url = await handleFileUpload(e, 'offer');
+                      if (url) setOfferForm((prev: any) => ({ ...prev, image_url: url }));
+                    }} />
+                  </label>
+                </div>
+              </div>
+              <div className="border-t border-slate-100 pt-5 flex justify-end gap-3.5">
+                <button type="submit" disabled={loading} className="px-5 py-2.5 text-white bg-[#144C6C] hover:bg-[#144C6C]/95 font-bold rounded-xl shadow-md flex items-center gap-2">
+                  {loading && <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />}
+                  <span>Save Offer</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* REVIEW ADD/EDIT MODAL FORM */}
       {reviewModalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
@@ -1487,14 +2034,31 @@ create policy "Allow all actions on reviews" on reviews for all using (true);
 
               <div>
                 <label className="uppercase tracking-widest text-slate-500 font-bold block mb-1">
-                  Avatar Picture URL
+                  Avatar Picture (URL or Upload)
                 </label>
-                <input
-                  type="url"
-                  value={reviewForm.avatar}
-                  onChange={(e) => setReviewForm(prev => ({ ...prev, avatar: e.target.value }))}
-                  className="w-full px-4 py-2 border border-slate-200 rounded-xl bg-white text-slate-800 focus:outline-none"
-                />
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={reviewForm.avatar}
+                    onChange={(e) => setReviewForm(prev => ({ ...prev, avatar: e.target.value }))}
+                    className="flex-1 px-4 py-2 border border-slate-200 rounded-xl bg-white text-slate-800 focus:outline-none"
+                    placeholder="https://images..."
+                  />
+                  <label className="flex-shrink-0 cursor-pointer bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl border border-slate-200 flex items-center justify-center font-bold text-xs transition-colors">
+                    Upload
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      className="hidden" 
+                      onChange={async (e) => {
+                        const url = await handleFileUpload(e, 'avatar');
+                        if (url) {
+                          setReviewForm(prev => ({ ...prev, avatar: url }));
+                        }
+                      }}
+                    />
+                  </label>
+                </div>
               </div>
 
               <div>
