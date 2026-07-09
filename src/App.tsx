@@ -2162,7 +2162,7 @@ export default function App() {
                     value={welcomeForm.name}
                     onChange={(e) => setWelcomeForm({ ...welcomeForm, name: e.target.value })}
                     className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium"
-                    placeholder=" Name *"
+                    placeholder="Name"
                   />
 
 
@@ -2172,8 +2172,23 @@ export default function App() {
                     value={welcomeForm.email}
                     onChange={(e) => setWelcomeForm({ ...welcomeForm, email: e.target.value })}
                     className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium"
-                    placeholder="Email Address *"
+                    placeholder="Email Address"
                   />
+
+                  <div className="flex border border-slate-300 rounded focus-within:border-[#144C6C]">
+                    <div className="flex items-center px-3 border-r border-slate-300 bg-slate-50 cursor-pointer">
+                      <span className="text-xl leading-none mr-1">🇮🇳</span>
+                      <ChevronDown className="w-3 h-3 text-slate-600" />
+                    </div>
+                    <input
+                      type="tel"
+                      required
+                      value={welcomeForm.phone}
+                      onChange={(e) => setWelcomeForm({ ...welcomeForm, phone: e.target.value })}
+                      className="w-full px-4 py-3 text-sm focus:outline-none text-slate-800 placeholder-slate-700 font-medium bg-transparent"
+                      placeholder="Contact Number"
+                    />
+                  </div>
 
 
                   <div className="relative">
@@ -2184,7 +2199,7 @@ export default function App() {
                       value={welcomeForm.destination}
                       onChange={(e) => setWelcomeForm({ ...welcomeForm, destination: e.target.value })}
                       className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium bg-white"
-                      placeholder="Type or select a destination *"
+                      placeholder="Destination"
                       autoComplete="off"
                     />
                     <datalist id="destination-options">
@@ -2202,7 +2217,7 @@ export default function App() {
                     required
                     value={welcomeForm.dateOfTravel}
                     onChange={(e) => setWelcomeForm({ ...welcomeForm, dateOfTravel: e.target.value })}
-                    className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium"
+                    className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium uppercase"
                     min={new Date().toISOString().split("T")[0]}
                   />
 
@@ -2212,7 +2227,7 @@ export default function App() {
                     value={welcomeForm.numberOfPeople}
                     onChange={(e) => setWelcomeForm({ ...welcomeForm, numberOfPeople: e.target.value })}
                     className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium"
-                    placeholder="No. of Pax *"
+                    placeholder="No. of Pax"
                     min="1"
                   />
 
