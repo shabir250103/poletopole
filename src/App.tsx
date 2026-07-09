@@ -1976,7 +1976,7 @@ export default function App() {
                     {/* Row 2: Budget, Days, Persons */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-black font-display font-bold mb-2">Travel Date </label>
+                        <label className="block text-[10px] uppercase tracking-widest text-black font-display font-bold mb-2">travel date </label>
                         <input
                           type="date"
                           name="budget"
@@ -2186,26 +2186,15 @@ export default function App() {
                   />
 
 
-                  <div className="relative">
-                    <input
-                      type="text"
-                      required
-                      list="destination-options"
-                      value={welcomeForm.destination}
-                      onChange={(e) => setWelcomeForm({ ...welcomeForm, destination: e.target.value })}
-                      className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium bg-white"
-                      placeholder="Destination"
-                      autoComplete="off"
-                    />
-                    <datalist id="destination-options">
-                      {packages
-                        .sort((a, b) => a.name.localeCompare(b.name))
-                        .map(p => (
-                          <option key={p.id} value={p.name}>{p.name}</option>
-                        ))
-                      }
-                    </datalist>
-                  </div>
+                  <input
+                    type="text"
+                    required
+                    value={welcomeForm.destination}
+                    onChange={(e) => setWelcomeForm({ ...welcomeForm, destination: e.target.value })}
+                    className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium bg-white"
+                    placeholder="Destination"
+                    autoComplete="off"
+                  />
 
                   <input
                     type="text"
@@ -2225,7 +2214,7 @@ export default function App() {
                     value={welcomeForm.numberOfDays}
                     onChange={(e) => setWelcomeForm({ ...welcomeForm, numberOfDays: e.target.value })}
                     className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium"
-                    placeholder="No. of Nights"
+                    placeholder="No of Nights"
                     min="1"
                   />
 
