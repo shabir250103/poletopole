@@ -592,55 +592,45 @@ export default function App() {
     setFormLoading(true);
     try {
       // Direct insertion to Supabase bookings table
-      try {
-        const { error: dbErr } = await supabase.from('bookings').insert({
-          name: bookingForm.name,
-          destination: bookingForm.destination,
-          budget: bookingForm.budget,
-          number_of_days: bookingForm.numberOfDays,
-          number_of_persons: bookingForm.numberOfPersons
-        });
-        if (dbErr) {
-          console.error('Error inserting booking to Supabase:', dbErr);
-        }
-      } catch (innerErr) {
-        console.error('Db connection error on booking submission:', innerErr);
-      }
-
-      const response = await fetch('/api/inquiry', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bookingForm)
+      const { error: dbErr } = await supabase.from('bookings').insert({
+        name: bookingForm.name,
+        destination: bookingForm.destination,
+        budget: bookingForm.budget,
+        number_of_days: bookingForm.numberOfDays,
+        number_of_persons: bookingForm.numberOfPersons
       });
-      const data = await response.json();
-
-      if (data.success) {
-        setInquirySuccess(data.message);
-        setWhatsappTemplateUrl(data.whatsappUrl);
-        // Automatically open WhatsApp on successful formulation
-        window.open(data.whatsappUrl, '_blank');
-        // Reset form
-        setBookingForm({
-          name: '',
-          destination: '',
-          budget: '',
-          numberOfDays: '',
-          numberOfPersons: '',
-        });
+      
+      if (dbErr) {
+        console.error('Error inserting booking to Supabase:', dbErr);
+        alert('There was an issue submitting your inquiry to our system. Opening WhatsApp directly.');
       }
-    } catch (err) {
-      console.error('Submission error:', err);
-      // Fallback direct WhatsApp opening in case of any issue
+
+      // Prepare WhatsApp message
       const template = `Hello Pole to Pole Tours and Travels! I want to inquire about a custom trip:\n\n` +
         `• *Destination*: ${bookingForm.destination}\n` +
         `• *Name*: ${bookingForm.name}\n` +
         `• *Budget*: ${bookingForm.budget || 'Not specified'}\n` +
         `• *Number of Days*: ${bookingForm.numberOfDays || 'Not specified'}\n` +
         `• *Number of Persons*: ${bookingForm.numberOfPersons || 'Not specified'}`;
-      setInquirySuccess('Your custom inquiry draft is ready! Opening WhatsApp...');
-      const fallbackUrl = `https://wa.me/919566131283?text=${encodeURIComponent(template)}`;
-      setWhatsappTemplateUrl(fallbackUrl);
-      window.open(fallbackUrl, '_blank');
+      
+      const whatsappUrl = `https://wa.me/919566131283?text=${encodeURIComponent(template)}`;
+      
+      setInquirySuccess('Your inquiry has been successfully saved! Opening WhatsApp...');
+      setWhatsappTemplateUrl(whatsappUrl);
+      window.open(whatsappUrl, '_blank');
+      
+      // Reset form on success
+      setBookingForm({
+        name: '',
+        destination: '',
+        budget: '',
+        numberOfDays: '',
+        numberOfPersons: '',
+      });
+
+    } catch (err) {
+      console.error('Submission error:', err);
+      alert('An unexpected error occurred. Please try again.');
     } finally {
       setFormLoading(false);
     }
