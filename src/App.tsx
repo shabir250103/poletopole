@@ -1223,12 +1223,12 @@ export default function App() {
               </div>
 
               <div className="my-8">
-                <h3 className="text-xl font-bold text-[#144C6C] mb-4 uppercase">Our Services</h3>
+                <h3 className="text-xl font-bold text-[#144C6C] mb-1 uppercase">Our Services :</h3>
                 <p className="leading-relaxed font-medium text-slate-800">Domestic Tours | International Tours | Inbound Tours | Cruises | Flight Tickets | Hotel Bookings | Transport Bookings | Visa | Airport Assistance | Travel Insurance | Educational & Industrial Tours | Group Tours | Customized Holiday Packages</p>
               </div>
 
               <div className="my-8">
-                <h3 className="text-xl font-bold text-[#144C6C] mb-4 uppercase">Why Choose Us?</h3>
+                <h3 className="text-xl font-bold text-[#144C6C] mb-1 uppercase">Why Choose Us?</h3>
                 <ul className="space-y-3">
                   <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-[#fbbf24] shrink-0 mt-0.5" /> Personalized travel planning tailored to your needs</li>
                   <li className="flex items-start gap-3"><CheckCircle2 className="w-5 h-5 text-[#fbbf24] shrink-0 mt-0.5" /> Competitive pricing with complete transparency</li>
@@ -1240,16 +1240,16 @@ export default function App() {
               </div>
 
               <div className="my-8">
-                <h3 className="text-xl font-bold text-[#144C6C] mb-4 uppercase">Our Mission</h3>
+                <h3 className="text-xl font-bold text-[#144C6C] mb-1 uppercase">Our Mission :</h3>
                 <p>To make travel easy, affordable, and enjoyable by providing high-quality travel services with honesty, professionalism, and a customer-first approach.</p>
               </div>
 
               <div className="my-8">
-                <h3 className="text-xl font-bold text-[#144C6C] mb-4 uppercase">Our Vision</h3>
-                <p>At Pole To Pole Tours And Travels, we don't just book trips—we create unforgettable memories. Whether you're exploring India or discovering destinations across the globe, we're here to make every journey special.</p>
+                <h3 className="text-xl font-bold text-[#144C6C] mb-1 uppercase">Our Vision :</h3>
+                <p>At Pole To Pole Tours And Travels, we don't just book trips,we create unforgettable memories. Whether you're exploring India or discovering destinations across the globe, we're here to make every journey special.</p>
               </div>
 
-              <p className="font-black text-[#144C6C] text-center pt-8 text-xl sm:text-2xl uppercase tracking-widest drop-shadow-sm">Travel Beyond Boundaries with Pole To Pole Tours And Travels.</p>
+              <p className="font-black text-[#144C6C] text-center pt-8 text-xl sm:text-2xl uppercase tracking-widest drop-shadow-sm">Travel Beyond Boundaries with Pole To Pole Tours And Travels</p>
             </div>
           </div>
         )}
