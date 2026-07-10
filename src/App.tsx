@@ -749,9 +749,9 @@ export default function App() {
     return (
       <section className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-4">
         <div className="text-center mb-10">
-          <span className="text-[#144C6C] font-black tracking-[0.2em] text-xs uppercase mb-3 block">Our Expertise</span>
+          <span className="text-[#144C6C] font-black tracking-[0.2em] text-xs uppercase mb-3 block"></span>
           <h2 className="text-3xl sm:text-4xl font-serif font-black text-slate-900 tracking-wide">Our Services</h2>
-          <p className="text-slate-500 max-w-2xl mx-auto mt-4 text-sm font-medium">Comprehensive travel solutions designed to make your journey unforgettable and completely stress-free.</p>
+          <p className="text-slate-500 max-w-2xl mx-auto mt-4 text-sm font-medium"></p>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 max-w-[1400px] mx-auto">
@@ -1212,8 +1212,8 @@ export default function App() {
 
               <div className="flex flex-col md:flex-row gap-8 items-center md:items-start mb-8">
                 {aboutUs?.founder_image && (
-                  <div className="w-48 h-48 sm:w-56 sm:h-56 shrink-0 rounded-full overflow-hidden shadow-xl border-4 border-white mb-6 md:mb-0">
-                    <img src={aboutUs.founder_image} alt="Founder" className="w-full h-full object-cover" />
+                  <div className="relative block mx-auto md:mx-0 w-48 h-48 sm:w-56 sm:h-56 shrink-0 rounded-full overflow-hidden shadow-xl border-4 border-white mb-6 md:mb-0">
+                    <img src={aboutUs.founder_image} alt="Founder" className="w-full h-full object-cover block" />
                   </div>
                 )}
                 <div className="space-y-4">
@@ -1249,7 +1249,7 @@ export default function App() {
                 <p>At Pole To Pole Tours And Travels, we don't just book trips,we create unforgettable memories. Whether you're exploring India or discovering destinations across the globe, we're here to make every journey special.</p>
               </div>
 
-              <p className="font-black text-[#144C6C] text-center pt-8 text-xl sm:text-2xl uppercase tracking-widest drop-shadow-sm">Travel Beyond Boundaries with Pole To Pole Tours And Travels</p>
+              <p className="font-black text-[#144C6C] text-center pt-8 text-xl sm:text-2xl uppercase tracking-widest drop-shadow-sm">Travel Beyond Boundaries with <br />Pole To Pole Tours And Travels</p>
             </div>
           </div>
         )}
@@ -1350,7 +1350,7 @@ export default function App() {
                       {/* Info body */}
                       <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
                         <div className="space-y-3">
-                          <h3 className="text-xl font-serif font-bold text-slate-900 font-display text-left leading-tight">
+                          <h3 className="text-xl font-serif font-bold text-slate-900 font-display text-center leading-tight">
                             {pkg.name}
                           </h3>
                         </div>
@@ -1358,7 +1358,7 @@ export default function App() {
                         {/* Card footer Price Display */}
                         <div className="mt-5 pt-5 border-t border-slate-100 flex items-center justify-between gap-2">
                           <div className="flex flex-col text-left">
-                            <span className="text-xs uppercase font-black tracking-widest text-black mb-0.5">Starts From</span>
+                            <span className="text-xs uppercase font-black tracking-widest text-[#144C6C] mb-0.5">Starts From</span>
                             <div className="flex items-baseline gap-1 flex-wrap">
                               <span className="text-xl sm:text-2xl font-bold text-[#144C6C]">
                                 {formatCurrency(pkg.price)}<sup className="text-sm">*</sup>

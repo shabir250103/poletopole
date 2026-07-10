@@ -75,7 +75,8 @@ body {
 
 /* Luxury custom scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -83,12 +84,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d4af37;
-  border-radius: 3px;
+  background: #ca8a04;
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #aa7c11;
+  background: #a16207;
 }
 
 /* Cinematic scanlines overlay */
