@@ -1114,8 +1114,8 @@ export default function App() {
         {currentPage === 'home' && (
           <div id="view-home" className="space-y-0">
             {/* Cinematic Boxed video hero banner */}
-            <section id="hero-banner" className="w-full max-w-full mx-auto px-0 mt-0 mb-12">
-              <div className="relative h-[80vh] min-h-[500px] max-h-[750px] flex items-end justify-end shadow-2xl bg-black">
+            <section id="hero-banner" className="w-full max-w-full mx-auto px-0 mt-0 mb-8 md:mb-12">
+              <div className="relative h-[55vh] min-h-[350px] md:h-[80vh] md:min-h-[500px] max-h-[750px] flex items-end justify-end shadow-2xl bg-black">
                 {/* Dynamic Image Carousel or Video Fallback */}
                 <div className="absolute inset-0 z-0 overflow-hidden bg-black">
                   {(() => {
