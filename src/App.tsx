@@ -2215,6 +2215,19 @@ export default function App() {
                     min="1"
                   />
 
+                  <div className="flex items-center gap-4 bg-slate-50 border border-slate-300 rounded px-4 py-3">
+                    <span className="font-bold text-[#144C6C] whitespace-nowrap">
+                      {captchaParams.a} + {captchaParams.b} =
+                    </span>
+                    <input
+                      type="number"
+                      required
+                      value={captchaInput}
+                      onChange={(e) => setCaptchaInput(e.target.value)}
+                      className="w-full bg-transparent text-sm focus:outline-none text-slate-800 font-medium"
+                      placeholder="Enter sum"
+                    />
+                  </div>
 
                   <div className="pt-4">
                     <button
