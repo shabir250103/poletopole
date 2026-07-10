@@ -1360,8 +1360,10 @@ export default function App() {
                           <div className="flex flex-col text-left">
                             <span className="text-xs uppercase font-black tracking-widest text-black mb-0.5">Starts From</span>
                             <div className="flex items-baseline gap-1 flex-wrap">
-                              <span className="text-xl sm:text-2xl font-bold text-[#144C6C]">{formatCurrency(pkg.price)}</span>
-                              <span className="text-xs font-black text-slate-700 whitespace-nowrap">* Per Person</span>
+                              <span className="text-xl sm:text-2xl font-bold text-[#144C6C]">
+                                {formatCurrency(pkg.price)}<sup className="text-sm">*</sup>
+                              </span>
+                              <span className="text-xs font-black text-slate-700 whitespace-nowrap">Per Person</span>
                             </div>
                           </div>
                           <button
