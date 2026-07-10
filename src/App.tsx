@@ -475,10 +475,8 @@ export default function App() {
   // Combine carousel images and fallback videos into a cohesive list (max 10 items)
   const heroItems = useMemo(() => {
     const items: Array<{ type: 'image' | 'video'; data: any }> = carouselImages.map(img => ({ type: 'image', data: img }));
-    if (items.length < 4) {
-      const videosNeeded = 4 - items.length;
-      const videosToAdd = HERO_VIDEOS.slice(0, videosNeeded).map(v => ({ type: 'video' as const, data: v }));
-      items.push(...videosToAdd);
+    if (items.length === 0) {
+      items.push({ type: 'image', data: { image_url: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=1920&q=80', title: 'Pole to Pole Tours' } });
     }
     return items.slice(0, 10);
   }, [carouselImages]);
@@ -950,7 +948,7 @@ export default function App() {
 
           <div className="text-center max-w-xl mx-auto mb-10">
             <h2 className="text-3xl font-serif font-bold text-slate-900 justify-center">
-              Request a Quote Details
+              Plan Your Trip
             </h2>
             <p className="text-xs text-slate-500 mt-2 font-display uppercase tracking-[0.25em] font-semibold">
 
@@ -1219,7 +1217,7 @@ export default function App() {
                   </div>
                 )}
                 <div className="space-y-4">
-                  <p>I am A. Nizaruddin, the founder of Pole To Pole Tours And Travels. We believe that every journey should be memorable, comfortable, and hassle-free. Since our establishment in 2019, we have been committed to delivering exceptional travel experiences through reliable, personalized, and affordable travel solutions for individuals, families, corporate clients, and groups.</p>
+                  <p>I am A. Nizaruddin, the founder of Pole To Pole Tours And Travels. We believe that every journey should be memorable, comfortable, and hassle-free. we have been committed to delivering exceptional travel experiences through reliable, personalized, and affordable travel solutions for individuals, families, corporate clients, and groups.</p>
                   <p>Based in India, Chennai. We specialize in creating unforgettable travel experiences across India and around the world. Whether you're planning a family vacation, honeymoon, pilgrimage, educational tour, corporate trip, or an international holiday, our experienced team is here to take care of every detail, ensuring a smooth and enjoyable journey from start to finish.</p>
                 </div>
               </div>
@@ -1360,10 +1358,10 @@ export default function App() {
                         {/* Card footer Price Display */}
                         <div className="mt-5 pt-5 border-t border-slate-100 flex items-center justify-between gap-2">
                           <div className="flex flex-col text-left">
-                            <span className="text-[10px] uppercase font-black tracking-widest text-slate-400 mb-0.5">Starts From</span>
+                            <span className="text-xs uppercase font-black tracking-widest text-black mb-0.5">Starts From</span>
                             <div className="flex items-baseline gap-1 flex-wrap">
-                              <span className="text-lg sm:text-xl font-bold text-[#144C6C]">{formatCurrency(pkg.price)}</span>
-                              <span className="text-[10px] font-bold text-slate-500 whitespace-nowrap">* / per person</span>
+                              <span className="text-xl sm:text-2xl font-bold text-[#144C6C]">{formatCurrency(pkg.price)}</span>
+                              <span className="text-xs font-black text-slate-700 whitespace-nowrap">* Per Person</span>
                             </div>
                           </div>
                           <button
@@ -1942,7 +1940,7 @@ export default function App() {
                 <div id="booking-inquiry-box" className="rounded-3xl p-8 sm:p-10 border border-slate-200 bg-white shadow-xl">
 
                   <div className="mb-8">
-                    <h3 className="text-2xl font-serif text-slate-900 font-bold">Request a Quote Details</h3>
+                    <h3 className="text-2xl font-serif text-slate-900 font-bold">Plan Your Trip</h3>
                     <p className="text-xs text-slate-500 font-display uppercase tracking-[0.25em] font-semibold mt-1"></p>
                   </div>
 
@@ -1950,7 +1948,7 @@ export default function App() {
                     {/* Row 1: Name & Destination */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-black font-display font-bold mb-2">Name </label>
+                        <label className="block text-xs uppercase tracking-widest text-black font-display font-bold mb-2">Name </label>
                         <input
                           type="text"
                           name="name"
@@ -1961,7 +1959,7 @@ export default function App() {
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-black font-display font-bold mb-2">Destination </label>
+                        <label className="block text-xs uppercase tracking-widest text-black font-display font-bold mb-2">Destination </label>
                         <input
                           type="text"
                           name="destination"
@@ -1976,7 +1974,7 @@ export default function App() {
                     {/* Row 2: Budget, Days, Persons */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-black font-display font-bold mb-2">travel date </label>
+                        <label className="block text-xs uppercase tracking-widest text-black font-display font-bold mb-2">travel date </label>
                         <input
                           type="date"
                           name="budget"
@@ -1988,7 +1986,7 @@ export default function App() {
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-black font-display font-bold mb-2">No of nights </label>
+                        <label className="block text-xs uppercase tracking-widest text-black font-display font-bold mb-2">No of nights </label>
                         <input
                           type="number"
                           name="numberOfDays"
@@ -2000,7 +1998,7 @@ export default function App() {
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-black font-display font-bold mb-2">No of pax </label>
+                        <label className="block text-xs uppercase tracking-widest text-black font-display font-bold mb-2">No of pax </label>
                         <input
                           type="number"
                           name="numberOfPersons"

@@ -196,7 +196,7 @@ export default function Navbar({ currentPage, setCurrentPage, onSelectPackage, o
       </div>
 
       <div className="w-full @container relative">
-        <div className="flex items-center justify-between h-[90px] sm:h-[100px] w-full bg-white pl-0 pr-0 relative">
+        <div className="flex items-center justify-between h-[90px] sm:h-[100px] w-full bg-transparent pl-0 pr-0 relative">
 
           {/* Brand Logo and Name */}
           <div
@@ -251,7 +251,7 @@ export default function Navbar({ currentPage, setCurrentPage, onSelectPackage, o
                   <button
                     id={`nav-${item.id}`}
                     onClick={handleNavClick}
-                    className={`h-full flex items-center justify-center transition-all duration-300 font-display cursor-pointer uppercase tracking-wider text-[12px] xl:text-[13px] whitespace-nowrap px-5 xl:px-6 font-black rounded-full ${isTabActive
+                    className={`h-full flex items-center justify-center transition-all duration-300 font-['Calibri',_sans-serif] cursor-pointer uppercase tracking-wider text-[15px] xl:text-[16px] whitespace-nowrap px-5 xl:px-6 font-bold rounded-full ${isTabActive
                       ? 'bg-[#144C6C] text-white shadow-sm'
                       : 'bg-transparent text-[#144C6C] hover:bg-slate-50'
                       }`}
@@ -402,7 +402,7 @@ export default function Navbar({ currentPage, setCurrentPage, onSelectPackage, o
                   setIsOpen(false);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className={`w-full text-left font-display text-sm uppercase tracking-widest py-3 px-4 rounded-lg block cursor-pointer transition-colors ${currentPage === item.id
+                className={`w-full text-left font-['Calibri',_sans-serif] text-sm uppercase tracking-widest py-3 px-4 rounded-lg block cursor-pointer transition-colors ${currentPage === item.id
                   ? 'bg-[#144C6C] text-white'
                   : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                   }`}
