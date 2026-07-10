@@ -475,9 +475,6 @@ export default function App() {
   // Combine carousel images and fallback videos into a cohesive list (max 10 items)
   const heroItems = useMemo(() => {
     const items: Array<{ type: 'image' | 'video'; data: any }> = carouselImages.map(img => ({ type: 'image', data: img }));
-    if (items.length === 0) {
-      items.push({ type: 'image', data: { image_url: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=1920&q=80', title: 'Pole to Pole Tours' } });
-    }
     return items.slice(0, 10);
   }, [carouselImages]);
 
