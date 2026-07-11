@@ -202,8 +202,6 @@ export default function App() {
     vacationType: '',
     numberOfDays: ''
   });
-  const [captchaParams, setCaptchaParams] = useState({ a: Math.floor(Math.random() * 10) + 1, b: Math.floor(Math.random() * 10) + 1 });
-  const [captchaInput, setCaptchaInput] = useState('');
 
   // Supabase dynamic datastreams
   const [packages, setPackages] = useState<TravelPackage[]>([]);
@@ -356,12 +354,6 @@ export default function App() {
 
   const handleWelcomeSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (parseInt(captchaInput) !== (captchaParams.a + captchaParams.b)) {
-      alert("Incorrect Captcha! Please try again.");
-      setCaptchaParams({ a: Math.floor(Math.random() * 10) + 1, b: Math.floor(Math.random() * 10) + 1 });
-      setCaptchaInput('');
-      return;
-    }
 
     try {
       const extraDetails = `City: ${welcomeForm.city} | Email: ${welcomeForm.email} | Ph: ${welcomeForm.phone} | WA: ${welcomeForm.whatsapp} | Type: ${welcomeForm.vacationType}`;
@@ -386,7 +378,6 @@ export default function App() {
       setWelcomeForm({
         name: '', city: '', email: '', phone: '', whatsapp: '', destination: '', dateOfTravel: '', numberOfPeople: '', vacationType: ''
       });
-      setCaptchaInput('');
 
       // Auto-close after 4 seconds
       setTimeout(() => {
@@ -599,7 +590,7 @@ export default function App() {
         number_of_days: bookingForm.numberOfDays,
         number_of_persons: bookingForm.numberOfPersons
       });
-      
+
       if (dbErr) {
         console.error('Error inserting booking to Supabase:', dbErr);
         alert('There was an issue submitting your inquiry to our system. Opening WhatsApp directly.');
@@ -612,13 +603,13 @@ export default function App() {
         `• *Budget*: ${bookingForm.budget || 'Not specified'}\n` +
         `• *Number of Days*: ${bookingForm.numberOfDays || 'Not specified'}\n` +
         `• *Number of Persons*: ${bookingForm.numberOfPersons || 'Not specified'}`;
-      
+
       const whatsappUrl = `https://wa.me/919566131283?text=${encodeURIComponent(template)}`;
-      
+
       setInquirySuccess('Your inquiry has been successfully saved! Opening WhatsApp...');
       setWhatsappTemplateUrl(whatsappUrl);
       window.open(whatsappUrl, '_blank');
-      
+
       // Reset form on success
       setBookingForm({
         name: '',
@@ -2190,9 +2181,8 @@ export default function App() {
                     onFocus={(e) => (e.target.type = "date")}
                     onBlur={(e) => (!e.target.value ? (e.target.type = "text") : null)}
                     onChange={(e) => setWelcomeForm({ ...welcomeForm, dateOfTravel: e.target.value })}
-                    className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium uppercase"
-                    placeholder="Travel date"
-                    min={new Date().toISOString().split("T")[0]}
+                    className="w-full border border-slate-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-[#144C6C] text-slate-800 placeholder-slate-700 font-medium"
+                    placeholder="Travel Date" min={new Date().toISOString().split("T")[0]}
                   />
 
                   <input
@@ -2214,20 +2204,6 @@ export default function App() {
                     placeholder="No of Pax"
                     min="1"
                   />
-
-                  <div className="flex items-center gap-4 bg-slate-50 border border-slate-300 rounded px-4 py-3">
-                    <span className="font-bold text-[#144C6C] whitespace-nowrap">
-                      {captchaParams.a} + {captchaParams.b} =
-                    </span>
-                    <input
-                      type="number"
-                      required
-                      value={captchaInput}
-                      onChange={(e) => setCaptchaInput(e.target.value)}
-                      className="w-full bg-transparent text-sm focus:outline-none text-slate-800 font-medium"
-                      placeholder="Enter sum"
-                    />
-                  </div>
 
                   <div className="pt-4">
                     <button
